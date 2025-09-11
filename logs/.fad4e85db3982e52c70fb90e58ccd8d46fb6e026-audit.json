@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\.fad4e85db3982e52c70fb90e58ccd8d46fb6e026-audit.json",
+    "files": [
+        {
+            "date": 1757577897372,
+            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-09-11.log",
+            "hash": "5d48e42509a30f4c24d3cd930ef9d7f5db219c12249f8e20abcc5807c0e2713e"
+        }
+    ],
+    "hashType": "sha256"
+}

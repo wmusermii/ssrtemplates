@@ -1,0 +1,61 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+html, body {
+  @apply m-0 p-0 h-full;
+}
+:root {
+    --p-primary-color: #0000a7!important;          /* base */
+    --p-primary-color-text: #fff!important;        /* text on primary */
+    --p-primary-100: #fff7ed!important;
+    --p-primary-200: #ffedd5!important;
+    --p-primary-300: #b1b1f8!important;
+    --p-primary-400: #9696f9!important;
+    --p-primary-500: #8686fc!important;
+    --p-primary-600: #6c6cf9!important;
+    --p-primary-700: #5555cf!important;
+    --p-primary-800: #3d3db4!important;
+    --p-primary-900: #2626af!important;
+    --p-form-field-border-radius: var(--p-border-radius-sm)!important;
+    --p-menubar-border-color:transparent!important;
+    --p-panelmenu-panel-first-border-width:0px!important;
+    --p-panelmenu-panel-border-width:0px!important;
+    --p-panelmenu-panel-last-border-width:0px!important;
+    font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Inter,
+      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol";
+    font-size: 14px;
+    color: #3f5067!important;
+  }
+.p-icon-wrapper {order: 1!important;margin-inline-start: auto!important; }
+.custom-chip .p-chip-label {
+  color: #a6a7a8; /* warna biru */
+}
+.custom-chip .p-chip-icon {
+  color: #a6a7a8;
+}
+.p-datatable-sort-icon {
+  padding-left: 2px!important;
+}
+/*
+.p-panelmenu-header-content {
+  width: 100%!important;
+}
+.p-panelmenu .p-panelmenu-header {
+  display: flex!important;
+  justify-content: space-between!important;
+  align-items: center!important;
+  width: 100%!important;
+}
+
+.p-panelmenu .p-panelmenu-header .p-panelmenu-header-icon {
+  margin-left: auto!important;
+  order: 2!important;
+}
+
+.p-panelmenu .p-menuitem .p-panelmenu-icon {
+  margin-left: auto!important;
+  order: 2!important;
+}
+*/

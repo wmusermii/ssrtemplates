@@ -1,0 +1,74 @@
+{
+  "name": "ssrtemplates",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "postupload": "cpx \"upload/**/*\" dist/ssrtemplates/upload",
+    "postbuild": "cpx \"data/**/*\" dist/ssrtemplates/server/data",
+    "builddata": "npm run build && npm run postbuild && npm run postupload",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "serve:ssr:ssrtemplates": "node dist/ssrtemplates/server/server.mjs"
+  },
+  "prettier": {
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^20.1.0",
+    "@angular/compiler": "^20.1.0",
+    "@angular/core": "^20.1.0",
+    "@angular/forms": "^20.1.0",
+    "@angular/platform-browser": "^20.1.0",
+    "@angular/platform-server": "^20.1.0",
+    "@angular/router": "^20.1.0",
+    "@angular/ssr": "^20.1.1",
+    "@primeuix/themes": "^1.2.1",
+    "better-sqlite3": "^12.2.0",
+    "cpx": "^1.5.0",
+    "express": "^5.1.0",
+    "jose": "^6.0.12",
+    "knex": "^3.1.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.30.1",
+    "nanoid": "^5.1.5",
+    "nodemailer": "^7.0.5",
+    "pdf-lib": "^1.17.1",
+    "primeicons": "^7.0.0",
+    "primeng": "^20.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.1.1",
+    "@angular/cli": "^20.1.1",
+    "@angular/compiler-cli": "^20.1.0",
+    "@types/express": "^5.0.1",
+    "@types/jasmine": "~5.1.0",
+    "@types/lodash": "^4.17.20",
+    "@types/node": "^20.17.19",
+    "@types/nodemailer": "^6.4.17",
+    "autoprefixer": "10.4.16",
+    "jasmine-core": "~5.8.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "postcss": "8.4.27",
+    "tailwindcss": "3.4.1",
+    "typescript": "~5.8.2"
+  }
+}
