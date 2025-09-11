@@ -17,15 +17,19 @@ html, body {
     --p-primary-700: #c14343!important;
     --p-primary-800: #a22c2c!important;
     --p-primary-900: #9f0e0f!important;
+    --p-panelmenu-gap: 0.1rem!important;
     --p-form-field-border-radius: var(--p-border-radius-sm)!important;
     --p-menubar-border-color:transparent!important;
+    --p-panelmenu-panel-padding: 0.15rem 0.15rem!important;
     --p-panelmenu-panel-first-border-width:0px!important;
     --p-panelmenu-panel-border-width:0px!important;
     --p-panelmenu-panel-last-border-width:0px!important;
+    --p-panelmenu-submenu-indent: 0.1rem!important;
+    --p-breadcrumb-padding: 0.1rem!important;
     font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Inter,
       Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
       "Segoe UI Symbol";
-    font-size: 1.75em!important;
+    font-size: 14px;
     color: #3f5067!important;
   }
 .p-icon-wrapper {order: 1!important;margin-inline-start: auto!important; }
@@ -38,7 +42,7 @@ html, body {
 .p-datatable-sort-icon {
   padding-left: 2px!important;
 }
-/*
+
 .p-panelmenu-header-content {
   width: 100%!important;
 }
@@ -58,4 +62,3 @@ html, body {
   margin-left: auto!important;
   order: 2!important;
 }
-*/

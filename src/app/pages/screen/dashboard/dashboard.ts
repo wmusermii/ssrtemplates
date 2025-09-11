@@ -13,10 +13,11 @@ import { LocalstorageService } from '../../../guard/ssr/localstorage/localstorag
 import { Router } from '@angular/router';
 import { cloneDeep } from 'lodash';
 import { TableModule } from 'primeng/table';
+
 @Component({
   standalone: true,
   selector: 'app-dashboard',
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, DatePickerModule, ChipModule, DatetimeComponent, TableModule],
+  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, DatePickerModule, ChipModule, TableModule],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
@@ -43,7 +44,7 @@ export class Dashboard implements OnInit {
   starttime:string ="00:00:01"
   endtime:string ="00:00:01"
   value: string | undefined;
-  loading: boolean = true;
+  loading: boolean = false;
   totalSku: string = "0";
   totalStoreItem: string = "0";
   totalWarehouseItem: string = "0";
@@ -62,128 +63,10 @@ export class Dashboard implements OnInit {
     this.userInfo = this.ssrStorage.getItem("C_INFO");
     const sessionDate:any = this.ssrStorage.getItem("FETCHTIME")
     console.log("USER INFO ", this.userInfo);
+
     // this._refreshCountInvoices();
-    this._refreshCountSKU();
-    if (this.date && !sessionDate) {
-      this.currentDate = this.date.toLocaleDateString('en-GB'); // format dd/mm/yyyy
-      // Kalau mau jadi 11-08-2025
-      this.currentDate = this.currentDate.replace(/\//g, '-');
-      // Jam:Menit:Detik
-      this.endtime = this.date.toLocaleTimeString('en-GB'); // format HH:MM:SS
-    }else {
-      const arrayDate:string = sessionDate.split(",");
-      this.currentDate = this.date?.toLocaleDateString('en-GB'); // format dd/mm/yyyy
-      this.currentDate = this.currentDate?.replace(/\//g, '-');
-      if(this.currentDate === arrayDate[2]) this.currentDate = arrayDate[2];
-    }
-    this._lastFetchShopee();
   }
-  async _refreshCountInvoices() {
-    this.loading = true;
-    fetch('/v2/warehouse/get_resi_count', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
-      }
-    })
-      .then(res => {
-        console.log("Response dari API  /warehouse/get_resi_count", res);
-        if (!res.ok) throw new Error('get QShopee Gagal'); this.loading = false;
-        return res.json();
-      })
-      .then(data => {
-        console.log("Response dari API /warehouse/get_resi_count", data);
-        if (data.code === 20000) {
-          this.totalResi = data.data.invoiceQty;
-          this.invoicetotalStr = `Invoices : ${this.totalResi} pcs.`
-          // const dataRecordsTemp = cloneDeep(data.data);;
-          // this.totalSku = dataRecordsTemp; this.loading = false;
 
-        } else {
-          // this.listInvoices = [];
-          this.totalResi = 0;
-          this.invoicetotalStr = `Invoices : ${this.totalResi} pcs.`
-        }
-      })
-      .catch(err => {
-        this.loading = false;
-        console.log("Response Error Catch /warehouse/get_resi_count", err);
-      });
-  }
-  async _refreshCountSKU() {
-    this.loading = true;
-    fetch('/v2/warehouse/get_sku_count', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
-      }
-    })
-      .then(res => {
-        console.log("Response dari API  /warehouse/get_sku_count", res);
-        if (!res.ok) throw new Error('get QShopee Gagal'); this.loading = false;
-        return res.json();
-      })
-      .then(data => {
-        console.log("Response dari API /warehouse/get_sku_count", data);
-        if (data.code === 20000) {
-          // this.listInvoices = [];
-          this.totalSku = data.data.skuQty;
-          this.skutotal = `Sku : ${this.totalSku} items`
-          this.loadingUser = false;
-        } else {
-          // this.listInvoices = [];
-          this.totalSku = "0";
-          this.skutotal = `Sku : ${this.totalSku} items`
-          this.loadingUser = false;
-        }
-      })
-      .catch(err => {
-        this.loading = false;
-        console.log("Response Error Catch /warehouse/get_sku_count", err);
-      });
-  }
-  async _lastFetchShopee() {
-    this.loading = true;
-    fetch('/v2/shopee/get_qshopeetoday', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
-      }
-    })
-      .then(res => {
-        console.log("Response dari API  /v2/shopee/get_qshopeetoday", res);
-        if (!res.ok) throw new Error('get QShopee Gagal'); this.loading = false;
-        return res.json();
-      })
-      .then(async data => {
-        console.log("Response dari API /v2/shopee/get_qshopeetoday", data);
-        if (data.code === 20000) {
-          this.loading=false;
-          this.starttime = data.data.totime;
-          this.endtime = data.data.totime;
-          // let dateTmp= new Date();
-          // Jam:Menit:Detik
-          // this.endtime = dateTmp.toLocaleTimeString('en-GB'); // format HH:MM:SS
-          this.ssrStorage.setItem("FETCHTIME",`${this.starttime},${this.endtime},${this.currentDate}`);
-          this.disableBtn = false;
-          this.totalResi = data.data.totalresi;
-          this.invoicetotalStr = `Invoices : ${this.totalResi} pcs.`
-          await this._getViewPosProcess({id:data.data.id})
-
-        } else {
-          this.loading=false;
-          this.disableBtn = false;
-          this.QueriesDataPos=[];
-        }
-      })
-      .catch(err => {
-        this.loading = false;
-        console.log("Response Error Catch /warehouse/get_sku_count", err);
-      });
-  }
   async _popupShopee(){
     this.showGenerateDialog= true;
     let startArray:any = await this.ssrStorage.getItem("FETCHTIME");
@@ -226,10 +109,7 @@ export class Dashboard implements OnInit {
       .then(data => {
         console.log("Response dari API /shopee/gen_qshopeeCurrent 1", data);
         if (data.code === 20000) {
-          // const dataRecords = data.data;
-          // const dataRecordsTemp = cloneDeep(data.data);
           console.log("FETCH SETELAH GENERATE ");
-          this._lastFetchShopee();
           this.loading = false;
         } else {
           this.loading = false

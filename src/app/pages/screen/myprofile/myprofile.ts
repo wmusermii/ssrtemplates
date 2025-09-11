@@ -11,15 +11,19 @@ import { DatetimeComponent } from '../../../layouts/directive/datetime/datetime.
 import { LocalstorageService } from '../../../guard/ssr/localstorage/localstorage.service';
 import { CheckboxModule } from 'primeng/checkbox';
 import { PasswordModule } from 'primeng/password';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   standalone:true,
   selector: 'app-myprofile',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ButtonModule, InputTextModule, DatePickerModule, ChipModule, SelectModule, TableModule, DatetimeComponent,CheckboxModule,PasswordModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ButtonModule, InputTextModule, DatePickerModule, ChipModule, SelectModule, TableModule, CheckboxModule,PasswordModule, BreadcrumbModule],
   templateUrl: './myprofile.html',
   styleUrl: './myprofile.css'
 })
 export class Myprofile implements OnInit {
+  home: MenuItem | undefined;
+  breaditems: MenuItem[] | undefined;
   userInfo: any | undefined;
   loading = false;
   token: string | null | undefined = undefined;
@@ -42,6 +46,8 @@ export class Myprofile implements OnInit {
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
     console.log("USER INFO ", this.userInfo);
+    this.breaditems = [{ label: 'Privacy' }, { label: 'Profile' }];
+    this.home = { icon: 'pi pi-home', routerLink: '/' };
     if (this.userInfo) {
       this.profileForm.patchValue({
         iduser: this.userInfo.iduser ?? '',

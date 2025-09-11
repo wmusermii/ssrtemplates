@@ -13,8 +13,12 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './sidenavilayout.css'
 })
 export class Sidenavilayout {
+  user: {name: string;} | null = null;
   isSidebarOpen = true;
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
+  }
+  onUserChange(userData: {name: string}) {
+    this.user = userData;
   }
 }

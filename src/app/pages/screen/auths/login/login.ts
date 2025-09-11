@@ -52,7 +52,7 @@ export class Login {
         if(data.code === 20000) {
           this.ssrStorage.setItem('token', data.data.token);
           this.ssrStorage.setItem('C_INFO', data.data.userinfo);
-          this.router.navigate(['/tasklist']);
+          this.router.navigate(['/dashboard']);
         } else {
           this.errorMessage = {error:true, severity:"error", message:`${data.message}`, icon:"pi pi-times"}
         }

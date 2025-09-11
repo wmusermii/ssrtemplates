@@ -1,7 +1,8 @@
-<header class="pt-4 max-w-screen-xl mx-auto px-2 flex items-start justify-between">
-  <h1 class="text-lg font-bold m-0 p-0">{{userInfo.fullname}}</h1>
-</header>
+
 <main class="pt-2 max-w-screen-xl mx-auto px-2 mb-6">
+  <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
+    <p-breadcrumb [model]="breaditems" [home]="home" />
+  </div>
   <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="w-full space-y-4 bg-white p-4 rounded shadow">
 
   <!-- User ID -->

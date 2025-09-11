@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Detailinvoice } from './detailinvoice';
+import { Rolemanagement } from './rolemanagement';
 
-describe('Detailinvoice', () => {
-  let component: Detailinvoice;
-  let fixture: ComponentFixture<Detailinvoice>;
+describe('Rolemanagement', () => {
+  let component: Rolemanagement;
+  let fixture: ComponentFixture<Rolemanagement>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Detailinvoice]
+      imports: [Rolemanagement]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Detailinvoice);
+    fixture = TestBed.createComponent(Rolemanagement);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

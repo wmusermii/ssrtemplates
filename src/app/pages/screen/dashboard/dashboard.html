@@ -1,25 +1,21 @@
-<header class="pt-4 max-w-screen-xl mx-auto px-2 flex items-start justify-between">
-  <!-- <pre>{{userInfo | json }}</pre> -->
+<!-- <header class="pt-4 max-w-screen-xl mx-auto px-2 flex items-start justify-between">
   <h1 class="text-lg font-bold m-0 p-0">{{userInfo.fullname}} ({{userInfo.groupname}})</h1>
-  <app-datetime></app-datetime>
-</header>
+</header> -->
 <main class="pt-2 max-w-screen-xl mx-auto px-2 mb-6">
-  <div class="w-full pt-2 flex items-center gap-2 flex-wrap px-2 mb-6">
+  <!-- <div class="w-full pt-2 flex items-center gap-2 flex-wrap px-2 mb-6">
     <p-chip [label]="skutotal" icon="pi pi-objects-column" class="border border-solid border-gray-300"
       styleClass="custom-chip" />
     <p-chip [label]="invoicetotalStr" icon="pi pi-receipt" class="border border-solid border-gray-300"
       styleClass="custom-chip" />
-  </div>
+  </div> -->
   <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
-    <h3 class="text-xl text-gray-400 font-medium p-0 m-0">Next Fetch {{currentDate}} : {{starttime}} - {{endtime}}
-      &nbsp; &nbsp;</h3>
+    <h3 class="text-xl text-gray-400 font-medium p-0 m-0">Welcome to NDP Proxy {{currentDate}}</h3>
     <div class="md:items-center space-y-1 md:space-y-0 md:space-x-2">
-      <button pButton type="submit" (click)="_popupShopee()" class="w-full" [disabled]="disableBtn"
-        label="Generate Shopee Invoice"></button>
+      <!-- <button pButton type="submit" (click)="_popupShopee()" class="w-full" [disabled]="disableBtn"
+        label="Generate Shopee Invoice"></button> -->
     </div>
   </div>
-  <div class="w-full bg-white py-3 px-5 rounded shadow mb-3 md:items-center">
-
+  <!-- <div class="w-full bg-white py-3 px-5 rounded shadow mb-3 md:items-center">
     <p-table [value]="QueriesDataPos"
     [paginator]="true"
     paginatorPosition="both"
@@ -61,42 +57,7 @@
       </ng-template>
     </p-table>
 
-  </div>
-
-
-
-  <div *ngIf="showGenerateDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white rounded-xl shadow-lg w-11/12 max-w-md p-6">
-      <div class="flex items-start gap-4">
-        <!-- Icon Section -->
-        <div class="pt-1">
-          <svg class="w-10 h-10 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd"
-              d="M8.257 3.099c.366-.774 1.42-.774 1.786 0l6.518 13.8A1 1 0 0 1 15.618 18H4.382a1 1 0 0 1-.943-1.101l6.518-13.8zM11 14a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm-1-2a.75.75 0 0 0 .75-.75V8a.75.75 0 0 0-1.5 0v3.25c0 .414.336.75.75.75z"
-              clip-rule="evenodd" />
-          </svg>
-        </div>
-        <!-- Text Section -->
-        <div class="flex-1">
-          <h2 class="text-lg font-semibold text-gray-800 mb-2">Inquery From Shopee</h2>
-          <p class="text-gray-700">
-            You are about to collect Shopee order at,
-            <strong>{{ currentDate }}</strong> on
-            <strong>{{ starttime }}</strong> to
-            <strong>{{ endtime }}</strong>.
-            <br />
-            And this will remove append data generated before! <br />
-            Please dont close or refresh the browser until its finished.
-          </p>
-        </div>
-      </div>
-      <!-- Button Section -->
-      <div class="flex justify-center gap-4 mt-6">
-        <p-button label="Yes, Generate" severity="warn" (click)="_processFetchingShopee()"></p-button>
-        <p-button label="Cancel" severity="secondary" (click)="_cancelFetchingShopee()"></p-button>
-      </div>
-    </div>
-  </div>
+  </div> -->
   <div *ngIf="loading"
     class="absolute inset-0 flex items-center justify-center rounded-md z-50 bg-[rgba(255,255,255,0.5)]">
     <div role="status">

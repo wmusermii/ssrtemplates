@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LocalstorageService } from '../../../guard/ssr/localstorage/localstorage.service';
 import { Router, RouterModule } from '@angular/router';
@@ -26,6 +26,10 @@ export class Sidebar implements OnInit, OnDestroy {
   message: any = { title: "Expired Session", icon: "pi pi-exclamation-circle", message: "EXP token please login again." }
   // Simulasi status login user (ganti sesuai logika aplikasi Anda)
   isUserLoggedIn = false;
+  user = {
+    name: 'undefined'
+  };
+  @Output() userChange = new EventEmitter<{name: string}>();
   constructor(private router: Router, private ssrStorage: LocalstorageService) { }
   ngOnInit(): void {
     this.token = this.ssrStorage.getItem('token')
@@ -60,41 +64,63 @@ export class Sidebar implements OnInit, OnDestroy {
         }
         return res.json();
       })
-      .then(data => {
+      .then(async data => {
         console.log("Response dari API /auth/attrb ", data);
         if (data.code === 20000) {
+          this.loading=false;
+          this.user={name:data.data.fullname};
+          this.userChange.emit(this.user);
           const datamenuString = data.data.menublob;
           if (datamenuString) {
             this.listMenu = JSON.parse(datamenuString);
-            this.replaceLogoutWithCommand.call(this,this.listMenu);
+            this.replaceLogoutWithCommand(this.listMenu);
+            this.expandAllPanelMenu(this.listMenu);
           }
         } else {
           this.listMenu = [];
         }
       })
       .catch(err => {
+        this.loading=false;
         console.log("Response Error Catch /auth/attrb", err);
         this.showConfirmDialog = true;
       });
   }
   // helper recursive function
-  async replaceLogoutWithCommand(items: any[]) {
-    for (const item of items) {
-      if (item.label === 'Logout') {
-        delete item.routerLink;
-        item.command = () => {
-          console.log('Logout clicked');
-          this.openLogoutDialog();
-          // Panggil method logout
-          // this.logout(); // pastikan this mengacu ke komponen (lihat penjelasan di bawah)
-        };
-      }
+  replaceLogoutWithCommand(items: any[]) {
+  for (const item of items) {
+    if (item.label === 'Logout') {
+      // RouterLink dummy supaya PrimeNG tetap render icon
+      item.routerLink = '/';
 
-      if (item.items) {
-        this.replaceLogoutWithCommand(item.items);
-      }
+      // Tetapkan command tanpa event
+      item.command = () => {
+        this.openLogoutDialog(); // jalankan dialog logout
+      };
+
+      // Pastikan icon tetap ada
+      item.icon = item.icon || 'pi pi-sign-out';
+      console.log('LOGOUT ITEM:', item);
+    }
+
+    // Recursive untuk submenu
+    if (item.items && item.items.length > 0) {
+      this.replaceLogoutWithCommand(item.items);
     }
   }
+
+  // Trigger re-render menu
+  this.listMenu = [...this.listMenu];
+}
+expandAllPanelMenu(items: any[]) {
+  for (const item of items) {
+    item.expanded = true; // set expanded
+    if (item.items && item.items.length > 0) {
+      this.expandAllPanelMenu(item.items); // recursive untuk submenu
+    }
+  }
+}
+
   openLogoutDialog() {
     console.log("LOGING OUT");
     this.showLogoutDialog = true;
