@@ -70,6 +70,8 @@ export class Rolemanagement implements OnInit {
             if (data.code === 20000) {
               // this.showProcedPostDialog = true;
               const dataRecordsTemp = cloneDeep(data.data);
+              console.log("HARUSNYA ",data.data);
+
               console.log("Data View ", dataRecordsTemp.data);
               this.roles = dataRecordsTemp.data;
               this.loading=false;
