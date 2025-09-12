@@ -135,23 +135,6 @@ export async function getQShopeeToday(req: Request, res: Response, next: NextFun
   }
 }
 
-export async function getPackageJobAvailable(req: Request, res: Response, next: NextFunction) {
-  try {
-    console.log("####################################### getPackageJobAvailable");
-    const userInfo: any = req.userInfo;
-    const packageResult = await apiService.getPackagesAvailable(userInfo);
-    if (packageResult.code === 20000 && packageResult.data.length > 0) {
-      await ResponseHelper.send(res, packageResult); return;
-    } else {
-      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
-      return;
-    }
-  } catch (error) {
-    logError("Error api.controller : ", error)
-    // next(error);
-    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
-  }
-}
 export async function checkPackageTaken(req: Request, res: Response, next: NextFunction) {
   try {
     console.log("####################################### getItemsInPackage");
@@ -337,23 +320,23 @@ export async function getAllSKUAvailable(req: Request, res: Response, next: Next
     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 }
-export async function getAllWarhouseAvailable(req: Request, res: Response, next: NextFunction) {
-  try {
-    console.log("####################################### getAllWarhouseAvailable");
-    const userInfo: any = req.userInfo;
-    const packageResult = await apiService.getAllWarehouses();
-    if (packageResult.code === 20000) {
-      await ResponseHelper.send(res, packageResult); return;
-    } else {
-      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
-      return;
-    }
-  } catch (error) {
-    logError("Error api.controller : ", error)
-    // next(error);
-    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
-  }
-}
+// export async function getAllWarhouseAvailable(req: Request, res: Response, next: NextFunction) {
+//   try {
+//     console.log("####################################### getAllWarhouseAvailable");
+//     const userInfo: any = req.userInfo;
+//     const packageResult = await apiService.getAllWarehouses();
+//     if (packageResult.code === 20000) {
+//       await ResponseHelper.send(res, packageResult); return;
+//     } else {
+//       await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+//       return;
+//     }
+//   } catch (error) {
+//     logError("Error api.controller : ", error)
+//     // next(error);
+//     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+//   }
+// }
 export async function getAllStockopname(req: Request, res: Response, next: NextFunction) {
   try {
     console.log("####################################### getAllStockopname");
@@ -529,6 +512,24 @@ export async function sendingPrinting(req: Request, res: Response, next: NextFun
       return;
     } else {
       await ResponseHelper.send(res, ApiResponse.successNoData(orders, "Finish printing label"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    // next(error);
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+
+export async function getRolesAvailable(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### getRolesAvailable");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.getRolesService(userInfo);
+    if (packageResult.code === 20000 && packageResult.data.length > 0) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
       return;
     }
   } catch (error) {

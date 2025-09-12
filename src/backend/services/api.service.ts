@@ -7,13 +7,15 @@ import { logInfo } from "../utils/logger";
 import { ShopeeService } from "./shopee/shopee.service";
 import nodemailer from 'nodemailer';
 import { promises as fs } from 'fs';
-import { WarehouseRepository } from "../repositories/warehouse.repository";
+// import { WarehouseRepository } from "../repositories/warehouse.repository";
 import { OpnameRepository } from "../repositories/opname.repository";
 import { Request } from "express";
+import { RoleRepository } from "../repositories/role.repository";
 export class ApiService {
   private shopeeRepo = new ShopeeRepository();
   private userRepo = new UserRepository();
-  private warehouseRepo = new WarehouseRepository();
+  // private warehouseRepo = new WarehouseRepository();
+  private roleRepo = new RoleRepository();
   private stockopnameRepo = new OpnameRepository();
   private apiShopeeService = new ShopeeService();//Jangan Di hapus dahulu
   async qShopeeInsert(payload: any, userinfo: any) {
@@ -155,18 +157,18 @@ export class ApiService {
     return ApiResponse.successNoData(shopeeResult, "Unable to get data!");
   }
 
-  async getAllWarehouses() {
-    const shopeeResult = await this.warehouseRepo.findAllWarehouse();
-    if (!shopeeResult) return ApiResponse.successNoData(shopeeResult, "Unable to get data!");
-    //################## Berhasil Isi #######################
-    return ApiResponse.success(shopeeResult, "Records found");
-  }
-  async getViewWarehousesById(warehouse_id:string) {
-    const shopeeResult = await this.warehouseRepo.findWarehouseById(warehouse_id);
-    if (!shopeeResult) return ApiResponse.successNoData(shopeeResult, "Unable to get data!");
-    //################## Berhasil Isi #######################
-    return ApiResponse.success(shopeeResult, "Records found");
-  }
+  // async getAllWarehouses() {
+  //   const shopeeResult = await this.warehouseRepo.findAllWarehouse();
+  //   if (!shopeeResult) return ApiResponse.successNoData(shopeeResult, "Unable to get data!");
+  //   //################## Berhasil Isi #######################
+  //   return ApiResponse.success(shopeeResult, "Records found");
+  // }
+  // async getViewWarehousesById(warehouse_id:string) {
+  //   const shopeeResult = await this.warehouseRepo.findWarehouseById(warehouse_id);
+  //   if (!shopeeResult) return ApiResponse.successNoData(shopeeResult, "Unable to get data!");
+  //   //################## Berhasil Isi #######################
+  //   return ApiResponse.success(shopeeResult, "Records found");
+  // }
 
 
  async getAllOpname() {
@@ -446,9 +448,12 @@ export class ApiService {
     const selectInvoiceUpdate = await this.shopeeRepo.copyInvoiceToBulkData(ordersToDelete);
     return ApiResponse.success(hasilprint, "Printing sent successfully");
   }
-
-
-
+  async getRolesService(userinfo: any) {
+    const roleResult = await this.roleRepo.findAllRole();
+    if (!roleResult) return ApiResponse.successNoData(roleResult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(roleResult, "Records found");
+  }
   private toDatetimeString(unix: number): string {
     const date = new Date(unix * 1000);
     const pad = (n: number) => String(n).padStart(2, '0');
