@@ -12,7 +12,7 @@ import { TableModule } from 'primeng/table';
 import { LocalstorageService } from '../../../../guard/ssr/localstorage/localstorage.service';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash-es/cloneDeep';
 @Component({
   standalone:true,
   selector: 'app-rolemanagement',
