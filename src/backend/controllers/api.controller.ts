@@ -538,3 +538,51 @@ export async function getRolesAvailable(req: Request, res: Response, next: NextF
     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 }
+export async function addRoles(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### addRoles");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.addRoleService(userInfo,req.body);
+    if (packageResult.code === 20000) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function updRoles(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### updRoles");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.updRoleService(userInfo,req.body);
+    if (packageResult.code === 20000) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function delRoles(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### delRoles");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.dellRoleService(userInfo,req.body);
+    if (packageResult.code === 20000) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}

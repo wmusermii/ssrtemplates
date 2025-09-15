@@ -83,6 +83,11 @@
 
       <!-- Login form -->
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        <div [hidden]="!errorMessage.error" class="mb-2">
+          <p-message [severity]="errorMessage.severity" [text]="errorMessage.message" [icon]="errorMessage.icon"
+            styleClass="p-message p-component block">
+          </p-message>
+        </div>
         <!-- Email -->
         <div class="relative">
           <div class="flex flex-col mb-2">

@@ -448,12 +448,43 @@ export class ApiService {
     const selectInvoiceUpdate = await this.shopeeRepo.copyInvoiceToBulkData(ordersToDelete);
     return ApiResponse.success(hasilprint, "Printing sent successfully");
   }
+
   async getRolesService(userinfo: any) {
     const roleResult = await this.roleRepo.findAllRole();
     if (!roleResult) return ApiResponse.successNoData(roleResult, "Unable to get data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(roleResult, "Records found");
   }
+  async getRoleByIdService(userinfo: any, payload:any) {
+    const roleResult = await this.roleRepo.findAllRoleById(payload.idRole);
+    if (!roleResult) return ApiResponse.successNoData(roleResult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(roleResult, "Records found");
+  }
+  async addRoleService(userinfo: any, payload:any) {
+    const roleResult = await this.roleRepo.addRole(payload);
+    if (!roleResult) return ApiResponse.successNoData(roleResult, "Unable to add data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(roleResult, "Record added");
+  }
+  async updRoleService(userinfo: any, payload:any) {
+    const idRoleOld = payload.idRoleOld;
+    delete payload.idRoleOld;
+    const roleResult = await this.roleRepo.updRole(payload,idRoleOld);
+    if (!roleResult) return ApiResponse.successNoData(roleResult, "Unable to update data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(roleResult, "Record updated");
+  }
+  async dellRoleService(userinfo: any, payload:any) {
+    const roleResult = await this.roleRepo.delRole(payload);
+    if (!roleResult) return ApiResponse.successNoData(roleResult, "Unable to delete data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(roleResult, "Record deleted");
+  }
+
+
+
+
   private toDatetimeString(unix: number): string {
     const date = new Date(unix * 1000);
     const pad = (n: number) => String(n).padStart(2, '0');

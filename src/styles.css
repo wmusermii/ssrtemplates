@@ -26,6 +26,7 @@ html, body {
     --p-panelmenu-panel-last-border-width:0px!important;
     --p-panelmenu-submenu-indent: 0.1rem!important;
     --p-breadcrumb-padding: 0.1rem!important;
+    --p-datatable-body-cell-padding: 0.25rem 0.6rem!important;
     font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Inter,
       Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
       "Segoe UI Symbol";
@@ -61,4 +62,10 @@ html, body {
 .p-panelmenu .p-menuitem .p-panelmenu-icon {
   margin-left: auto!important;
   order: 2!important;
+}
+
+.label-required::after {
+  content: " *";
+  color: red;
+  font-weight: bold;
 }
