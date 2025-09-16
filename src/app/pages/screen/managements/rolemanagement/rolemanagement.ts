@@ -13,10 +13,11 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import cloneDeep from 'lodash-es/cloneDeep';
 import { MessageModule } from 'primeng/message';
+import { TooltipModule } from 'primeng/tooltip';
 @Component({
   standalone:true,
   selector: 'app-rolemanagement',
-  imports: [CommonModule, FormsModule,ReactiveFormsModule, ButtonModule, InputGroupModule,InputGroupAddonModule,InputTextModule,TextareaModule, TableModule, BreadcrumbModule, MessageModule],
+  imports: [CommonModule,TooltipModule, FormsModule,ReactiveFormsModule, ButtonModule, InputGroupModule,InputGroupAddonModule,InputTextModule,TextareaModule, TableModule, BreadcrumbModule, MessageModule],
   templateUrl: './rolemanagement.html',
   styleUrl: './rolemanagement.css'
 })

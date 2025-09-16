@@ -52,7 +52,7 @@
         <td>{{rowData.roleName}}</td>
         <td>{{rowData.roleDescription}}</td>
         <td class="w-16 text-center">
-          <p-button icon="pi pi-trash" [rounded]="true" [text]="true" (onClick)="_delRole(rowData)" severity="danger" />
+          <p-button pTooltip="Delete data" tooltipPosition="top" icon="pi pi-trash" [rounded]="true" [text]="true" (onClick)="_delRole(rowData)" severity="danger" />
         </td>
       </tr>
     </ng-template>

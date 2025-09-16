@@ -10,10 +10,11 @@ import { TableModule } from 'primeng/table';
 import { LocalstorageService } from '../../../../guard/ssr/localstorage/localstorage.service';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { TooltipModule } from 'primeng/tooltip';
 @Component({
   standalone:true,
   selector: 'app-usermanagement',
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, DatePickerModule, ChipModule, TableModule, BreadcrumbModule],
+  imports: [CommonModule,TooltipModule, FormsModule, ButtonModule, InputTextModule, DatePickerModule, ChipModule, TableModule, BreadcrumbModule],
   templateUrl: './usermanagement.html',
   styleUrl: './usermanagement.css'
 })

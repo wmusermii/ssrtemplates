@@ -50,7 +50,7 @@
         <td class="!w-48 text-center">{{rowData.updated_at}}</td>
         <td class="w-16 text-center">
           @if(rowData.idMenu > 1) {
-            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" (onClick)="_delMenu(rowData)" severity="danger" />
+            <p-button pTooltip="Delete data" tooltipPosition="top" icon="pi pi-trash" [rounded]="true" [text]="true" (onClick)="_delMenu(rowData)" severity="danger" />
           }
         </td>
       </tr>

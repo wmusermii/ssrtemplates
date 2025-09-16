@@ -12,12 +12,14 @@ import { OpnameRepository } from "../repositories/opname.repository";
 import { Request } from "express";
 import { RoleRepository } from "../repositories/role.repository";
 import { MenuRepository } from "../repositories/menu.repository";
+import { GroupRepository } from "../repositories/group.repository";
 export class ApiService {
   private shopeeRepo = new ShopeeRepository();
   private userRepo = new UserRepository();
   // private warehouseRepo = new WarehouseRepository();
   private roleRepo = new RoleRepository();
   private menuRepo = new MenuRepository();
+  private groupRepo = new GroupRepository();
   private stockopnameRepo = new OpnameRepository();
   private apiShopeeService = new ShopeeService();//Jangan Di hapus dahulu
   async qShopeeInsert(payload: any, userinfo: any) {
@@ -521,6 +523,45 @@ export class ApiService {
     //################## Berhasil Isi #######################
     return ApiResponse.success(menuResult, "Record deleted");
   }
+
+  async getGroupsService(userinfo: any) {
+    const groupResult = await this.groupRepo.findAllGroup();
+    if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(groupResult, "Records found");
+  }
+  async getGroupByIdService(userinfo: any, payload:any) {
+    const groupResult = await this.groupRepo.findAllGroupById(payload.idRole);
+    if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(groupResult, "Records found");
+  }
+  async addGroupService(userinfo: any, payload:any) {
+    payload = {...payload, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
+    const groupResult = await this.groupRepo.addGroup(payload);
+    if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to add data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(groupResult, "Record added");
+  }
+  async updGroupService(userinfo: any, payload:any) {
+    payload = {...payload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{updated_by:userinfo.iduser}}
+    const groupResult = await this.groupRepo.updGroup(payload);
+    if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to update data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(groupResult, "Record updated");
+  }
+  async dellGroupService(userinfo: any, payload:any) {
+    const groupResult = await this.groupRepo.delGroup(payload);
+    if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to delete data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(groupResult, "Record deleted");
+  }
+
+
+
+
+
+
   private toDatetimeString(unix: number): string {
     const date = new Date(unix * 1000);
     const pad = (n: number) => String(n).padStart(2, '0');

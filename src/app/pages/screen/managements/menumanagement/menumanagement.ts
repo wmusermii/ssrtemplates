@@ -16,10 +16,12 @@ import { TextareaModule } from 'primeng/textarea';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { SelectModule } from 'primeng/select';
+import { TooltipModule } from 'primeng/tooltip';
+
 @Component({
   standalone:true,
   selector: 'app-menumanagement',
-  imports: [CommonModule, FormsModule,ReactiveFormsModule, ButtonModule, InputGroupModule,InputGroupAddonModule,InputTextModule,TextareaModule, TableModule, BreadcrumbModule, MessageModule,SelectModule],
+  imports: [CommonModule,TooltipModule, FormsModule,ReactiveFormsModule, ButtonModule, InputGroupModule,InputGroupAddonModule,InputTextModule,TextareaModule, TableModule, BreadcrumbModule, MessageModule,SelectModule],
   templateUrl: './menumanagement.html',
   styleUrl: './menumanagement.css'
 })
