@@ -11,12 +11,16 @@ const apiService = new ApiService();
 export async function login(req: Request, res: Response, next: NextFunction) {
   const { credential } = req.body;
   try {
-    // console.log("CREDENTIAL : ", credential);
     const decoded = Buffer.from(credential, 'base64').toString('utf-8');
-  //  console.log("CREDENTIAL DECODED : ", decoded);
     const [username, password] = decoded.split(':');
     const user = await authService.login(username, password);
-    const data:any = user.data;
+    let dataTemp:any = user.data;
+    const data:any = {
+      ...dataTemp,
+      ua: req.headers['user-agent'],
+      ip: req.ip
+    }
+
     if(user.code === 20000) {
       const token = await EncryptDecryptJwt.generateToken(data);
       const uInfo = JSON.parse(JSON.stringify(data)); // agar data tidak hilang

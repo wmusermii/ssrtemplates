@@ -36,7 +36,10 @@ export class Login {
     const credential = btoa(`${objPayload.username}:${objPayload.password}`);
     fetch('/v2/auth/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-client': 'angular-ssr'
+      },
       body: JSON.stringify({ credential })
     })
       .then(res => {

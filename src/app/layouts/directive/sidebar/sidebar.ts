@@ -49,7 +49,8 @@ export class Sidebar implements OnInit, OnDestroy {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
+        'Authorization': `Bearer ${this.token}`,
+        'x-client': 'angular-ssr'
       }
     })
       .then(async res => {

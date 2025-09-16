@@ -26,6 +26,19 @@ export async function authBearerMiddleware(req: Request, res: Response, next: Ne
       logWarn("Invalid or expired token");
       return ResponseHelper.send(res, ApiResponse.invalidToken("Invalid or expired token"));
     }
+    //################ Check Lagi di akses dari mana
+    const ua = req.headers['user-agent'];
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    if (decoded.ua !== ua || decoded.ip !== ip) {
+      return ResponseHelper.send(res, ApiResponse.serviceUnauthorised("Token misuse detected"));
+    }
+    //################ Check X-CLIENT ########
+    const clientHeader = req.headers['x-client'];
+    console.log("MIDDLE WARE X CLIENT ", clientHeader);
+    if (clientHeader !== 'angular-ssr') {
+      return ResponseHelper.send(res, ApiResponse.serviceUnauthorised("Invalid client"));
+    }
+
     (req as any).userInfo = decoded;// Simpan user ke request agar bisa digunakan di handler berikutnya
     next();
   } catch (error) {

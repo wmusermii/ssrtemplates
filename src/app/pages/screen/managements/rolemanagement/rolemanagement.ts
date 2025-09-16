@@ -38,6 +38,7 @@ export class Rolemanagement implements OnInit {
   selectedRole: RoleField = {};
   showDetailForm:any = {show:false, action:"add"};
   showDetailDelete:boolean = false;
+  showErrorPage:any = {show:false, message:"undefined"};
   errorMessage:any = {error:false, severity:"error", message:"ini test", icon:"pi pi-exclamation-circle"};
   roleForm = new FormGroup({
       idRole: new FormControl('', [Validators.required]),
@@ -71,12 +72,16 @@ export class Rolemanagement implements OnInit {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.token}`
+            'Authorization': `Bearer ${this.token}`,
+            'x-client': 'angular-ssr'
           }
         })
           .then(res => {
             console.log("Response dari API  /v2/admin/get_roles", res);
-            if (!res.ok) throw new Error('get QShopee Gagal');
+            // if (!res.ok) throw new Error('get get_roles Gagal');
+            // if (!res.ok){
+            //   this.showErrorPage = {show:true, message:res}
+            // }
             return res.json();
           })
           .then(data => {
@@ -93,6 +98,7 @@ export class Rolemanagement implements OnInit {
               this.roles = [];
               this.totalRoles = this.roles.length;
               this.loading=false;
+              this.showErrorPage = {show:true, message:data.message}
             }
           })
           .catch(err => {
@@ -171,7 +177,8 @@ export class Rolemanagement implements OnInit {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
+        'Authorization': `Bearer ${this.token}`,
+        'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
     })
@@ -206,14 +213,15 @@ export class Rolemanagement implements OnInit {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
+        'Authorization': `Bearer ${this.token}`,
+        'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
     })
       .then(res => {
         console.log("Response dari API ", res);
         // logInfo
-        if (!res.ok) throw new Error('Error add data');
+        if (!res.ok) throw new Error('Error update data');
         return res.json();
       })
       .then(data => {
@@ -238,7 +246,8 @@ export class Rolemanagement implements OnInit {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
+        'Authorization': `Bearer ${this.token}`,
+        'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
     })

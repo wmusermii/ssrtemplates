@@ -135,25 +135,25 @@ export async function getQShopeeToday(req: Request, res: Response, next: NextFun
   }
 }
 
-export async function checkPackageTaken(req: Request, res: Response, next: NextFunction) {
-  try {
-    console.log("####################################### getItemsInPackage");
-    const { order_sn } = req.body;
-    const userInfo: any = req.userInfo;
-    const payload = { order_sn: order_sn }
-    const packageResult = await apiService.getPackagesIstaken(payload);
-    if (packageResult.code === 20000 && packageResult.data.length > 0) {
-      await ResponseHelper.send(res, packageResult); return;
-    } else {
-      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
-      return;
-    }
-  } catch (error) {
-    logError("Error api.controller : ", error)
-    // next(error);
-    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
-  }
-}
+// export async function checkPackageTaken(req: Request, res: Response, next: NextFunction) {
+//   try {
+//     console.log("####################################### getItemsInPackage");
+//     const { order_sn } = req.body;
+//     const userInfo: any = req.userInfo;
+//     const payload = { order_sn: order_sn }
+//     const packageResult = await apiService.getPackagesIstaken(payload);
+//     if (packageResult.code === 20000 && packageResult.data.length > 0) {
+//       await ResponseHelper.send(res, packageResult); return;
+//     } else {
+//       await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+//       return;
+//     }
+//   } catch (error) {
+//     logError("Error api.controller : ", error)
+//     // next(error);
+//     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+//   }
+// }
 export async function getQShopeeAttribute(req: Request, res: Response, next: NextFunction) {
   try {
     console.log("####################################### getQShopeeAttribute");
@@ -188,63 +188,63 @@ export async function updateQShopeeAttribute(req: Request, res: Response, next: 
     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 }
-export async function getItemsInPackage(req: Request, res: Response, next: NextFunction) {
-  try {
-    console.log("####################################### getItemsInPackage");
-    const { order_sn } = req.body;
-    const userInfo: any = req.userInfo;
-    const payload = { order_sn: order_sn }
-    const packageResult = await apiService.getItemInPackagesAvailable(payload, userInfo);
-    if (packageResult.code === 20000 && packageResult.data.length > 0) {
-      await ResponseHelper.send(res, packageResult); return;
-    } else {
-      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
-      return;
-    }
-  } catch (error) {
-    logError("Error api.controller : ", error)
-    // next(error);
-    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
-  }
-}
-export async function updateItemsInPackage(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { id_q_shopee, order_sn, item_id } = req.body;
-    const userInfo: any = req.userInfo;
-    const payload = { id_q_shopee: id_q_shopee, order_sn: order_sn, item_id: item_id }
-    // console.log("####################################### updateItemsInPackage ", payload);
-    const packageResult = await apiService.updateItemInPackagesAvailable(payload, userInfo);
-    if (packageResult.code === 20000 && packageResult.data.length > 0) {
-      await ResponseHelper.send(res, packageResult); return;
-    } else {
-      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
-      return;
-    }
-  } catch (error) {
-    logError("Error api.controller : ", error)
-    // next(error);
-    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
-  }
-}
+// export async function getItemsInPackage(req: Request, res: Response, next: NextFunction) {
+//   try {
+//     console.log("####################################### getItemsInPackage");
+//     const { order_sn } = req.body;
+//     const userInfo: any = req.userInfo;
+//     const payload = { order_sn: order_sn }
+//     const packageResult = await apiService.getItemInPackagesAvailable(payload, userInfo);
+//     if (packageResult.code === 20000 && packageResult.data.length > 0) {
+//       await ResponseHelper.send(res, packageResult); return;
+//     } else {
+//       await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+//       return;
+//     }
+//   } catch (error) {
+//     logError("Error api.controller : ", error)
+//     // next(error);
+//     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+//   }
+// }
+// export async function updateItemsInPackage(req: Request, res: Response, next: NextFunction) {
+//   try {
+//     const { id_q_shopee, order_sn, item_id } = req.body;
+//     const userInfo: any = req.userInfo;
+//     const payload = { id_q_shopee: id_q_shopee, order_sn: order_sn, item_id: item_id }
+//     // console.log("####################################### updateItemsInPackage ", payload);
+//     const packageResult = await apiService.updateItemInPackagesAvailable(payload, userInfo);
+//     if (packageResult.code === 20000 && packageResult.data.length > 0) {
+//       await ResponseHelper.send(res, packageResult); return;
+//     } else {
+//       await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+//       return;
+//     }
+//   } catch (error) {
+//     logError("Error api.controller : ", error)
+//     // next(error);
+//     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+//   }
+// }
 
-export async function viewQShopeePosItem(req: Request, res: Response, next: NextFunction) {
-  try {
-    console.log("####################################### viewQShopeePosItem");
-    const { id } = req.body;
-    const userInfo: any = req.userInfo;
-    const viewResult = await apiService.viewShopeePosByID({ id: id }, userInfo);
-    if (viewResult.code === 20000 && viewResult.data.length > 0) {
-      await ResponseHelper.send(res, ApiResponse.success(viewResult, "Success")); return;
-    } else {
-      await ResponseHelper.send(res, ApiResponse.successNoData([], "No available data"));
-      return;
-    }
-  } catch (error) {
-    logError("Error api.controller : ", error)
-    // next(error);
-    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
-  }
-}
+// export async function viewQShopeePosItem(req: Request, res: Response, next: NextFunction) {
+//   try {
+//     console.log("####################################### viewQShopeePosItem");
+//     const { id } = req.body;
+//     const userInfo: any = req.userInfo;
+//     const viewResult = await apiService.viewShopeePosByID({ id: id }, userInfo);
+//     if (viewResult.code === 20000 && viewResult.data.length > 0) {
+//       await ResponseHelper.send(res, ApiResponse.success(viewResult, "Success")); return;
+//     } else {
+//       await ResponseHelper.send(res, ApiResponse.successNoData([], "No available data"));
+//       return;
+//     }
+//   } catch (error) {
+//     logError("Error api.controller : ", error)
+//     // next(error);
+//     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+//   }
+// }
 
 export async function getCountInvoicesAvailable(req: Request, res: Response, next: NextFunction) {
   try {
@@ -575,6 +575,88 @@ export async function delRoles(req: Request, res: Response, next: NextFunction) 
     console.log("####################################### delRoles");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.dellRoleService(userInfo,req.body);
+    if (packageResult.code === 20000) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function getIcons(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### getIcons");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.getIconService(userInfo);
+    if (packageResult.code === 20000 && packageResult.data.length > 0) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    // next(error);
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function getMenusAvailable(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### getMenusAvailable");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.getMenusService(userInfo);
+    if (packageResult.code === 20000 && packageResult.data.length > 0) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    // next(error);
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function addMenus(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### addMenus");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.addMenuService(userInfo,req.body);
+    if (packageResult.code === 20000) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function updMenus(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### updMenus");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.updMenuService(userInfo,req.body);
+    if (packageResult.code === 20000) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function delMenus(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### delMenus");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.dellMenuService(userInfo,req.body);
     if (packageResult.code === 20000) {
       await ResponseHelper.send(res, packageResult); return;
     } else {

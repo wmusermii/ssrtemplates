@@ -31,7 +31,6 @@ export class EncryptDecryptJwt {
   }
 
   static async generateToken(userData: any): Promise<string> {
-
     return await new SignJWT(userData)
       .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
       .setIssuedAt()

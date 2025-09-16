@@ -11,11 +11,13 @@ import { promises as fs } from 'fs';
 import { OpnameRepository } from "../repositories/opname.repository";
 import { Request } from "express";
 import { RoleRepository } from "../repositories/role.repository";
+import { MenuRepository } from "../repositories/menu.repository";
 export class ApiService {
   private shopeeRepo = new ShopeeRepository();
   private userRepo = new UserRepository();
   // private warehouseRepo = new WarehouseRepository();
   private roleRepo = new RoleRepository();
+  private menuRepo = new MenuRepository();
   private stockopnameRepo = new OpnameRepository();
   private apiShopeeService = new ShopeeService();//Jangan Di hapus dahulu
   async qShopeeInsert(payload: any, userinfo: any) {
@@ -481,10 +483,44 @@ export class ApiService {
     //################## Berhasil Isi #######################
     return ApiResponse.success(roleResult, "Record deleted");
   }
-
-
-
-
+  async getIconService(userinfo: any) {
+    const iconResult = await this.menuRepo.findAllIconsPrime();
+    if (!iconResult) return ApiResponse.successNoData(iconResult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(iconResult, "Records found");
+  }
+  async getMenusService(userinfo: any) {
+    const menuResult = await this.menuRepo.findAllMenu();
+    if (!menuResult) return ApiResponse.successNoData(menuResult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(menuResult, "Records found");
+  }
+  async getMenuByIdService(userinfo: any, payload:any) {
+    const menuResult = await this.menuRepo.findAllMenuById(payload.idRole);
+    if (!menuResult) return ApiResponse.successNoData(menuResult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(menuResult, "Records found");
+  }
+  async addMenuService(userinfo: any, payload:any) {
+    payload = {...payload, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
+    const menuResult = await this.menuRepo.addMenu(payload);
+    if (!menuResult) return ApiResponse.successNoData(menuResult, "Unable to add data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(menuResult, "Record added");
+  }
+  async updMenuService(userinfo: any, payload:any) {
+    payload = {...payload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{updated_by:userinfo.iduser}}
+    const menuResult = await this.menuRepo.updMenu(payload);
+    if (!menuResult) return ApiResponse.successNoData(menuResult, "Unable to update data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(menuResult, "Record updated");
+  }
+  async dellMenuService(userinfo: any, payload:any) {
+    const menuResult = await this.menuRepo.delMenu(payload);
+    if (!menuResult) return ApiResponse.successNoData(menuResult, "Unable to delete data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(menuResult, "Record deleted");
+  }
   private toDatetimeString(unix: number): string {
     const date = new Date(unix * 1000);
     const pad = (n: number) => String(n).padStart(2, '0');

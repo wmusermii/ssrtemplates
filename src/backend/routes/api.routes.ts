@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ResponseHelper } from '../utils/ResponseHelper';
-import { addRoles, checkPackageTaken, delRoles, echo, generateQShopee, generateQShopeeCurrent, generateQShopeeJobs, getAllSKUAvailable, getAllSKUOnTransaction, getAllStockopname, getBestDataToPrint, getCountInvoicesAvailable, getCountSKUAvailable, getItemsInPackage, getQShopee, getQShopeeAttribute, getQShopeeToday, getRolesAvailable, getShopInfo, getShopPerformance, getStockDetailopnameByIdOP, getStockDetailopnameByIdOPExcel, insertStockDetailopname, insertStockopname, sendingEmailTo, sendingPrinting, updateItemsInPackage, updateQShopeeAttribute, updateUser, updRoles, viewQShopeePosItem } from '../controllers/api.controller';
+import { addMenus, addRoles,  delMenus, delRoles, echo, generateQShopee, generateQShopeeCurrent, generateQShopeeJobs, getAllSKUAvailable, getAllSKUOnTransaction, getAllStockopname, getBestDataToPrint, getCountInvoicesAvailable, getCountSKUAvailable, getIcons,  getMenusAvailable, getQShopee, getQShopeeAttribute, getQShopeeToday, getRolesAvailable, getShopInfo, getShopPerformance, getStockDetailopnameByIdOP, getStockDetailopnameByIdOPExcel, insertStockDetailopname, insertStockopname, sendingEmailTo, sendingPrinting,  updateQShopeeAttribute, updateUser, updMenus, updRoles } from '../controllers/api.controller';
 import { attrb, login, registUser } from '../controllers/auth.controller';
 import { authBearerMiddleware } from '../middlewares/authmiddleware';
 import { asyncHandler } from '../middlewares/asyncHandler';
@@ -29,7 +29,15 @@ router.post('/auth/updateuser', asyncHandler(authBearerMiddleware),asyncHandler(
 router.get('/admin/get_roles', asyncHandler(authBearerMiddleware),asyncHandler(getRolesAvailable)); //Melihat is daftar Role
 router.post('/admin/add_role', asyncHandler(authBearerMiddleware),asyncHandler(addRoles)); //Menambah is daftar Role
 router.post('/admin/upd_role', asyncHandler(authBearerMiddleware),asyncHandler(updRoles)); //Merubah is daftar Role
-router.post('/admin/del_role', asyncHandler(authBearerMiddleware),asyncHandler(delRoles)); //Merubah is daftar Role
+router.post('/admin/del_role', asyncHandler(authBearerMiddleware),asyncHandler(delRoles)); //menghapus is daftar Role
+
+router.get('/admin/get_icons', asyncHandler(authBearerMiddleware),asyncHandler(getIcons)); //Melihat is daftar IconsPrimeNG
+router.get('/admin/get_menus', asyncHandler(authBearerMiddleware),asyncHandler(getMenusAvailable)); //Melihat is daftar menu
+router.post('/admin/add_menu', asyncHandler(authBearerMiddleware),asyncHandler(addMenus)); //Menambah is daftar Menu
+router.post('/admin/upd_menu', asyncHandler(authBearerMiddleware),asyncHandler(updMenus)); //Merubah is daftar Menu
+router.post('/admin/del_menu', asyncHandler(authBearerMiddleware),asyncHandler(delMenus)); //menghapus is daftar Menu
+
+
 // router.get('/warehouse/get_jobs/available', asyncHandler(authBearerMiddleware),asyncHandler(viewQShopeePosItem));// Untuk mengambil Jobs / POS barang list dalam Inquery Shopee yang available
 // router.get('/warehouse/get_packages', asyncHandler(authBearerMiddleware),asyncHandler(getPackageJobAvailable));// Untuk mengambil Packaging list dalam Jobs yang available
 // router.post('/warehouse/check_taken_packages', asyncHandler(authBearerMiddleware),asyncHandler(checkPackageTaken));// Untuk cek apaka package yang di ambil sudah diambil user lain

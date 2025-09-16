@@ -22,6 +22,7 @@ export class UserRepository {
       'mu.fullname',
       'mu.mobile',
       'mu.email',
+      'mg.idgroup',
       'mg.groupname',
       'mg.menublob'
     ]).from('m_user as mu').innerJoin("m_group as mg","mu.idgroup","mg.idgroup").where({ "username":username, "password":password }).first();
