@@ -9,18 +9,19 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { LocalstorageService } from '../../../../guard/ssr/localstorage/localstorage.service';
 import { Router } from '@angular/router';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, TreeNode } from 'primeng/api';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { MessageModule } from 'primeng/message';
 import { TextareaModule } from 'primeng/textarea';
 import cloneDeep from 'lodash-es/cloneDeep';
 import { TooltipModule } from 'primeng/tooltip';
-
+import { TreeModule } from 'primeng/tree';
+import { DragDropModule } from 'primeng/dragdrop';
 @Component({
   standalone: true,
   selector: 'app-groupmanagement',
-  imports: [CommonModule,TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule],
+  imports: [CommonModule,TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, TreeModule,DragDropModule],
   templateUrl: './groupmanagement.html',
   styleUrl: './groupmanagement.css'
 })
@@ -42,8 +43,14 @@ export class Groupmanagement implements OnInit {
   selectedGroup: GroupField = {};
   showDetailForm: any = { show: false, action: "add" };
   showDetailDelete: boolean = false;
+  showMenusDetail:any = {show:false, selectedGroup:{message:"ini harusnya isi Object"}}
   showErrorPage: any = { show: false, message: "undefined" };
   errorMessage: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" };
+//################################ FOR TREE ##############################
+  masterMenu: any[] = [];
+  treeData: any[] = [];
+  draggedMenu: any | undefined | null;
+//######################################################################
   groupForm = new FormGroup({
     idgroup: new FormControl('', [Validators.required]),
     groupname: new FormControl('', [Validators.required]),
@@ -68,7 +75,36 @@ export class Groupmanagement implements OnInit {
     this.breaditems = [{ label: 'Management' }, { label: 'Groups' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
     await this._refreshListData();
+
+    //################################ FOR TREE ############################
+    this.masterMenu = [
+      { id: 1, label: 'Dashboard', icon: 'pi pi-home' },
+      { id: 2, label: 'User', icon: 'pi pi-users' },
+      { id: 3, label: 'Role', icon: 'pi pi-id-card' },
+      { id: 4, label: 'Report', icon: 'pi pi-chart-bar' }
+    ];
+
+
   }
+  onDropNode(event: any) {
+  if (this.draggedMenu) {
+    // Tambah node baru di root treeData
+    this.treeData = [
+      ...this.treeData,
+      {
+        key: this.draggedMenu.id.toString(),
+        label: this.draggedMenu.label,
+        icon: this.draggedMenu.icon,
+        data: this.draggedMenu,
+        children: []
+      }
+    ];
+    this.draggedMenu = null;
+  }
+}
+
+
+
   async _refreshListData() {
     this.loading = true;
     fetch('/v2/admin/get_groups', {
@@ -133,7 +169,12 @@ export class Groupmanagement implements OnInit {
     )
     this.showDetailForm = { show: true, action: "edit" };
   }
-
+  async _menusAtGroup(event: any){
+    this.showMenusDetail = {show:true, selectedGroup:event}
+  }
+  async _cancelMenusAtGroup(){
+    this.showMenusDetail = {show:false, selectedGroup:{}}
+  }
   async _addGroup() {
     this.groupForm.patchValue({
       "idgroup": null,
@@ -147,7 +188,6 @@ export class Groupmanagement implements OnInit {
     this.selectedGroup = event;
     this.showDetailDelete = true;
   }
-
   onSubmit() {
     if (this.groupForm.invalid) {
       return; // Form invalid, jangan lanjut
@@ -276,6 +316,70 @@ export class Groupmanagement implements OnInit {
         this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
       });
   }
+  //############################################## FOR DRAG AND DROP ################################
+  dragStart(menu: any) {
+    console.log("Dragging Menu");
+        this.draggedMenu = menu;
+  }
+  dragEnd() {
+    console.log("Dragging End");
+        this.draggedMenu = null;
+  }
+
+
+  onDropRoot(event: any) {
+  if (this.draggedMenu) {
+    this.treeData = [
+      ...this.treeData,
+      this.createNode(this.draggedMenu)
+    ];
+    this.removeFromMaster(this.draggedMenu.id);
+    this.draggedMenu = null;
+  }
+}
+
+onDropChild(event: any, parentNode: any) {
+  if (this.draggedMenu) {
+    parentNode.children = parentNode.children || [];
+    parentNode.children.push(this.createNode(this.draggedMenu));
+    parentNode.expanded = true;
+    this.removeFromMaster(this.draggedMenu.id);
+    this.draggedMenu = null;
+  }
+}
+
+deleteNode(node: any, nodes: any[]) {
+  const idx = nodes.indexOf(node);
+  if (idx >= 0) {
+    nodes.splice(idx, 1);
+    this.masterMenu.push(node.data); // balikin ke master menu
+  } else {
+    // cari di children
+    for (let n of nodes) {
+      if (n.children && n.children.length) {
+        this.deleteNode(node, n.children);
+      }
+    }
+  }
+}
+
+
+private createNode(menu: any) {
+  return {
+    key: menu.id.toString(),
+    label: menu.label,
+    icon: menu.icon,
+    data: menu,
+    roles:['rd','cr','dl','up','vw'],
+    children: []
+  };
+}
+
+private removeFromMaster(id: number) {
+  this.masterMenu = this.masterMenu.filter(m => m.id !== id);
+}
+
+
 }
 interface GroupField {
   idgroup?: string | null;
