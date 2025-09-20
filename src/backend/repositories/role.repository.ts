@@ -4,15 +4,19 @@ export class RoleRepository {
     const result = await db.select([
       'mr.idRole',
       'mr.roleName',
-      'mr.roleDescription'
-    ]).from('m_role as mr').orderBy("mr.idRole");
+      'mr.roleDescription',
+      'mr.created_at',
+      'mr.deleteable'
+    ]).from('m_role as mr').orderBy("mr.created_at");
     return result;
   }
   async findAllRoleById(idRole:string) {
     const result = await db.select([
       'mr.idRole',
       'mr.roleName',
-      'mr.roleDescription'
+      'mr.roleDescription',
+      'mr.created_at',
+      'mr.deleteable'
     ]).from('m_role as mr').where("mr.idRole", idRole).first();
     return result;
   }

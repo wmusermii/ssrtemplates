@@ -21,7 +21,7 @@ import { DragDropModule } from 'primeng/dragdrop';
 @Component({
   standalone: true,
   selector: 'app-groupmanagement',
-  imports: [CommonModule,TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, TreeModule,DragDropModule],
+  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, TreeModule, DragDropModule],
   templateUrl: './groupmanagement.html',
   styleUrl: './groupmanagement.css'
 })
@@ -34,6 +34,7 @@ export class Groupmanagement implements OnInit {
   //##########################################################
   loading: boolean = false;
   cols!: Column[];
+  colsRole!: Column[];
   rows = 50;
   idRoleOld: string = "";
   groups!: GroupField[];
@@ -41,16 +42,20 @@ export class Groupmanagement implements OnInit {
   allGroups!: GroupField[];
   globalFilter: string = '';
   selectedGroup: GroupField = {};
+  rolesData!: any[];
+  menusData!: any[];
   showDetailForm: any = { show: false, action: "add" };
   showDetailDelete: boolean = false;
-  showMenusDetail:any = {show:false, selectedGroup:{message:"ini harusnya isi Object"}}
+  showRoleForm: any = { show: false, action: "root" };
+  selectedRoles: any[] = [];
+  showMenusDetail: any = { show: false, selectedGroup: { message: "ini harusnya isi Object" } }
   showErrorPage: any = { show: false, message: "undefined" };
   errorMessage: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" };
-//################################ FOR TREE ##############################
+  //################################ FOR TREE ##############################
   masterMenu: any[] = [];
   treeData: any[] = [];
   draggedMenu: any | undefined | null;
-//######################################################################
+  //######################################################################
   groupForm = new FormGroup({
     idgroup: new FormControl('', [Validators.required]),
     groupname: new FormControl('', [Validators.required]),
@@ -59,7 +64,7 @@ export class Groupmanagement implements OnInit {
   get f() {
     return this.groupForm.controls;
   }
-  _changeError(){
+  _changeError() {
     // this.errorMessage={error:false, severity:"info", message:"", icon:"pi pi-send"};
   }
   constructor(private router: Router, private ssrStorage: LocalstorageService) { }
@@ -68,14 +73,20 @@ export class Groupmanagement implements OnInit {
     this.userInfo = this.ssrStorage.getItem("C_INFO");
     console.log("USER INFO ", this.userInfo);
     this.cols = [
-      { field: 'idgroup', header: 'Id Group' },
+      { field: 'idgroup', header: 'Group Id' },
       { field: 'groupname', header: 'Name' },
       { field: 'description', header: 'Description' }
+    ];
+    this.colsRole = [
+      { field: 'idRole', header: 'Role Id' },
+      { field: 'roleName', header: 'Name' },
+      { field: 'roleDescription', header: 'Description' }
     ];
     this.breaditems = [{ label: 'Management' }, { label: 'Groups' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
     await this._refreshListData();
-
+    await this._refreshListRoles();
+    await this._refreshMenuMaster();
     //################################ FOR TREE ############################
     this.masterMenu = [
       { id: 1, label: 'Dashboard', icon: 'pi pi-home' },
@@ -87,23 +98,21 @@ export class Groupmanagement implements OnInit {
 
   }
   onDropNode(event: any) {
-  if (this.draggedMenu) {
-    // Tambah node baru di root treeData
-    this.treeData = [
-      ...this.treeData,
-      {
-        key: this.draggedMenu.id.toString(),
-        label: this.draggedMenu.label,
-        icon: this.draggedMenu.icon,
-        data: this.draggedMenu,
-        children: []
-      }
-    ];
-    this.draggedMenu = null;
+    if (this.draggedMenu) {
+      // Tambah node baru di root treeData
+      this.treeData = [
+        ...this.treeData,
+        {
+          key: this.draggedMenu.id.toString(),
+          label: this.draggedMenu.label,
+          icon: this.draggedMenu.icon,
+          data: this.draggedMenu,
+          children: []
+        }
+      ];
+      this.draggedMenu = null;
+    }
   }
-}
-
-
 
   async _refreshListData() {
     this.loading = true;
@@ -144,6 +153,73 @@ export class Groupmanagement implements OnInit {
         console.log("Response Error Catch /v2/admin/get_groups", err);
       });
   }
+  async _refreshListRoles() {
+    this.loading = true;
+    fetch('/v2/admin/get_roles', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.token}`,
+        'x-client': 'angular-ssr'
+      }
+    })
+      .then(res => {
+        console.log("Response dari API  /v2/admin/get_roles", res);
+        return res.json();
+      })
+      .then(data => {
+        console.log("Response dari API /v2/admin/get_roles", data);
+        if (data.code === 20000) {
+          const dataRecordsTemp = cloneDeep(data.data);
+          this.rolesData = dataRecordsTemp;
+          this.loading = false;
+        } else {
+          this.rolesData = [];
+        }
+      })
+      .catch(err => {
+        console.log("Response Error Catch /v2/admin/get_groups", err);
+      });
+  }
+  async _refreshMenuMaster() {
+    this.loading = true;
+    fetch('/v2/admin/get_menus', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.token}`,
+        'x-client': 'angular-ssr'
+      }
+    })
+      .then(res => {
+        console.log("Response dari API  /v2/admin/get_menus", res);
+        if (!res.ok) throw new Error('get get_menus Gagal');
+        return res.json();
+      })
+      .then(data => {
+        console.log("Response dari API /v2/admin/get_menus", data);
+        // this.loading=false;
+        // this.menus=[];this.allMenus=[];
+        if (data.code === 20000) {
+
+          this.masterMenu = [];
+          const dataRecordsTemp = cloneDeep(data.data);
+          this.masterMenu = dataRecordsTemp;
+          // this.allMenus=this.menus;
+          // this.totalMenus = this.allMenus.length;
+          this.loading = false;
+        } else {
+          // this.menus = [];
+          // this.totalMenus = this.menus.length;
+          this.loading = false;
+        }
+      })
+      .catch(err => {
+        console.log("Response Error Catch /v2/admin/get_roles", err);
+      });
+  }
+
+
   onGlobalSearch() {
     console.log("Global filter : ", this.globalFilter);
     const term = this.globalFilter.trim().toLowerCase();
@@ -169,11 +245,20 @@ export class Groupmanagement implements OnInit {
     )
     this.showDetailForm = { show: true, action: "edit" };
   }
-  async _menusAtGroup(event: any){
-    this.showMenusDetail = {show:true, selectedGroup:event}
+  onRowSelectRole(event: any) {
+    console.log('Selected Role:', event.data);
+    this.selectedRoles.push(event.data);
+    console.log("SELECTED ROLES ", this.selectedRoles);
   }
-  async _cancelMenusAtGroup(){
-    this.showMenusDetail = {show:false, selectedGroup:{}}
+  onRowUnselectRole(event: any) {
+    this.selectedRoles = this.selectedRoles.filter(r => r.idRole !== event.data.idRole);
+  }
+  async _menusAtGroup(event: any) {
+    this.showMenusDetail = { show: true, selectedGroup: event }
+    //  this.showRoleForm = {show:true, action:event}
+  }
+  async _cancelMenusAtGroup() {
+    this.showMenusDetail = { show: false, selectedGroup: {} }
   }
   async _addGroup() {
     this.groupForm.patchValue({
@@ -285,6 +370,42 @@ export class Groupmanagement implements OnInit {
         this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
       });
   }
+
+  _updateMenuGroup(menublob:string) {
+    let payload = {idgroup:this.showMenusDetail.selectedGroup.idgroup, menublob:menublob}
+    fetch('/v2/admin/upd_group_menu', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.token}`,
+        'x-client': 'angular-ssr'
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        console.log("Response dari API ", res);
+        // logInfo
+        if (!res.ok) throw new Error('Error add data');
+        return res.json();
+      })
+      .then(data => {
+        // console.log("Response dari API DATA ", JSON.parse(data));
+        console.log("Response dari API DATA UPD MENUBLOB", data);
+        this.loading = false;
+        if (data.code === 20000) {
+          // this.showDetailForm = { show: false, action: "add" };
+          // this._refreshListData();
+        } else {
+          this.errorMessage = { error: true, severity: "error", message: `${data.message}`, icon: "pi pi-times" }
+        }
+      })
+      .catch(err => {
+        console.log("Response Error ", err);
+        // alert('Login gagal: ' + err.message);
+        this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
+      });
+  }
+
   async _saveDeleteData(payload: any) {
     fetch('/v2/admin/del_group', {
       method: 'POST',
@@ -319,65 +440,182 @@ export class Groupmanagement implements OnInit {
   //############################################## FOR DRAG AND DROP ################################
   dragStart(menu: any) {
     console.log("Dragging Menu");
-        this.draggedMenu = menu;
+    this.draggedMenu = menu;
   }
   dragEnd() {
     console.log("Dragging End");
-        this.draggedMenu = null;
+    // this.draggedMenu = null;
   }
-
-
+  onDropRootStart(event: any) {
+    console.log("Drop Root Start Event ");
+    this.selectedRoles = [];
+    this.showRoleForm = { show: true, action: "root", draggedMenu: this.draggedMenu }
+  }
   onDropRoot(event: any) {
-  if (this.draggedMenu) {
-    this.treeData = [
-      ...this.treeData,
-      this.createNode(this.draggedMenu)
-    ];
-    this.removeFromMaster(this.draggedMenu.id);
-    this.draggedMenu = null;
-  }
-}
-
-onDropChild(event: any, parentNode: any) {
-  if (this.draggedMenu) {
-    parentNode.children = parentNode.children || [];
-    parentNode.children.push(this.createNode(this.draggedMenu));
-    parentNode.expanded = true;
-    this.removeFromMaster(this.draggedMenu.id);
-    this.draggedMenu = null;
-  }
-}
-
-deleteNode(node: any, nodes: any[]) {
-  const idx = nodes.indexOf(node);
-  if (idx >= 0) {
-    nodes.splice(idx, 1);
-    this.masterMenu.push(node.data); // balikin ke master menu
-  } else {
-    // cari di children
-    for (let n of nodes) {
-      if (n.children && n.children.length) {
-        this.deleteNode(node, n.children);
-      }
+    console.log("Drop Root Event ",this.draggedMenu);
+    if (this.draggedMenu) {
+      this.treeData = [
+        ...this.treeData,
+        this.createNode(this.draggedMenu)
+      ];
+      this.removeFromMaster(this.draggedMenu.idMenu);
+      this.draggedMenu = null;
     }
   }
+  onDropChildStart(event: any, parentNode: any) {
+    console.log("Drop Child Event Start");
+    this.selectedRoles = [];
+    this.showRoleForm = { show: true, action: "child", draggedMenu: this.draggedMenu, parentNode: parentNode }
+  }
+  onDropChild(event: any, parentNode: any) {
+    console.log("Drop Child Event ");
+    if (this.draggedMenu) {
+      parentNode.children = parentNode.children || [];
+      parentNode.children.push(this.createNode(this.draggedMenu));
+      parentNode.expanded = true;
+      this.removeFromMaster(this.draggedMenu.idMenu);
+      this.draggedMenu = null;
+    }
+  }
+  async _roleSubmit() {
+    console.log("Selected Role", this.selectedRoles);
+    console.log("DraggedMenu", this.draggedMenu);
+    console.log("Role Form", this.showRoleForm);
+    // Ambil semua idRole
+    if (this.selectedRoles.length > 0) {
+      this.draggedMenu = { ...this.draggedMenu, ...{ roles: this.selectedRoles.map(item => item.idRole) } }
+    }
+    if (this.showRoleForm.action === 'root') {
+      this.onDropRoot(this.draggedMenu);
+    } else {
+      this.onDropChild(this.draggedMenu, this.showRoleForm.parentNode);
+    }
+    this.showRoleForm = { show: false, action: "root" }
+  }
+  async _roleCancel() {
+    this.selectedRoles = [];
+    console.log("Selected Role", this.selectedRoles);
+    console.log("DraggedMenu", this.draggedMenu);
+    this.draggedMenu = null;
+    this.showRoleForm = { show: false, action: "root" }
+  }
+
+  // Ambil semua node + descendant dalam bentuk flat list
+  private flattenNodes(node: any): any[] {
+    let nodes = [node];
+    if (node.children && node.children.length > 0) {
+      for (let child of node.children) {
+        nodes = nodes.concat(this.flattenNodes(child));
+      }
+    }
+    return nodes;
+  }
+  private removeNode(target: any, nodes: any[]): boolean {
+    const index = nodes.findIndex(n => n.key === target.key);
+    if (index !== -1) {
+      nodes.splice(index, 1);
+      return true;
+    }
+    // Cari rekursif ke children
+    for (let node of nodes) {
+      if (node.children && this.removeNode(target, node.children)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  deleteNode(node: any, nodes: any[]) {
+    // 1. Flatten untuk ambil node beserta semua anak-anaknya
+    const allNodes = this.flattenNodes(node);
+    // 2. Kembalikan semua ke master menu
+    for (let n of allNodes) {
+      this.masterMenu.push({
+        idMenu: +n.key,
+        nameMenu: n.label,
+        iconMenu: n.icon,
+        pathMenu: n.path
+      });
+    }
+    // 3. Hapus dari treeData (rekursif)
+    this.removeNode(node, this.treeData);
+  }
+  private createNode(menu: any) {
+    return {
+      key: menu.idMenu.toString(),
+      label: menu.nameMenu,
+      icon: menu.iconMenu,
+      path: menu.pathMenu,
+      roles: menu.roles,
+      children: []
+    };
+  }
+
+  private removeFromMaster(id: number) {
+    this.masterMenu = this.masterMenu.filter(m => m.idMenu !== id);
+  }
+  async _generateMenusAtGroup(){
+    this.loading = true;
+    // console.log(`Data dari treenode `, this.treeData);
+    const compactMenu = await this.transformTreeToMenuModel(this.treeData);
+
+    // console.log(`Compact treenode `, compactMenu);
+    // console.log("Compact Menu",JSON.stringify(compactMenu));
+    this._updateMenuGroup(JSON.stringify(compactMenu))
+  }
+  // Transform treeData -> PrimeNG MenuModel
+async transformTreeToMenuModel(nodes: any[], isRoot = true): Promise<any[]> {
+  const transformed = await Promise.all(
+    nodes.map(async node => {
+      const menuItem: any = {
+        label: node.label
+      };
+
+      if (node.icon) {
+        menuItem.icon = node.icon;
+      }
+
+      if (node.path) {
+        menuItem.routerLink = node.path;
+      }
+
+      if (node.roles && Array.isArray(node.roles) && node.roles.length > 0) {
+        menuItem.roles = [...node.roles];
+      }
+
+      if (node.children && node.children.length > 0) {
+        menuItem.items = await this.transformTreeToMenuModel(node.children, false);
+      }
+
+      return menuItem;
+    })
+  );
+
+  // Tambahkan Privacy & Security hanya sekali di level root
+  if (isRoot) {
+    transformed.push({
+      label: "Privacy & Security",
+      items: [
+        {
+          label: "Profile",
+          icon: "pi pi-user",
+          routerLink: "/privacy/profile"
+        },
+        {
+          label: "Logout",
+          icon: "pi pi-sign-out",
+          routerLink: "/privacy/logout"
+        }
+      ]
+    });
+  }
+
+  return transformed;
 }
 
 
-private createNode(menu: any) {
-  return {
-    key: menu.id.toString(),
-    label: menu.label,
-    icon: menu.icon,
-    data: menu,
-    roles:['rd','cr','dl','up','vw'],
-    children: []
-  };
-}
 
-private removeFromMaster(id: number) {
-  this.masterMenu = this.masterMenu.filter(m => m.id !== id);
-}
+
 
 
 }
@@ -392,4 +630,9 @@ interface Column {
   header?: string | null;
   class?: string | null;
   cellclass?: string | null;
+}
+interface RoleField {
+  idRole?: string | null;
+  roleName?: string | null;
+  roleDescription?: string | null;
 }

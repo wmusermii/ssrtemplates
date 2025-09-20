@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ResponseHelper } from '../utils/ResponseHelper';
-import { addGroups, addMenus, addRoles,  delGroups,  delMenus, delRoles, echo, generateQShopee, generateQShopeeCurrent, generateQShopeeJobs, getAllSKUAvailable, getAllSKUOnTransaction, getAllStockopname, getBestDataToPrint, getCountInvoicesAvailable, getCountSKUAvailable, getGroupsAvailable, getIcons,  getMenusAvailable, getQShopee, getQShopeeAttribute, getQShopeeToday, getRolesAvailable, getShopInfo, getShopPerformance, getStockDetailopnameByIdOP, getStockDetailopnameByIdOPExcel, insertStockDetailopname, insertStockopname, sendingEmailTo, sendingPrinting,  updateQShopeeAttribute, updateUser, updGroups, updMenus, updRoles } from '../controllers/api.controller';
+import { addGroups, addMenus, addRoles,  delGroups,  delMenus, delRoles, echo, generateQShopee, generateQShopeeCurrent, generateQShopeeJobs, getAllSKUAvailable, getAllSKUOnTransaction, getAllStockopname, getBestDataToPrint, getCountInvoicesAvailable, getCountSKUAvailable, getGroupsAvailable, getIcons,  getMenusAvailable, getQShopee, getQShopeeAttribute, getQShopeeToday, getRolesAvailable, getShopInfo, getShopPerformance, getStockDetailopnameByIdOP, getStockDetailopnameByIdOPExcel, insertStockDetailopname, insertStockopname, sendingEmailTo, sendingPrinting,  updateQShopeeAttribute, updateUser, updGroupMenu, updGroups, updMenus, updRoles } from '../controllers/api.controller';
 import { attrb, login, registUser } from '../controllers/auth.controller';
 import { authBearerMiddleware } from '../middlewares/authmiddleware';
 import { asyncHandler } from '../middlewares/asyncHandler';
@@ -39,10 +39,11 @@ router.post('/admin/del_menu', asyncHandler(authBearerMiddleware),asyncHandler(d
 
 
 
-router.get('/admin/get_groups', asyncHandler(authBearerMiddleware),asyncHandler(getGroupsAvailable)); //Melihat is daftar menu
-router.post('/admin/add_group', asyncHandler(authBearerMiddleware),asyncHandler(addGroups)); //Menambah is daftar Menu
-router.post('/admin/upd_group', asyncHandler(authBearerMiddleware),asyncHandler(updGroups)); //Merubah is daftar Menu
-router.post('/admin/del_group', asyncHandler(authBearerMiddleware),asyncHandler(delGroups)); //menghapus is daftar Menu
+router.get('/admin/get_groups', asyncHandler(authBearerMiddleware),asyncHandler(getGroupsAvailable)); //Melihat is daftar Group
+router.post('/admin/add_group', asyncHandler(authBearerMiddleware),asyncHandler(addGroups)); //Menambah is daftar Group
+router.post('/admin/upd_group', asyncHandler(authBearerMiddleware),asyncHandler(updGroups)); //Merubah is daftar Group
+router.post('/admin/upd_group_menu', asyncHandler(authBearerMiddleware),asyncHandler(updGroupMenu)); //Merubah is daftar Group
+router.post('/admin/del_group', asyncHandler(authBearerMiddleware),asyncHandler(delGroups)); //menghapus is daftar Group
 
 
 // router.get('/warehouse/get_jobs/available', asyncHandler(authBearerMiddleware),asyncHandler(viewQShopeePosItem));// Untuk mengambil Jobs / POS barang list dalam Inquery Shopee yang available

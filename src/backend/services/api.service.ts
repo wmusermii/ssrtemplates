@@ -466,6 +466,10 @@ export class ApiService {
     return ApiResponse.success(roleResult, "Records found");
   }
   async addRoleService(userinfo: any, payload:any) {
+
+    payload = {...payload, ...{created_at:new Date().toISOString().slice(0, 19).replace('T', ' ')}}
+
+
     const roleResult = await this.roleRepo.addRole(payload);
     if (!roleResult) return ApiResponse.successNoData(roleResult, "Unable to add data!");
     //################## Berhasil Isi #######################
@@ -550,6 +554,15 @@ export class ApiService {
     //################## Berhasil Isi #######################
     return ApiResponse.success(groupResult, "Record updated");
   }
+
+  async updGroupMenuService(userinfo: any, payload:any) {
+    payload = {...payload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{updated_by:userinfo.iduser}}
+    const groupResult = await this.groupRepo.updGroupMenu(payload);
+    if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to update data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(groupResult, "Record updated");
+  }
+
   async dellGroupService(userinfo: any, payload:any) {
     const groupResult = await this.groupRepo.delGroup(payload);
     if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to delete data!");

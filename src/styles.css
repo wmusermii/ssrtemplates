@@ -24,7 +24,8 @@ html, body {
     --p-panelmenu-panel-first-border-width:0px!important;
     --p-panelmenu-panel-border-width:0px!important;
     --p-panelmenu-panel-last-border-width:0px!important;
-    --p-panelmenu-submenu-indent: 0.1rem!important;
+    --p-panelmenu-submenu-indent: 0.5rem!important;
+    --p-navigation-item-padding:0.5rem 0.1rem!important;
     --p-breadcrumb-padding: 0.1rem!important;
     --p-datatable-body-cell-padding: 0.25rem 0.6rem!important;
     --p-tree-padding: 0.1rem!important;
@@ -48,22 +49,43 @@ html, body {
 .p-panelmenu-header-content {
   width: 100%!important;
 }
-.p-panelmenu .p-panelmenu-header {
+.p-panelmenu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding-right: 0.5rem; /* beri ruang di kanan agar icon tidak mepet */
+}
+
+/* Target SVG icon (chevron) dan letakkan di akhir */
+.p-panelmenu-header-link > svg {
+  order: 2;
+  margin-left: auto; /* dorong svg ke paling kanan */
+}
+
+/* Label & icon menu letakkan di kiri */
+.p-panelmenu-header > span,
+.p-panelmenu-header > label {
+  order: 1;
+  margin-right: 0.5rem;
+}
+
+/* .p-panelmenu .p-panelmenu-header {
   display: flex!important;
   justify-content: space-between!important;
   align-items: center!important;
   width: 100%!important;
-}
+} */
 
-.p-panelmenu .p-panelmenu-header .p-panelmenu-header-icon {
+/* .p-panelmenu .p-panelmenu-header .p-panelmenu-header-icon {
   margin-left: auto!important;
   order: 2!important;
-}
+} */
 
-.p-panelmenu .p-menuitem .p-panelmenu-icon {
+/* .p-panelmenu .p-menuitem .p-panelmenu-icon {
   margin-left: auto!important;
   order: 2!important;
-}
+} */
 .p-tree {
   width: 100% !important;
 }

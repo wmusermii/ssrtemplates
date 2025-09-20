@@ -279,6 +279,8 @@ interface RoleField {
   idRole?: string | null;
   roleName?: string | null;
   roleDescription?: string | null;
+  created_at?: string | null;
+  deleteable?: number | null;
 }
 interface Column {
   field?: string | null;

@@ -19,13 +19,18 @@ export class GroupRepository {
     return result;
   }
   async addGroup(payload: any) {
-    const query = await db('m_group').insert(payload).returning("idGroup");
+    const query = await db('m_group').insert(payload).returning("idgroup");
     return query;
   }
   async updGroup(payload: any) {
-    const query = await db('m_group').update(payload).where("idGroup", payload.idGroup).returning("idGroup");
+    const query = await db('m_group').update(payload).where("idgroup", payload.idgroup).returning("idgroup");
     return query;
   }
+  async updGroupMenu(payload: any) {
+    const query = await db('m_group').update(payload).where("idgroup", payload.idgroup).returning("idgroup");
+    return query;
+  }
+
   async delGroup(payload: any) {
     const query = await db('m_group').delete().where("idGroup", payload.idGroup);
     return query;

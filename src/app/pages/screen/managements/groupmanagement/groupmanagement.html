@@ -2,6 +2,7 @@
   <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
     <p-breadcrumb [model]="breaditems" [home]="home" />
   </div>
+  <!-- <pre>{{treeData | json}}</pre> -->
   @if(!showMenusDetail.show) {
   <p-table #table [columns]="cols" [value]="groups" class="w-full" stripedRows="true" showGridlines="true"
     scrollable="true" selectionMode="single" [(selection)]="selectedGroup" (onRowSelect)="onRowSelect($event)"
@@ -60,8 +61,6 @@
     </ng-template>
   </p-table>
   }
-
-
   <div *ngIf="showDetailForm.show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
     <form [formGroup]="groupForm" (ngSubmit)="onSubmit()"
       class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl space-y-4">
@@ -120,7 +119,7 @@
         </div>
 
         <!-- Message -->
-        <div class="flex-1">
+        <div class="basis-3/4">
           <p class="text-gray-800 break-words">
             {{ showErrorPage.message }}
           </p>
@@ -138,37 +137,68 @@
   @if(showMenusDetail.show) {
   <div #menuproperties>
     <!-- <pre>{{showMenusDetail.selectedGroup | json}}</pre> -->
+    <div class="w-full bg-white shadow rounded p-6 space-y-4">
+      <!-- Group Id -->
+      <div class="flex">
+        <div class="flex basis-1/4 justify-between pr-4">
+          <span class="font-medium">Group Id</span>
+          <span>:</span>
+        </div>
+        <div class="basis-3/4">
+          <span class="text-gray-700">{{showMenusDetail.selectedGroup.idgroup}}</span>
+        </div>
+      </div>
+
+      <!-- Group Name -->
+      <div class="flex">
+        <div class="flex basis-1/4 justify-between pr-4">
+          <span class="font-medium">Group Name</span>
+          <span>:</span>
+        </div>
+        <div class="basis-3/4">
+          <span class="text-gray-700">{{showMenusDetail.selectedGroup.groupname}}</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="flex">
+        <div class="flex basis-1/4 justify-between pr-4">
+          <span class="font-medium">Description</span>
+          <span>:</span>
+        </div>
+        <div class="basis-3/4">
+          <span class="text-gray-700">{{showMenusDetail.selectedGroup.description}}</span>
+        </div>
+      </div>
+    </div>
     <div class="grid gap-4 grid-cols-2">
       <!-- Master Menu -->
-      <div class="gap-2 p-6">
+      <div class="gap-2 p-2">
         <h3 class="mb-2 font-bold">Master Menu</h3>
         <ul class="list-none flex flex-col gap-2 p-0 m-0">
           <li *ngFor="let menu of masterMenu" class="p-4 gap-2 rounded-border rounded-md shadow-sm cursor-move bg-white"
             pDraggable (onDragStart)="dragStart(menu)" (onDragEnd)="dragEnd()">
-            <i [class]="menu.icon"></i> {{ menu.label }}
+            <i [class]="menu.iconMenu"></i> {{ menu.nameMenu }}
           </li>
         </ul>
       </div>
-
       <!-- Canvas Tree -->
-      <div class="gap-2 p-6">
+      <div class="gap-2 p-2">
         <h3 class="mb-2 font-bold">Selected Menu</h3>
         <!-- Drop ke root -->
-        <div pDroppable (onDrop)="onDropRoot($event)" class="border rounded-md min-h-[200px]">
+        <div pDroppable (onDrop)="onDropRootStart($event)" class="border rounded-md min-h-[200px]">
           <p-tree [value]="treeData" class="w-full">
             <ng-template let-node pTemplate="default">
-              <div pDroppable (onDrop)="onDropChild($event, node)"
+              <div pDroppable (onDrop)="onDropChildStart($event, node)"
                 class="flex items-center justify-between gap-2 p-2 bg-white w-full">
                 <!-- Label -->
                 <span class="p-treenode-label">{{ node.label }}</span>
-
                 <!-- Roles + Delete di kanan -->
                 <div class="flex items-center gap-2">
                   <!-- Roles list -->
                   <span class="text-md text-gray-500">
                     [{{ node.roles?.join(', ') }}]
                   </span>
-
                   <!-- Tombol delete -->
                   <button (click)="deleteNode(node, treeData)" class="p-1 text-gray-500 hover:text-red-600">
                     <i class="pi pi-times"></i>
@@ -177,20 +207,81 @@
               </div>
             </ng-template>
           </p-tree>
-
-
         </div>
+
+
       </div>
     </div>
-
     <div class="mt-2">&nbsp;</div>
+    <div class="p-6 flex justify-between">
+      <p-button pTooltip="Cancel Generate Menus" tooltipPosition="top" icon="pi pi-chevron-left" [text]="false"
+        (onClick)="_cancelMenusAtGroup()" label="Back" variant="outlined" severity="danger" />
+      <p-button pTooltip="Generate Menus" tooltipPosition="top" icon="pi pi-save" [text]="false"
+        (onClick)="_generateMenusAtGroup()" label="Generate Menu" />
 
-    <p-button pTooltip="Cancel Edit" tooltipPosition="top" icon="pi pi-chevron-left" [text]="false"
-      (onClick)="_cancelMenusAtGroup()" label="Back" />
+      <!-- <pre>{{treeData | json}}</pre> -->
+    </div>
+
 
 
   </div>
   }
+  <div *ngIf="showRoleForm.show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl space-y-4">
+      <p-table #table2 [columns]="colsRole" [value]="rolesData" class="w-full" stripedRows="true" showGridlines="true"
+        scrollable="true" (onRowSelect)="onRowSelectRole($event)" (onRowUnselect)="onRowUnselectRole($event)"
+        dataKey="idRole" [paginator]="true" [rows]="rows" [tableStyle]="{ 'min-width': '40rem' }"
+        [rowsPerPageOptions]="[50, 100]">
+        <ng-template #caption>
+          <div class="flex flex-col gap-2">
+            <!-- Baris atas: Title dan Add Button -->
+            <div class="flex items-center justify-between">
+              <span class="text-lg font-semibold">Role Records</span>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-columnsR>
+          <tr>
+            <th class="w-16 text-center">
+              <div class="flex justify-center">
+                <p-tableHeaderCheckbox />
+              </div>
+            </th>
+            <th [pSortableColumn]="colR.field" *ngFor="let colR of columnsR"
+              [ngStyle]="{ 'text-align': colR.class === 'text-center' ? 'center' : (colR.class === 'text-end' ? 'right' : 'left') }">
+              {{ colR.header }}<p-sortIcon field="colR.field" />
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData2>
+          <tr>
+            <!-- Nomor baris -->
+            <td class="!w-16 text-center">
+              <div class="flex justify-center">
+                <p-tableCheckbox [value]="rowData2" />
+              </div>
+            </td>
+            <td class="w-28 text-center">
+              <div class="flex justify-center">
+                {{ rowData2.idRole }}
+              </div>
+            </td>
+            <td>{{rowData2.roleName}}</td>
+            <td>{{rowData2.roleDescription}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <!-- Buttons -->
+      <div class="flex justify-end gap-4 pt-4">
+        <button pButton type="button" class="px-6" severity="secondary" label="Cancel" (click)="_roleCancel()"></button>
+        <button pButton type="button" (click)="_roleSubmit()" class="px-6" label="Choose"></button>
+      </div>
+    </div>
+  </div>
+
+
+
+
   <div *ngIf="loading"
     class="absolute inset-0 flex items-center justify-center rounded-md z-50 bg-[rgba(255,255,255,0.5)]">
     <div role="status">
