@@ -62,8 +62,10 @@ export async function getaclattrb(req: Request, res: Response, next: NextFunctio
   try {
     console.log("####################################### getaclattrb");
     const userInfo: any = req.userInfo;
+    const { routeUrl } = req.body;
+    console.log("####################################### Payload ", routeUrl);
     const packageResult = await authService.selectAclAttrb(userInfo, req.body);
-    if (packageResult.code === 20000 && packageResult.data.length > 0) {
+    if (packageResult.code === 20000) {
       await ResponseHelper.send(res, packageResult); return;
     } else {
       await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));

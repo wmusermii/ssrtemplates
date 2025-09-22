@@ -101,7 +101,7 @@ export class Sidebar implements OnInit, OnDestroy {
 
       // Pastikan icon tetap ada
       item.icon = item.icon || 'pi pi-sign-out';
-      console.log('LOGOUT ITEM:', item);
+      // console.log('LOGOUT ITEM:', item);
     }
 
     // Recursive untuk submenu

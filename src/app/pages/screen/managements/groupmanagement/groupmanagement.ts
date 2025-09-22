@@ -27,6 +27,7 @@ import { it } from 'node:test';
   styleUrl: './groupmanagement.css'
 })
 export class Groupmanagement implements OnInit {
+  currentUrl: string = '';
   home: MenuItem | undefined;
   breaditems: MenuItem[] | undefined;
   //##########################################################
@@ -58,6 +59,7 @@ export class Groupmanagement implements OnInit {
   treeData: any[] = [];
   draggedMenu: any | undefined | null;
   //######################################################################
+  aclMenublob: any[] = [];
   groupForm = new FormGroup({
     idgroup: new FormControl('', [Validators.required]),
     groupname: new FormControl('', [Validators.required]),
@@ -71,6 +73,7 @@ export class Groupmanagement implements OnInit {
   }
   constructor(private router: Router, private ssrStorage: LocalstorageService) { }
   async ngOnInit(): Promise<void> {
+    this.currentUrl = this.router.url;
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
     console.log("USER INFO ", this.userInfo);
@@ -86,9 +89,13 @@ export class Groupmanagement implements OnInit {
     ];
     this.breaditems = [{ label: 'Management' }, { label: 'Groups' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
-    await this._refreshListData();
-    await this._refreshListRoles();
-    await this._refreshMenuMaster();
+    await this._refreshACLMenu();
+    if (this.aclMenublob.includes("rd")) {
+      await this._refreshListData();
+      await this._refreshListRoles();
+      await this._refreshMenuMaster();
+    }
+
     //################################ FOR TREE ############################
     this.masterMenu = [];
   }
@@ -108,7 +115,7 @@ export class Groupmanagement implements OnInit {
       this.draggedMenu = null;
     }
   }
-  async _refreshListData() {
+  async _refreshListData():Promise<void> {
     this.loading = true;
     fetch('/v2/admin/get_groups', {
       method: 'GET',
@@ -147,7 +154,7 @@ export class Groupmanagement implements OnInit {
         console.log("Response Error Catch /v2/admin/get_groups", err);
       });
   }
-  async _refreshListRoles() {
+  async _refreshListRoles():Promise<void> {
     this.loading = true;
     fetch('/v2/admin/get_roles', {
       method: 'GET',
@@ -175,7 +182,7 @@ export class Groupmanagement implements OnInit {
         console.log("Response Error Catch /v2/admin/get_groups", err);
       });
   }
-  async _refreshMenuMaster() {
+  async _refreshMenuMaster():Promise<void> {
     this.loading = true;
     fetch('/v2/admin/get_menus', {
       method: 'GET',
@@ -559,7 +566,42 @@ export class Groupmanagement implements OnInit {
     this.masterMenu = this.masterMenu.filter(m => m.idMenu !== id);
   }
 
+  async _refreshACLMenu(): Promise<void> {
+      const payload: any = { routeUrl: this.currentUrl };
+      console.log("PAYLOAD ATTRB ", payload);
+      this.loading = true;
 
+      try {
+        const res = await fetch('/v2/auth/aclattrb', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`,
+            'x-client': 'angular-ssr'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        console.log("Response dari API /v2/auth/aclattrb", res);
+
+        const data = await res.json();
+        console.log("Response dari API /v2/auth/aclattrb", data);
+
+        this.loading = false;
+
+        if (data.code === 20000) {
+          const dataRecordsMenu: any = cloneDeep(data.data);
+          this.aclMenublob = dataRecordsMenu.roles;
+        } else {
+          this.aclMenublob = [];
+        }
+        console.log("ACL MENU INI ", this.aclMenublob);
+      } catch (err) {
+        console.log("Response Error Catch /v2/auth/aclattrb", err);
+        this.aclMenublob = [];
+        this.loading = false;
+      }
+    }
 
   async _generateMenusAtGroup(){
     this.loading = true;

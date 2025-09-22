@@ -10,8 +10,7 @@
         <!-- Baris atas: Title dan Add Button -->
         <div class="flex items-center justify-between">
           <span class="text-lg font-semibold">Role has {{totalRoles}} Records</span>
-          <!-- <p-button icon="pi pi-plus" (onClick)="_addProduct()" label="Add Product" rounded raised /> -->
-          <p-button icon="pi pi-add" (onClick)="_addRole()" label="Add Role" variant="outlined" />
+          <p-button *ngIf="aclMenublob?.includes('cr')" icon="pi pi-add" (onClick)="_addRole()" label="Add Role" variant="outlined" />
         </div>
         <!-- Input Search -->
         <p-inputgroup class="w-full">
@@ -52,10 +51,9 @@
         <td>{{rowData.roleName}}</td>
         <td>{{rowData.roleDescription}}</td>
         <td class="w-16 text-center">
-          @if(rowData.deleteable === 1){
+          @if(rowData.deleteable === 1 && aclMenublob.includes('dl')){
             <p-button pTooltip="Delete data" tooltipPosition="top" icon="pi pi-trash" [rounded]="true" [text]="true" (onClick)="_delRole(rowData)" severity="danger" />
           }
-
         </td>
       </tr>
     </ng-template>
