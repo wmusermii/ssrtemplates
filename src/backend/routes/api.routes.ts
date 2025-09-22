@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ResponseHelper } from '../utils/ResponseHelper';
 import { addGroups, addMenus, addRoles,  delGroups,  delMenus, delRoles, echo, generateQShopee, generateQShopeeCurrent, generateQShopeeJobs, getAllSKUAvailable, getAllSKUOnTransaction, getAllStockopname, getBestDataToPrint, getCountInvoicesAvailable, getCountSKUAvailable, getGroupsAvailable, getIcons,  getMenusAvailable, getQShopee, getQShopeeAttribute, getQShopeeToday, getRolesAvailable, getShopInfo, getShopPerformance, getStockDetailopnameByIdOP, getStockDetailopnameByIdOPExcel, insertStockDetailopname, insertStockopname, sendingEmailTo, sendingPrinting,  updateQShopeeAttribute, updateUser, updGroupMenu, updGroups, updMenus, updRoles } from '../controllers/api.controller';
-import { attrb, login, registUser } from '../controllers/auth.controller';
+import { attrb, getaclattrb, login, registUser } from '../controllers/auth.controller';
 import { authBearerMiddleware } from '../middlewares/authmiddleware';
 import { asyncHandler } from '../middlewares/asyncHandler';
 const router = Router();
@@ -23,7 +23,9 @@ router.get('/echo', echo);
 router.post('/auth/login', asyncHandler(login));
 router.post('/auth/registuser', asyncHandler(registUser));
 router.get('/auth/attrb',asyncHandler(authBearerMiddleware), asyncHandler(attrb));
+router.post('/auth/aclattrb', asyncHandler(authBearerMiddleware),asyncHandler(getaclattrb));
 router.post('/auth/updateuser', asyncHandler(authBearerMiddleware),asyncHandler(updateUser));
+
 //##################################### AUTH ROUTES #############
 
 router.get('/admin/get_roles', asyncHandler(authBearerMiddleware),asyncHandler(getRolesAvailable)); //Melihat is daftar Role

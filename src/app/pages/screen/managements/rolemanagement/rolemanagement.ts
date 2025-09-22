@@ -22,6 +22,7 @@ import { TooltipModule } from 'primeng/tooltip';
   styleUrl: './rolemanagement.css'
 })
 export class Rolemanagement implements OnInit {
+  currentUrl: string = '';
   home: MenuItem | undefined;
   breaditems: MenuItem[] | undefined;
   //##########################################################
@@ -55,9 +56,11 @@ export class Rolemanagement implements OnInit {
     // this.errorMessage={error:false, severity:"info", message:"", icon:"pi pi-send"};
   }
   async ngOnInit(): Promise<void> {
+    this.currentUrl = this.router.url;
+    console.log('Current URL:', this.currentUrl);
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
-    console.log("USER INFO ", this.userInfo);
+    // console.log("USER INFO ", this.userInfo);
     this.cols = [
         { field: 'idRole', header: 'Id Role' },
         { field: 'roleName', header: 'Name' },
@@ -106,6 +109,45 @@ export class Rolemanagement implements OnInit {
             console.log("Response Error Catch /v2/admin/get_roles", err);
           });
   }
+  async _refreshACLMenu(){
+    this.loading=true;
+        fetch('/v2/auth/aclattrb', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`,
+            'x-client': 'angular-ssr'
+          }
+        })
+          .then(res => {
+            console.log("Response dari API  /v2/auth/aclattrb", res);
+            return res.json();
+          })
+          .then(data => {
+            console.log("Response dari API /v2/auth/aclattrb", data);
+            this.loading=false;
+            // this.roles=[];this.allRoles=[];
+            if (data.code === 20000) {
+              // const dataRecordsTemp = cloneDeep(data.data);
+              // this.roles = dataRecordsTemp;
+              // this.allRoles=this.roles;
+              // this.totalRoles = this.allRoles.length;
+              // this.loading=false;
+            } else {
+              // this.roles = [];
+              // this.totalRoles = this.roles.length;
+              // this.loading=false;
+              // this.showErrorPage = {show:true, message:data.message}
+            }
+          })
+          .catch(err => {
+            console.log("Response Error Catch /v2/admin/get_roles", err);
+          });
+  }
+
+
+
+
   onGlobalSearch() {
     console.log("Global filter : ", this.globalFilter);
   const term = this.globalFilter.trim().toLowerCase();

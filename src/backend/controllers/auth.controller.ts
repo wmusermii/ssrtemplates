@@ -57,6 +57,28 @@ export async function attrb(req: Request, res: Response) {
     await ResponseHelper.send(res,ApiResponse.serverError(error+""));return;
   }
 }
+
+export async function getaclattrb(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### getaclattrb");
+    const userInfo: any = req.userInfo;
+    const packageResult = await authService.selectAclAttrb(userInfo, req.body);
+    if (packageResult.code === 20000 && packageResult.data.length > 0) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    // next(error);
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+
+
+
+
 export async function registUser(req: Request, res: Response) {
   const { fullname, mobilename, email, username, password, groupCode } = req.body;
   try {
