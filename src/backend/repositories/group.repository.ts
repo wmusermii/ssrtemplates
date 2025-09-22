@@ -23,6 +23,7 @@ export class GroupRepository {
     return query;
   }
   async updGroup(payload: any) {
+    console.log("PAYLOAD UPDATE ",payload);
     const query = await db('m_group').update(payload).where("idgroup", payload.idgroup).returning("idgroup");
     return query;
   }

@@ -36,7 +36,7 @@ export class Groupmanagement implements OnInit {
   cols!: Column[];
   colsRole!: Column[];
   rows = 50;
-  idRoleOld: string = "";
+  idGroup: string = "";
   groups!: GroupField[];
   totalGroups: number = 0;
   allGroups!: GroupField[];
@@ -94,8 +94,6 @@ export class Groupmanagement implements OnInit {
       { id: 3, label: 'Role', icon: 'pi pi-id-card' },
       { id: 4, label: 'Report', icon: 'pi pi-chart-bar' }
     ];
-
-
   }
   onDropNode(event: any) {
     if (this.draggedMenu) {
@@ -113,7 +111,6 @@ export class Groupmanagement implements OnInit {
       this.draggedMenu = null;
     }
   }
-
   async _refreshListData() {
     this.loading = true;
     fetch('/v2/admin/get_groups', {
@@ -218,8 +215,6 @@ export class Groupmanagement implements OnInit {
         console.log("Response Error Catch /v2/admin/get_roles", err);
       });
   }
-
-
   onGlobalSearch() {
     console.log("Global filter : ", this.globalFilter);
     const term = this.globalFilter.trim().toLowerCase();
@@ -233,16 +228,16 @@ export class Groupmanagement implements OnInit {
     }
   }
   onRowSelect(event: any) {
-    console.log('Selected Role:', event.data);
+    console.log('Selected Group:', event.data);
     const dataObj = event.data
-    this.idRoleOld = dataObj.idRole
-
+    this.idGroup = dataObj.idgroup
     this.groupForm.patchValue({
-      "idgroup": dataObj.idRole,
-      "groupname": dataObj.roleName,
-      "description": dataObj.roleDescription
+      "idgroup": dataObj.idgroup,
+      "groupname": dataObj.groupname,
+      "description": dataObj.description
     }
-    )
+    );
+    this.groupForm.get('idgroup')?.disable();
     this.showDetailForm = { show: true, action: "edit" };
   }
   onRowSelectRole(event: any) {
@@ -267,6 +262,7 @@ export class Groupmanagement implements OnInit {
       "description": null
     }
     )
+    this.groupForm.get('idgroup')?.enable();
     this.showDetailForm = { show: true, action: "add" };
   }
   async _delGroup(event: any) {
@@ -280,14 +276,12 @@ export class Groupmanagement implements OnInit {
     this.loading = true;
     const objPayload = this.groupForm.value;
     console.log("Payload form ", objPayload);
+    this.groupForm.get('idgroup')?.enable();
     if (this.showDetailForm.action == "add") {
       this._saveAddData(objPayload)
     } else {
-      this._saveEditData(objPayload, this.idRoleOld)
+      this._saveEditData(objPayload, this.idGroup)
     }
-    // const payload = {credential:btoa(`${objPayload.username}:${objPayload.password}`)}
-    // const credential = btoa(`${objPayload.username}:${objPayload.password}`);
-
   }
   onCancel() {
     this.showDetailForm = { show: false, action: "add" };
@@ -334,9 +328,9 @@ export class Groupmanagement implements OnInit {
         this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
       });
   }
-  _saveEditData(payload: any, idRoleOld: string) {
+  _saveEditData(payload: any, iGroup: string) {
 
-    payload = { ...payload, ...{ idRoleOld: idRoleOld } }
+    payload = { ...payload, ...{ idgroup: iGroup } }
 
     fetch('/v2/admin/upd_group', {
       method: 'POST',
@@ -556,11 +550,7 @@ export class Groupmanagement implements OnInit {
   }
   async _generateMenusAtGroup(){
     this.loading = true;
-    // console.log(`Data dari treenode `, this.treeData);
     const compactMenu = await this.transformTreeToMenuModel(this.treeData);
-
-    // console.log(`Compact treenode `, compactMenu);
-    // console.log("Compact Menu",JSON.stringify(compactMenu));
     this._updateMenuGroup(JSON.stringify(compactMenu))
   }
   // Transform treeData -> PrimeNG MenuModel
@@ -570,23 +560,18 @@ async transformTreeToMenuModel(nodes: any[], isRoot = true): Promise<any[]> {
       const menuItem: any = {
         label: node.label
       };
-
       if (node.icon) {
         menuItem.icon = node.icon;
       }
-
       if (node.path) {
         menuItem.routerLink = node.path;
       }
-
       if (node.roles && Array.isArray(node.roles) && node.roles.length > 0) {
         menuItem.roles = [...node.roles];
       }
-
       if (node.children && node.children.length > 0) {
         menuItem.items = await this.transformTreeToMenuModel(node.children, false);
       }
-
       return menuItem;
     })
   );
