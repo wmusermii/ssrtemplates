@@ -18,6 +18,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import { TooltipModule } from 'primeng/tooltip';
 import { TreeModule } from 'primeng/tree';
 import { DragDropModule } from 'primeng/dragdrop';
+import { it } from 'node:test';
 @Component({
   standalone: true,
   selector: 'app-groupmanagement',
@@ -53,6 +54,7 @@ export class Groupmanagement implements OnInit {
   errorMessage: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" };
   //################################ FOR TREE ##############################
   masterMenu: any[] = [];
+  masterMenuTemp: any[] = [];
   treeData: any[] = [];
   draggedMenu: any | undefined | null;
   //######################################################################
@@ -88,12 +90,7 @@ export class Groupmanagement implements OnInit {
     await this._refreshListRoles();
     await this._refreshMenuMaster();
     //################################ FOR TREE ############################
-    this.masterMenu = [
-      { id: 1, label: 'Dashboard', icon: 'pi pi-home' },
-      { id: 2, label: 'User', icon: 'pi pi-users' },
-      { id: 3, label: 'Role', icon: 'pi pi-id-card' },
-      { id: 4, label: 'Report', icon: 'pi pi-chart-bar' }
-    ];
+    this.masterMenu = [];
   }
   onDropNode(event: any) {
     if (this.draggedMenu) {
@@ -202,6 +199,7 @@ export class Groupmanagement implements OnInit {
           this.masterMenu = [];
           const dataRecordsTemp = cloneDeep(data.data);
           this.masterMenu = dataRecordsTemp;
+          this.masterMenuTemp = dataRecordsTemp;
           // this.allMenus=this.menus;
           // this.totalMenus = this.allMenus.length;
           this.loading = false;
@@ -249,10 +247,22 @@ export class Groupmanagement implements OnInit {
     this.selectedRoles = this.selectedRoles.filter(r => r.idRole !== event.data.idRole);
   }
   async _menusAtGroup(event: any) {
+    let menuBlob:any |undefined =event.menublob
+    console.log("DATA MENU SELECTED ", menuBlob);
+    if(menuBlob) {
+      let menuObj = JSON.parse(menuBlob)
+      let tesc:any = this.cleanMenuForTree(menuObj);
+      console.log("HASIL PARSE ",tesc);
+      this.treeData= this.cleanMenuForTree(menuObj);
+    }
     this.showMenusDetail = { show: true, selectedGroup: event }
     //  this.showRoleForm = {show:true, action:event}
   }
   async _cancelMenusAtGroup() {
+    this.masterMenu = this.masterMenuTemp;
+
+
+
     this.showMenusDetail = { show: false, selectedGroup: {} }
   }
   async _addGroup() {
@@ -548,6 +558,9 @@ export class Groupmanagement implements OnInit {
   private removeFromMaster(id: number) {
     this.masterMenu = this.masterMenu.filter(m => m.idMenu !== id);
   }
+
+
+
   async _generateMenusAtGroup(){
     this.loading = true;
     const compactMenu = await this.transformTreeToMenuModel(this.treeData);
@@ -597,6 +610,64 @@ async transformTreeToMenuModel(nodes: any[], isRoot = true): Promise<any[]> {
 
   return transformed;
 }
+
+private cleanMenuForTree(data: any): any[] {
+  if (!Array.isArray(data)) {
+    return [];
+  }
+  return data
+    .filter(item => item.label !== "Privacy & Security")
+    .map(item => {
+
+// --- hapus item dari masterMenu kalau ada yang match ---
+      this.masterMenu = this.masterMenu.filter(
+        m => m.nameMenu !== item.label
+      );
+
+
+      const newItem: any = {
+        key: `id${item.label}`,
+        label: item.label
+      };
+      if (item.icon) {
+        newItem.icon = item.icon;
+      }
+
+      if (item.routerLink) {
+        newItem.path = item.routerLink;
+      }
+
+      if (item.roles && item.roles.length > 0) {
+        newItem.roles = [...item.roles];
+      }
+
+      // --- cek items ---
+// console.log("CHECK ITEMS ", item.items);
+      if (item.items) {
+        let parsedItems: any[] = [];
+
+        if (typeof item.items === "string") {
+          // console.log("itemnya string : ", item.items);
+          try {
+            parsedItems = JSON.parse(item.items);
+            // console.log("itemnya aray : ", parsedItems);
+          } catch (e) {
+            console.warn("Gagal parse items string:", item.items);
+          }
+        } else if (Array.isArray(item.items)) {
+          // console.log("itemnya ternyata array : ", item.items);
+          parsedItems = item.items;
+        }
+
+        if (parsedItems.length > 0) {
+          newItem.children = this.cleanMenuForTree(parsedItems);
+        }
+      }
+
+      return newItem;
+    });
+}
+
 
 
 
