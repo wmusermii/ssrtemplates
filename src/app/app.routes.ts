@@ -20,11 +20,6 @@ export const routes: Routes = [
       {
        path:'registration',
       loadComponent:() => import("./pages/screen/auths/registration/registration").then(m => m.Registration)
-      },
-      {
-        path: '',
-        redirectTo: 'login',
-        pathMatch: 'full'
       }
     ]
   },
@@ -61,13 +56,13 @@ export const routes: Routes = [
        path:'privacy/profile',
        canActivate:[authGuard],
       loadComponent:() => import("./pages/screen/myprofile/myprofile").then(m => m.Myprofile)
-      },
-      {
-        path: '',
-        redirectTo: 'login',
-        pathMatch: 'full'
       }
     ]
+  },
+  // fallback
+  {
+    path: '**',
+    redirectTo: 'dashboard'
   }
 ];
 

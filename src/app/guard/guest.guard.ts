@@ -5,7 +5,7 @@ export const guestGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const ssrStorage = inject(LocalstorageService)
   const isLoggedIn = ssrStorage.getItem('token');
-  console.log("##################### GUEST GARD EXECUTE #################");
+  console.log("[guestGuard]", { isLoggedIn, route: state.url });
   if (isLoggedIn) {
     router.navigate(['/dashboard']);
     return false;

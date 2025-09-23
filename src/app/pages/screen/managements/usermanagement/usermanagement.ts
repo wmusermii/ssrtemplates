@@ -17,11 +17,12 @@ import { MessageModule } from 'primeng/message';
 import { TextareaModule } from 'primeng/textarea';
 import { TagModule } from 'primeng/tag';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { DividerModule } from 'primeng/divider';
 import cloneDeep from 'lodash-es/cloneDeep';
 @Component({
   standalone:true,
   selector: 'app-usermanagement',
-  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, ChipModule,TagModule, ToggleSwitchModule],
+  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, ChipModule,TagModule, ToggleSwitchModule, DividerModule],
   templateUrl: './usermanagement.html',
   styleUrl: './usermanagement.css'
 })

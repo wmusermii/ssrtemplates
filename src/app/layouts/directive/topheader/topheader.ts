@@ -32,7 +32,8 @@ export class Topheader implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.token = this.ssrStorage.getItem('token')
     if (!this.token) {
-      // console.log("TOKEN KOSONG : ", this.token);
+      console.log("TOKEN KOSONG TOP BAR: ", this.token);
+
       this.router.navigate(['/login']);
     } else {
       // console.log("TOKEN ISI : ", "this.token");

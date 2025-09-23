@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from "@angular/router";
 
 @Component({
@@ -7,6 +7,9 @@ import { RouterOutlet } from "@angular/router";
   templateUrl: './nonavi.html',
   styleUrl: './nonavi.css'
 })
-export class Nonavi {
+export class Nonavi implements OnInit {
+  ngOnInit(): void {
+    console.log("Routes loaded: nonavi")
+  }
 
 }

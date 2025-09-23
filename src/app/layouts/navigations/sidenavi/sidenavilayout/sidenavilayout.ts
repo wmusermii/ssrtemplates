@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Sidebar } from '../../../directive/sidebar/sidebar';
 import { RouterOutlet } from '@angular/router';
@@ -12,7 +12,10 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './sidenavilayout.html',
   styleUrl: './sidenavilayout.css'
 })
-export class Sidenavilayout {
+export class Sidenavilayout implements OnInit {
+  ngOnInit(): void {
+    console.log("Routes loaded: sidenavi")
+  }
   user: {name: string;} | null = null;
   isSidebarOpen = true;
   toggleSidebar() {

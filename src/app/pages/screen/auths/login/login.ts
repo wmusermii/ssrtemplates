@@ -51,9 +51,11 @@ export class Login {
       .then(data => {
         // console.log("Response dari API DATA ", JSON.parse(data));
         console.log("Response dari API DATA ", data);
-        this.loading=false;
+
         if(data.code === 20000) {
+          this.loading=false;
           this.ssrStorage.setItem('token', data.data.token);
+          delete data.data.userinfo.password;
           this.ssrStorage.setItem('C_INFO', data.data.userinfo);
           this.router.navigate(['/dashboard']);
         } else {

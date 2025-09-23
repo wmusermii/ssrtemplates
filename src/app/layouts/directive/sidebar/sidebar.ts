@@ -14,7 +14,7 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './sidebar.css'
 })
 export class Sidebar implements OnInit, OnDestroy {
-  loading: boolean = false;
+  loading: boolean = true;
   token: string | null | undefined = undefined;
   dropdownClicked = false;
   openDropdownId: string | null = null;
@@ -35,7 +35,7 @@ export class Sidebar implements OnInit, OnDestroy {
     this.token = this.ssrStorage.getItem('token')
     if (!this.token) {
       console.log("TOKEN KOSONG : ", this.token);
-      this.router.navigate(['/login']);
+      // this.router.navigate(['/login']);
     } else {
       console.log("TOKEN ISI : ", "this.token");
       this._getAttribute()
@@ -59,8 +59,9 @@ export class Sidebar implements OnInit, OnDestroy {
         if(!res.ok) {
           await this.ssrStorage.clear();
           setTimeout(() => {
+            console.log("sidebar 1 tiba tiba");
             this.router.navigate(['/login']);
-          }, 50);
+          }, 1000);
           return;
         }
         return res.json();
@@ -150,6 +151,7 @@ expandAllPanelMenu(items: any[]) {
     } catch (error) {
       console.error('Error saat clear storage:', error);
       // Tetap navigasi meskipun error
+      console.log("sidebar Error saat clear storage tiba tiba");
       this.router.navigate(['/login']);
     }
   }

@@ -76,10 +76,15 @@ export class Menumanagement implements OnInit {
     ];
     this.breaditems = [{ label: 'Management' }, { label: 'Menus' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
-    await this._refreshIconData();
-    await this._refreshListData();
+    await this._refreshACLMenu();
+    console.log("MENU ACL ", this.aclMenublob);
+    if (this.aclMenublob.includes("rd")) {
+       await this._refreshIconData();
+       await this._refreshListData();
+    }
+
   }
-  async _refreshListData(){
+  async _refreshListData():Promise<void>{
       this.loading=true;
           fetch('/v2/admin/get_menus', {
             method: 'GET',
@@ -150,7 +155,7 @@ export class Menumanagement implements OnInit {
         this.loading = false;
       }
     }
-  async _refreshIconData(){
+  async _refreshIconData():Promise<void>{
       this.loading=true;
           fetch('/v2/admin/get_icons', {
             method: 'GET',
