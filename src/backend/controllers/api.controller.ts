@@ -339,15 +339,15 @@ export async function getAllSKUAvailable(req: Request, res: Response, next: Next
 // }
 export async function getAllStockopname(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### getAllStockopname");
-    const userInfo: any = req.userInfo;
-    const packageResult = await apiService.getAllOpname();
-    if (packageResult.code === 20000) {
-      await ResponseHelper.send(res, packageResult); return;
-    } else {
-      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
-      return;
-    }
+    // console.log("####################################### getAllStockopname");
+    // const userInfo: any = req.userInfo;
+    // const packageResult = await apiService.getAllOpname();
+    // if (packageResult.code === 20000) {
+    //   await ResponseHelper.send(res, packageResult); return;
+    // } else {
+    //   await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+    //   return;
+    // }
   } catch (error) {
     logError("Error api.controller : ", error)
     // next(error);
@@ -388,13 +388,13 @@ export async function insertStockopname(req: Request, res: Response, next: NextF
     // Format jadi 'YYYY-MM-DD HH:mm:ss'
     const formatted = localDate.toISOString().slice(0, 19).replace('T', ' ');
 
-    const packageResult = await apiService.insertHeaderOpname({ opname_date: formatted, wh_id: wh_id });
-    if (packageResult.code === 20000) {
-      await ResponseHelper.send(res, packageResult); return;
-    } else {
+    // const packageResult = await apiService.insertHeaderOpname({ opname_date: formatted, wh_id: wh_id });
+    // if (packageResult.code === 20000) {
+      // await ResponseHelper.send(res, packageResult); return;
+    // } else {
       await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
-      return;
-    }
+    //   return;
+    // }
   } catch (error) {
     logError("Error api.controller : ", error)
     // next(error);
@@ -448,13 +448,13 @@ export async function insertStockDetailopname(req: Request, res: Response, next:
     // console.log("####################################### insertStockopname ", opname_date);
     const userInfo: any = req.userInfo;
     const formatted = null;
-    const packageResult = await apiService.insertDetailOpname(req.body);
-    if (packageResult.code === 20000) {
-      await ResponseHelper.send(res, packageResult); return;
-    } else {
+    // const packageResult = await apiService.insertDetailOpname(req.body);
+    // if (packageResult.code === 20000) {
+    //   await ResponseHelper.send(res, packageResult); return;
+    // } else {
       await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
       return;
-    }
+    // }
   } catch (error) {
     logError("Error api.controller : ", error)
     // next(error);
@@ -756,7 +756,7 @@ export async function getUsersAvailable(req: Request, res: Response, next: NextF
   try {
     console.log("####################################### getUsersAvailable");
     const userInfo: any = req.userInfo;
-    const packageResult = await apiService.getGroupsService(userInfo);
+    const packageResult = await apiService.getUsersService(userInfo);
     if (packageResult.code === 20000 && packageResult.data.length > 0) {
       await ResponseHelper.send(res, packageResult); return;
     } else {
@@ -773,7 +773,7 @@ export async function addUsers(req: Request, res: Response, next: NextFunction) 
   try {
     console.log("####################################### addUsers");
     const userInfo: any = req.userInfo;
-    const packageResult = await apiService.addGroupService(userInfo,req.body);
+    const packageResult = await apiService.addUserService(userInfo,req.body);
     if (packageResult.code === 20000) {
       await ResponseHelper.send(res, packageResult); return;
     } else {
@@ -789,7 +789,7 @@ export async function updUsers(req: Request, res: Response, next: NextFunction) 
   try {
     console.log("####################################### updUsers");
     const userInfo: any = req.userInfo;
-    const packageResult = await apiService.updGroupService(userInfo,req.body);
+    const packageResult = await apiService.updUserService(userInfo,req.body);
     if (packageResult.code === 20000) {
       await ResponseHelper.send(res, packageResult); return;
     } else {
@@ -806,7 +806,7 @@ export async function delUsers(req: Request, res: Response, next: NextFunction) 
   try {
     console.log("####################################### delUsers");
     const userInfo: any = req.userInfo;
-    const packageResult = await apiService.dellGroupService(userInfo,req.body);
+    const packageResult = await apiService.dellUserService(userInfo,req.body);
     if (packageResult.code === 20000) {
       await ResponseHelper.send(res, packageResult); return;
     } else {

@@ -6,7 +6,7 @@
     scrollable="true"
     [selectionMode]="aclMenublob.includes('up') ? 'single' : null"
     [(selection)]="selectedUser" (onRowSelect)="onRowSelect($event)"
-    [paginator]="true" [rows]="rows" [tableStyle]="{ 'min-width': '40rem' }" [rowsPerPageOptions]="[50, 100]">
+    [paginator]="true" [rows]="rows" [tableStyle]="{ 'min-width': '80rem' }" [rowsPerPageOptions]="[50, 100]">
     <ng-template #caption>
       <div class="flex flex-col gap-2">
         <!-- Baris atas: Title dan Add Button -->
@@ -26,7 +26,7 @@
     </ng-template>
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th class="w-16 text-center">No</th> <!-- Kolom nomor -->
+        <th class="w-16 text-center">No</th>
         <th [pSortableColumn]="col.field" *ngFor="let col of columns"
           [ngStyle]="{ 'text-align': col.class === 'text-center' ? 'center' : (col.class === 'text-end' ? 'right' : 'left') }">
           {{ col.header }}<p-sortIcon field="col.field" />
@@ -38,20 +38,33 @@
 
     <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
       <tr [pSelectableRow]="rowData">
-        <!-- Nomor baris -->
+        <!-- <td class="w-28 text-center">
+          <div class="flex justify-center">
+            {{ rowData.iduser }}
+          </div>
+        </td> -->
         <td class="w-16">
           <div class="flex justify-end">
             {{ rowIndex + 1 + (table.first || 0) }}.
           </div>
-
         </td>
-        <td class="w-28 text-center">
+        <td class="w-72 text-start">{{rowData.username}}</td>
+        <td class="w-72 text-start">{{rowData.fullname}}</td>
+        <td class="w-72 text-start">{{rowData.groupname}}</td>
+        <td>{{rowData.email}}</td>
+        <td class="w-44">
           <div class="flex justify-center">
-            {{ rowData.idRole }}
+            @if(rowData.status === 1) {
+              <!-- <span>Active</span> -->
+              <!-- <p-chip label="Active" tooltipPosition="User is active" /> -->
+              <p-tag severity="info" value="Active" tooltipPosition="User is active" tooltipPosition="top"/>
+            } @else {
+              <!-- <span>Inactive</span> -->
+               <!-- <p-chip label="Inactive" tooltipPosition="User is not active" /> -->
+               <p-tag severity="warn" value="Inactive" tooltipPosition="User is not active" tooltipPosition="top"/>
+            }
           </div>
         </td>
-        <td>{{rowData.roleName}}</td>
-        <td>{{rowData.roleDescription}}</td>
         <td class="w-16 text-center">
           @if(rowData.deleteable === 1 && aclMenublob.includes('dl')){
             <p-button pTooltip="Delete data" tooltipPosition="top" icon="pi pi-trash" [rounded]="true" [text]="true" (onClick)="_delUser(rowData)" severity="danger" />
@@ -70,25 +83,27 @@
       </div>
       <!-- Header / Title -->
       <div class="border-b pb-3 mb-2">
-        <h2 class="text-xl font-semibold text-gray-800 m-0 p-0">{{showDetailForm.action | titlecase}} Role Detail</h2>
+        <h2 class="text-xl font-semibold text-gray-800 m-0 p-0">{{showDetailForm.action | titlecase}} User Detail</h2>
       </div>
       <!-- Role Id -->
       <div class="flex flex-col mb-2">
-        <label for="idRole" class="mb-2 font-medium label-required">Role Id</label>
-        <input type="text" class="w-full" pInputText formControlName="idRole" id="idRole" (change)="_changeError()" />
+        <label for="username" class="mb-2 font-medium label-required">User name</label>
+        <input type="text" class="w-full" pInputText formControlName="username" id="username" (change)="_changeError()" />
       </div>
       <!-- Name -->
       <div class="flex flex-col mb-2">
-        <label for="roleName" class="mb-2 font-medium label-required">Name</label>
-        <input type="text" class="w-full" pInputText formControlName="roleName" id="roleName"
-          (change)="_changeError()" />
+        <label for="fullname" class="mb-2 font-medium label-required">Fullname</label>
+        <input type="text" class="w-full" pInputText formControlName="fullname" id="fullname" />
       </div>
-      <!-- Description -->
+      <!-- Email -->
       <div class="flex flex-col mb-2">
-        <label for="roleDescription" class="mb-2 font-medium">Description <i>(Optional)</i></label>
-        <textarea rows="5" class="w-full" pTextarea formControlName="roleDescription"></textarea>
+        <label for="email" class="mb-2 font-medium">Email <i>(Optional)</i></label>
+        <input type="text" class="w-full" pInputText formControlName="email" id="email" />
       </div>
-
+       <div class="flex flex-col mb-2">
+        <label for="status" class="mb-2 font-medium">User Status <i>(Optional)</i></label>
+        <p-toggleswitch formControlName="status" [disabled]="true" />Disabled
+      </div>
       <!-- Buttons -->
       <div class="flex justify-end gap-4 pt-4">
         <button pButton type="button" (click)="onCancel()" class="px-6"  severity="secondary" label="Cancel"

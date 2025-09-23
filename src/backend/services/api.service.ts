@@ -20,7 +20,7 @@ export class ApiService {
   private roleRepo = new RoleRepository();
   private menuRepo = new MenuRepository();
   private groupRepo = new GroupRepository();
-  private stockopnameRepo = new OpnameRepository();
+  // private stockopnameRepo = new OpnameRepository();
   private apiShopeeService = new ShopeeService();//Jangan Di hapus dahulu
   async qShopeeInsert(payload: any, userinfo: any) {
     const formattedDate = new Date(payload.fromdate).toISOString().substring(0, 10);
@@ -175,28 +175,28 @@ export class ApiService {
   // }
 
 
- async getAllOpname() {
-    const shopeeResult = await this.stockopnameRepo.findAllHeaderOpname();
-    if (!shopeeResult) return ApiResponse.successNoData(shopeeResult, "Unable to get data!");
-    //################## Berhasil Isi #######################
-    return ApiResponse.success(shopeeResult, "Records found");
-  }
+//  async getAllOpname() {
+//     const shopeeResult = await this.stockopnameRepo.findAllHeaderOpname();
+//     if (!shopeeResult) return ApiResponse.successNoData(shopeeResult, "Unable to get data!");
+//     //################## Berhasil Isi #######################
+//     return ApiResponse.success(shopeeResult, "Records found");
+//   }
 
-   async insertHeaderOpname(payload:any) {
-    console.log("####### insertHeaderOpname : ",payload);
-    const shopeeResult = await this.stockopnameRepo.insertOpname(payload);
-    if (!shopeeResult) return ApiResponse.successNoData(shopeeResult, "Unable to get data!");
-    //################## Berhasil Isi #######################
-    return ApiResponse.success(shopeeResult, "Records found");
-  }
-  async insertDetailOpname(payload:any) {
-    // console.log("####### insertDetailOpname : ",payload);
-    const shopeeResult = await this.stockopnameRepo.insertDetailOpname(payload);
-    if (!shopeeResult) return ApiResponse.successNoData(shopeeResult, "Unable to create data!");
-    // const shopeeResult = null;
-    //################## Berhasil Isi #######################
-    return ApiResponse.success(shopeeResult, "Records found");
-  }
+//    async insertHeaderOpname(payload:any) {
+//     console.log("####### insertHeaderOpname : ",payload);
+//     const shopeeResult = await this.stockopnameRepo.insertOpname(payload);
+//     if (!shopeeResult) return ApiResponse.successNoData(shopeeResult, "Unable to get data!");
+//     //################## Berhasil Isi #######################
+//     return ApiResponse.success(shopeeResult, "Records found");
+//   }
+//   async insertDetailOpname(payload:any) {
+//     // console.log("####### insertDetailOpname : ",payload);
+//     const shopeeResult = await this.stockopnameRepo.insertDetailOpname(payload);
+//     if (!shopeeResult) return ApiResponse.successNoData(shopeeResult, "Unable to create data!");
+//     // const shopeeResult = null;
+//     //################## Berhasil Isi #######################
+//     return ApiResponse.success(shopeeResult, "Records found");
+//   }
 
   async getPackagesAvailable(userinfo: any) {
     const shopeeResult = await this.shopeeRepo.selectPackagesAvailable();
@@ -262,11 +262,6 @@ export class ApiService {
     console.log("+++++ HASIL CSV : ", printResult);
     //################## Berhasil Isi #######################
     const fileUrl = `${req.protocol}://${req.get('host')}/upload/${printResult}`;
-
-
-
-
-
     return ApiResponse.success(fileUrl, "Records found");
   }
 
@@ -569,33 +564,33 @@ export class ApiService {
   }
 
   async getUsersService(userinfo: any) {
-    const userResult = await this.userRepo.findAllGroup();
+    const userResult = await this.userRepo.findAllUsers(userinfo);
     if (!userResult) return ApiResponse.successNoData(userResult, "Unable to get data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(userResult, "Records found");
   }
   async getUserByIdService(userinfo: any, payload:any) {
-    const userResult = await this.userRepo.findAllGroupById(payload.idRole);
+    const userResult = await this.userRepo.findAllUsersById(userinfo,payload);
     if (!userResult) return ApiResponse.successNoData(userResult, "Unable to get data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(userResult, "Records found");
   }
   async addUserService(userinfo: any, payload:any) {
     payload = {...payload, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
-    const userResult = await this.userRepo.addGroup(payload);
+    const userResult = await this.userRepo.addUser(payload);
     if (!userResult) return ApiResponse.successNoData(userResult, "Unable to add data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(userResult, "Record added");
   }
   async updUserService(userinfo: any, payload:any) {
     payload = {...payload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{updated_by:userinfo.iduser}}
-    const userResult = await this.userRepo.updGroup(payload);
+    const userResult = await this.userRepo.updUser(payload);
     if (!userResult) return ApiResponse.successNoData(userResult, "Unable to update data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(userResult, "Record updated");
   }
   async dellUserService(userinfo: any, payload:any) {
-    const userResult = await this.userRepo.delGroup(payload);
+    const userResult = await this.userRepo.delUser(payload);
     if (!userResult) return ApiResponse.successNoData(userResult, "Unable to delete data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(userResult, "Record deleted");

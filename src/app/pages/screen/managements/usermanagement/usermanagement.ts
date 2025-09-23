@@ -15,11 +15,13 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { MessageModule } from 'primeng/message';
 import { TextareaModule } from 'primeng/textarea';
+import { TagModule } from 'primeng/tag';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import cloneDeep from 'lodash-es/cloneDeep';
 @Component({
   standalone:true,
   selector: 'app-usermanagement',
-  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule],
+  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, ChipModule,TagModule, ToggleSwitchModule],
   templateUrl: './usermanagement.html',
   styleUrl: './usermanagement.css'
 })
@@ -44,9 +46,13 @@ export class Usermanagement implements OnInit {
   errorMessage: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" };
   aclMenublob: any[] = [];
   userForm = new FormGroup({
-    idRole: new FormControl('', [Validators.required]),
-    roleName: new FormControl('', [Validators.required]),
-    roleDescription: new FormControl(''),
+    username: new FormControl('', [Validators.required]),
+    password: new FormControl(''),
+    fullname: new FormControl('', [Validators.required]),
+    idgroup: new FormControl(''),
+    idgroupObj: new FormControl(null, [Validators.required]),
+    email: new FormControl(''),
+    status: new FormControl(''),
   });
   constructor(private router: Router, private ssrStorage: LocalstorageService) { }
   async ngOnInit(): Promise<void> {
@@ -56,7 +62,7 @@ export class Usermanagement implements OnInit {
     //##########################################################
     // console.log("USER INFO ", this.userInfo);
     this.cols = [
-      { field: 'username', header: 'User ID' },
+      { field: 'username', header: 'User' },
       { field: 'fullname', header: 'Fullname' },
       { field: 'groupname', header: 'Group' },
       { field: 'email', header: 'Email' },
@@ -66,9 +72,9 @@ export class Usermanagement implements OnInit {
     this.home = { icon: 'pi pi-home', routerLink: '/' };
     //##########################################################
     await this._refreshACLMenu();
-    // if (this.aclMenublob.includes("rd")) {
-    //   await this._refreshListData();
-    // }
+    if (this.aclMenublob.includes("rd")) {
+      await this._refreshListData();
+    }
   }
   get f() {
     return this.userForm.controls;
@@ -80,10 +86,19 @@ export class Usermanagement implements OnInit {
     console.log('Selected Role:', event.data);
     const dataObj = event.data
     this.idRoleOld = dataObj.idRole
+    // username: new FormControl('', [Validators.required]),
+    // password: new FormControl(''),
+    // fullname: new FormControl('', [Validators.required]),
+    // idgroup: new FormControl(''),
+    // idgroupObj: new FormControl(null, [Validators.required]),
+    // email: new FormControl(''),
+    // status: new FormControl(''),
     this.userForm.patchValue({
-      "idRole": dataObj.idRole,
-      "roleName": dataObj.roleName,
-      "roleDescription": dataObj.roleDescription
+      "username": dataObj.username,
+      "password": null,
+      "fullname": dataObj.fullname,
+      "email": dataObj.username,
+      "status": null
     }
     )
     this.showDetailForm = { show: true, action: "edit" };
@@ -100,7 +115,7 @@ export class Usermanagement implements OnInit {
       })
         .then(res => {
           console.log("Response dari API  /v2/admin/get_users", res);
-          // if (!res.ok) throw new Error('get get_users Gagal');
+          if (!res.ok) throw new Error('get get_users Gagal');
           // if (!res.ok){
           //   this.showErrorPage = {show:true, message:res}
           // }
@@ -120,7 +135,7 @@ export class Usermanagement implements OnInit {
             this.users = [];
             this.totalUsers = this.users.length;
             this.loading = false;
-            this.showErrorPage = { show: true, message: data.message }
+            // this.showErrorPage = { show: true, message: data.message }
           }
         })
         .catch(err => {
@@ -179,9 +194,11 @@ export class Usermanagement implements OnInit {
 
   async _addUser() {
     this.userForm.patchValue({
-      "idRole": null,
-      "roleName": null,
-      "roleDescription": null
+      "username": null,
+      "password": null,
+      "fullname": null,
+      "email": null,
+      "status": null
     }
     )
     this.showDetailForm = { show: true, action: "add" };

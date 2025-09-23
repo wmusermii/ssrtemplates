@@ -79,5 +79,60 @@ export class UserRepository {
     return query;
   }
 //################################################################## FOR CRUD #############################################
+async findAllUsers(userinfo: any) {
+    const result = await db.select([
+      'mu.iduser',
+      'mu.username',
+      'mu.password',
+      'mu.fullname',
+      'mu.mobile',
+      'mu.email',
+      'mu.idgroup',
+      'mu.deleteable',
+      'mu.created_by',
+      'mu.created_at',
+      'mu.updated_by',
+      'mu.updated_at',
+      'mu.status',
+      'mg.groupname',
+    ]).from('m_user as mu').innerJoin("m_group as mg","mu.idgroup","mg.idgroup").whereNot({ "mu.iduser":userinfo.iduser,"mu.deleteable":0});
+    return result;
+  }
+  async findAllUsersById(userinfo: any, payload:any) {
+    const result = await db.select([
+      'mu.iduser',
+      'mu.username',
+      'mu.password',
+      'mu.fullname',
+      'mu.mobile',
+      'mu.email',
+      'mu.idgroup',
+      'mu.deleteable',
+      'mu.created_by',
+      'mu.created_at',
+      'mu.updated_by',
+      'mu.updated_at',
+      'mu.status',
+      'mg.groupname',
+    ]).from('m_user as mu').innerJoin("m_group as mg","mu.idgroup","mg.idgroup").where({ "iduser":payload.iduser }).first();
+    return result;
+  }
+  async addUser(payload: any) {
+    const query = await db('m_user').insert(payload).returning("ididusergroup");
+    return query;
+  }
+  async updUser(payload: any) {
+    console.log("PAYLOAD UPDATE ",payload);
+    const query = await db('m_user').update(payload).where("iduser", payload.iduser).returning("iduser");
+    return query;
+  }
+  async updUserMenu(payload: any) {
+    const query = await db('m_user').update(payload).where("iduser", payload.iduser).returning("iduser");
+    return query;
+  }
 
+  async delUser(payload: any) {
+    const query = await db('m_user').delete().where("iduser", payload.iduser);
+    return query;
+  }
 }
