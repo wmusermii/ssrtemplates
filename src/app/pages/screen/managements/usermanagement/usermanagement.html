@@ -76,7 +76,7 @@
   </p-table>
   <div *ngIf="showDetailForm.show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()"
-      class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl space-y-4">
+      class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl space-y-4">
       <div [hidden]="!errorMessage.error" class="mb-2">
         <p-message [severity]="errorMessage.severity" [text]="errorMessage.message" [icon]="errorMessage.icon"
           styleClass="p-message p-component block">
@@ -102,15 +102,29 @@
         <label for="email" class="mb-2 font-medium">Email <i>(Optional)</i></label>
         <input type="text" class="w-full" pInputText formControlName="email" id="email" />
       </div>
+      <!-- Group Of -->
+      <div class="flex flex-col mb-2">
+        <label for="idgroup" class="mb-2 font-medium label-required">Group ACL</label>
+        <!-- <input type="text" class="w-full" pInputText formControlName="idgroup" id="idgroup" /> -->
+         <p-select formControlName="idgroupObj" [options]="groups" optionLabel="groupname" placeholder="-- Select Group --" class="w-full" />
+      </div>
       <div class="flex flex-col mb-2">
         <label for="status" class="mb-2 font-medium">
           User Status <i>(Optional)</i>
         </label>
+      <div class="flex items-center gap-2">
+        <p-toggleswitch formControlName="status" ></p-toggleswitch>
+        {{ userForm.get('status')?.value ? 'Enabled' : 'Disabled' }}
+      </div>
+      <div class="flex items-center gap-2"><p-divider /></div>
+      <div class="flex flex-col mb-2">
+        <label for="password" class="mb-2 font-medium label-required">Password</label>
+        <!-- <input type="text" class="w-full" pInputText formControlName="password" id="password" /> -->
+        <p-password formControlName="password" (change)="_changeError()" class="w-full" [feedback]="false"
+              styleClass="w-full" inputStyleClass="w-full" [toggleMask]="true"></p-password>
+      </div>
 
-        <div class="flex items-center gap-2">
-          <p-toggleswitch formControlName="status" [disabled]="true"></p-toggleswitch>
-          <span>Disabled</span>
-        </div>
+
       </div>
       <!-- Buttons -->
       <div class="flex justify-end gap-4 pt-4">
@@ -155,7 +169,6 @@
       </div>
     </div>
   </div>
-
   <div *ngIf="loading"
     class="absolute inset-0 flex items-center justify-center rounded-md z-50 bg-[rgba(255,255,255,0.5)]">
     <div role="status">

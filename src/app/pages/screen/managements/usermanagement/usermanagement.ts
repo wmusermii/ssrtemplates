@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -19,10 +19,12 @@ import { TagModule } from 'primeng/tag';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { DividerModule } from 'primeng/divider';
 import cloneDeep from 'lodash-es/cloneDeep';
+import { PasswordModule } from 'primeng/password';
+import { SelectModule } from 'primeng/select';
 @Component({
   standalone:true,
   selector: 'app-usermanagement',
-  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, ChipModule,TagModule, ToggleSwitchModule, DividerModule],
+  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, ChipModule,TagModule, ToggleSwitchModule, DividerModule,PasswordModule, SelectModule],
   templateUrl: './usermanagement.html',
   styleUrl: './usermanagement.css'
 })
@@ -40,6 +42,7 @@ export class Usermanagement implements OnInit {
   totalUsers: number = 0;
   allUser!: UserField[];
   globalFilter: string = '';
+  groups:any[] = [];
   selectedUser: UserField = {};
   showDetailForm: any = { show: false, action: "add" };
   showDetailDelete: boolean = false;
@@ -48,14 +51,15 @@ export class Usermanagement implements OnInit {
   aclMenublob: any[] = [];
   userForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
-    password: new FormControl(''),
+    password: new FormControl('', [Validators.required]),
     fullname: new FormControl('', [Validators.required]),
     idgroup: new FormControl(''),
-    idgroupObj: new FormControl(null, [Validators.required]),
+    idgroupObj: new FormControl({}, [Validators.required]),
     email: new FormControl(''),
-    status: new FormControl(''),
+    status: new FormControl(true),
   });
   constructor(private router: Router, private ssrStorage: LocalstorageService) { }
+
   async ngOnInit(): Promise<void> {
     this.currentUrl = this.router.url;
     this.token = this.ssrStorage.getItem('token');
@@ -74,8 +78,10 @@ export class Usermanagement implements OnInit {
     //##########################################################
     await this._refreshACLMenu();
     if (this.aclMenublob.includes("rd")) {
+      await this._refreshGroupData();
       await this._refreshListData();
     }
+
   }
   get f() {
     return this.userForm.controls;
@@ -87,19 +93,12 @@ export class Usermanagement implements OnInit {
     console.log('Selected Role:', event.data);
     const dataObj = event.data
     this.idRoleOld = dataObj.idRole
-    // username: new FormControl('', [Validators.required]),
-    // password: new FormControl(''),
-    // fullname: new FormControl('', [Validators.required]),
-    // idgroup: new FormControl(''),
-    // idgroupObj: new FormControl(null, [Validators.required]),
-    // email: new FormControl(''),
-    // status: new FormControl(''),
-    this.userForm.patchValue({
+      this.userForm.patchValue({
       "username": dataObj.username,
       "password": null,
       "fullname": dataObj.fullname,
       "email": dataObj.username,
-      "status": null
+      "status": dataObj.status === 1?true:false
     }
     )
     this.showDetailForm = { show: true, action: "edit" };
@@ -179,6 +178,43 @@ export class Usermanagement implements OnInit {
         this.loading = false;
       }
     }
+  async _refreshGroupData(): Promise<void> {
+      this.loading = true;
+      this.loading = true;
+          fetch('/v2/admin/get_groups', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${this.token}`,
+              'x-client': 'angular-ssr'
+            }
+          })
+            .then(res => {
+              console.log("Response dari API  /v2/admin/get_groups", res);
+              return res.json();
+            })
+            .then(data => {
+              console.log("Response dari API /v2/admin/get_groups", data);
+              this.loading = false;
+              // this.groups = []; this.allGroups = [];
+              if (data.code === 20000) {
+                const dataRecordsTemp = cloneDeep(data.data);
+                this.groups = dataRecordsTemp;
+                // this.allGroups = this.groups;
+                // this.totalGroups = this.allGroups.length;
+                // this.loading = false;
+              } else {
+                // this.groups = [];
+                // this.totalGroups = this.groups.length;
+                // this.loading = false;
+                // this.showErrorPage = { show: true, message: data.message }
+              }
+            })
+            .catch(err => {
+              console.log("Response Error Catch /v2/admin/get_groups", err);
+            });
+    }
+
   onGlobalSearch() {
     console.log("Global filter : ", this.globalFilter);
     const term = this.globalFilter.trim().toLowerCase();
@@ -199,7 +235,7 @@ export class Usermanagement implements OnInit {
       "password": null,
       "fullname": null,
       "email": null,
-      "status": null
+      "status": true
     }
     )
     this.showDetailForm = { show: true, action: "add" };
@@ -216,11 +252,11 @@ export class Usermanagement implements OnInit {
     this.loading = true;
     const objPayload = this.userForm.value;
     console.log("Payload form ", objPayload);
-    if (this.showDetailForm.action == "add") {
-      this._saveAddData(objPayload)
-    } else {
-      this._saveEditData(objPayload, this.idRoleOld)
-    }
+    // if (this.showDetailForm.action == "add") {
+    //   this._saveAddData(objPayload)
+    // } else {
+    //   this._saveEditData(objPayload, this.idRoleOld)
+    // }
     // const payload = {credential:btoa(`${objPayload.username}:${objPayload.password}`)}
     // const credential = btoa(`${objPayload.username}:${objPayload.password}`);
 
