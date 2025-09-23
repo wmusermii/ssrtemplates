@@ -21,6 +21,7 @@ export class Sidebar implements OnInit, OnDestroy {
   showLogoutDialog = false;
   showConfirmDialog = false;
   isMobileMenuOpen = false;
+  errorMessage:any = {error:false, severity:"info", message:"ini test", icon:"pi pi-times"};
   items: MenuItem[] | undefined;
   listMenu: any[] = [];
   message: any = { title: "Expired Session", icon: "pi pi-exclamation-circle", message: "EXP token please login again." }
@@ -31,25 +32,45 @@ export class Sidebar implements OnInit, OnDestroy {
   };
   @Output() userChange = new EventEmitter<{name: string}>();
   constructor(private router: Router, private ssrStorage: LocalstorageService) { }
-  ngOnInit(): void {
-    this.token = this.ssrStorage.getItem('token')
+  async ngOnInit(): Promise<void> {
+    this.token = this.ssrStorage.getItem('blob')
     if (!this.token) {
       console.log("TOKEN KOSONG : ", this.token);
       // this.router.navigate(['/login']);
     } else {
       console.log("TOKEN ISI : ", "this.token");
-      this._getAttribute()
+      await this._getAttribute()
     }
   }
   ngOnDestroy(): void {
 
   }
-  async _getAttribute() {
+
+  async _getAttribute():Promise<void> {
+    try {
+      this.loading = true;
+      const attrbstring = atob(this.token!)
+      const attrbObj:any = JSON.parse(attrbstring);
+      console.log("ATTRIBUTENYA ",attrbObj);
+      this.user={name:attrbObj.fullname};
+      this.userChange.emit(this.user);
+      const datamenuString = attrbObj.menublob;
+      if (datamenuString) {
+        this.listMenu = JSON.parse(datamenuString);
+        this.replaceLogoutWithCommand(this.listMenu);
+        this.expandAllPanelMenu(this.listMenu);
+      }
+      this.loading=false;
+    } catch (error) {
+      console.log("ERROR getAttribute ",error);
+    }
+  }
+  async _getAttributeBak() {
     fetch('/v2/auth/attrb', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
+        // 'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       }
     })
@@ -141,18 +162,51 @@ expandAllPanelMenu(items: any[]) {
 
   async confirmLogout() {
     this.loading = true;
-    this.showLogoutDialog = false;
-    this.showConfirmDialog = false;
-    try {
-      await this.ssrStorage.clear();
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 50);
-    } catch (error) {
-      console.error('Error saat clear storage:', error);
-      // Tetap navigasi meskipun error
-      console.log("sidebar Error saat clear storage tiba tiba");
-      this.router.navigate(['/login']);
-    }
+    // this.showLogoutDialog = false;
+    // this.showConfirmDialog = false;
+    // try {
+    //   await this.ssrStorage.clear();
+    //   setTimeout(() => {
+    //     this.router.navigate(['/login']);
+    //   }, 50);
+    // } catch (error) {
+    //   console.error('Error saat clear storage:', error);
+    //   // Tetap navigasi meskipun error
+    //   console.log("sidebar Error saat clear storage tiba tiba");
+    //   this.router.navigate(['/login']);
+    // }
+     fetch('/v2/auth/logout', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-client': 'angular-ssr'
+      }
+    })
+      .then(async res => {
+        console.log("Response dari API  /auth/logout", res);
+        if (!res.ok) throw new Error('Logout Gagal');
+        // if(!res.ok) {
+        //   return;
+        // }
+        return res.json();
+      })
+      .then(async data => {
+        console.log("Response dari API /auth/logout ", data);
+        if (data.code === 20000) {
+          await this.ssrStorage.clear();
+           this.showLogoutDialog = false;
+            this.showConfirmDialog = false;
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 50);
+        } else {
+          this.errorMessage = {error:false, severity:"error", message:"Unable to logout", icon:"pi pi-times"};
+        }
+      })
+      .catch(err => {
+        this.loading=false;
+        console.log("Response Error Catch /auth/attrb", err);
+        this.showConfirmDialog = true;
+      });
   }
 }

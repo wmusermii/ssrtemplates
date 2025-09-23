@@ -20,9 +20,11 @@ export async function login(req: Request, res: Response, next: NextFunction) {
       ua: req.headers['user-agent'],
       ip: req.ip
     }
-
+    let tokenCookie = null;
     if(user.code === 20000) {
       const token = await EncryptDecryptJwt.generateToken(data);
+      delete data.password;
+      tokenCookie = await EncryptDecryptJwt.generateToken(data);
       const uInfo = JSON.parse(JSON.stringify(data)); // agar data tidak hilang
       for (const key in user.data) {
         if (user.data.hasOwnProperty(key)) {
@@ -34,10 +36,46 @@ export async function login(req: Request, res: Response, next: NextFunction) {
       user.data.token = token;
       user.data.userinfo = uInfo;
     }
-    await ResponseHelper.send(res, user);return;
+    const optionCookie:any[]=[
+      {
+        name: 'x_token',
+        value: tokenCookie,
+        options: {
+          httpOnly: true,   // Melindungi dari akses JavaScript
+          secure: false,     // Hanya dikirim melalui HTTPS jika true
+          signed:true,
+          sameSite: 'strict', // Mencegah CSRF
+          maxAge: convertToMaxAge("15m")  // Cookie berlaku selama 15 menit
+        }
+      }
+    ]
+    // await ResponseHelper.send(res, user);return;
+    // console.log("COOKENYA ",optionCookie);
+    await ResponseHelper.sendWithCookies(res, user, optionCookie);return;
   } catch (error) {
     logError("Error auth.controller : ", error)
     // next(error);
+    await ResponseHelper.send(res,ApiResponse.serverError(error+""));return;
+  }
+}
+export async function logout(req: Request, res: Response, next: NextFunction) {
+  try {
+    const optionCookie:any[]=[
+      {
+        name: 'x_token',
+        value: null,
+        options: {
+          httpOnly: true,   // Melindungi dari akses JavaScript
+          secure: false,     // Hanya dikirim melalui HTTPS jika true
+          signed:true,
+          sameSite: 'strict', // Mencegah CSRF
+          maxAge: convertToMaxAge("15m")  // Cookie berlaku selama 15 menit
+        }
+      }
+    ]
+    return ResponseHelper.sendClearCookies(res, ApiResponse.success({code:-1, message:"Logged out"}, "Logout success"), optionCookie);
+  } catch (error) {
+    logError("Error auth.controller logout : ", error)
     await ResponseHelper.send(res,ApiResponse.serverError(error+""));return;
   }
 }
@@ -57,7 +95,6 @@ export async function attrb(req: Request, res: Response) {
     await ResponseHelper.send(res,ApiResponse.serverError(error+""));return;
   }
 }
-
 export async function getaclattrb(req: Request, res: Response, next: NextFunction) {
   try {
     console.log("####################################### getaclattrb");
@@ -179,4 +216,19 @@ function shuffleString(str: string): string {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr.join("");
+}
+function convertToMaxAge(timeString: string): number {
+  const match = timeString.match(/^(\d+)([smhd])$/);
+  if (!match) {
+      throw new Error('Format waktu tidak valid. Gunakan format seperti "5m", "1h", dll.');
+  }
+  const value = parseInt(match[1], 10);
+  const unit = match[2];
+  switch (unit) {
+      case 's': return value * 1000;          // Detik ke milidetik
+      case 'm': return value * 60 * 1000;     // Menit ke milidetik
+      case 'h': return value * 60 * 60 * 1000; // Jam ke milidetik
+      case 'd': return value * 24 * 60 * 60 * 1000; // Hari ke milidetik
+      default: throw new Error('Unit waktu tidak dikenal.');
+  }
 }

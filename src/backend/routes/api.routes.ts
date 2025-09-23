@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { ResponseHelper } from '../utils/ResponseHelper';
 import { addGroups, addMenus, addRoles,  addUsers,  delGroups,  delMenus, delRoles, delUsers, echo, generateQShopee, generateQShopeeCurrent, generateQShopeeJobs, getAllSKUAvailable, getAllSKUOnTransaction, getAllStockopname, getBestDataToPrint, getCountInvoicesAvailable, getCountSKUAvailable, getGroupsAvailable, getIcons,  getMenusAvailable, getQShopee, getQShopeeAttribute, getQShopeeToday, getRolesAvailable, getShopInfo, getShopPerformance, getStockDetailopnameByIdOP, getStockDetailopnameByIdOPExcel, getUsersAvailable, insertStockDetailopname, insertStockopname, sendingEmailTo, sendingPrinting,  updateQShopeeAttribute, updateUser, updGroupMenu, updGroups, updMenus, updRoles, updUsers } from '../controllers/api.controller';
-import { attrb, getaclattrb, login, registUser } from '../controllers/auth.controller';
+import { attrb, getaclattrb, login, logout, registUser } from '../controllers/auth.controller';
 import { authBearerMiddleware } from '../middlewares/authmiddleware';
 import { asyncHandler } from '../middlewares/asyncHandler';
+import { CookieMiddleware } from '../middlewares/cookiemiddleware';
 const router = Router();
 router.get('/echo', echo);
 //##################################### REAL FUNCTION#############
@@ -21,36 +22,37 @@ router.get('/echo', echo);
 // router.post('/shopee/update_attributes', asyncHandler(authBearerMiddleware),asyncHandler(updateQShopeeAttribute));
 //##################################### AUTH ROUTES #############
 router.post('/auth/login', asyncHandler(login));
+router.get('/auth/logout', asyncHandler(CookieMiddleware),asyncHandler(logout));
 router.post('/auth/registuser', asyncHandler(registUser));
-router.get('/auth/attrb',asyncHandler(authBearerMiddleware), asyncHandler(attrb));
-router.post('/auth/aclattrb', asyncHandler(authBearerMiddleware),asyncHandler(getaclattrb));
-router.post('/auth/updateuser', asyncHandler(authBearerMiddleware),asyncHandler(updateUser));
+router.get('/auth/attrb',asyncHandler(CookieMiddleware), asyncHandler(attrb));
+router.post('/auth/aclattrb', asyncHandler(CookieMiddleware),asyncHandler(getaclattrb));
+router.post('/auth/updateuser', asyncHandler(CookieMiddleware),asyncHandler(updateUser));
 
 //##################################### AUTH ROUTES #############
 
-router.get('/admin/get_roles', asyncHandler(authBearerMiddleware),asyncHandler(getRolesAvailable)); //Melihat is daftar Role
-router.post('/admin/add_role', asyncHandler(authBearerMiddleware),asyncHandler(addRoles)); //Menambah is daftar Role
-router.post('/admin/upd_role', asyncHandler(authBearerMiddleware),asyncHandler(updRoles)); //Merubah is daftar Role
-router.post('/admin/del_role', asyncHandler(authBearerMiddleware),asyncHandler(delRoles)); //menghapus is daftar Role
+router.get('/admin/get_roles', asyncHandler(CookieMiddleware),asyncHandler(getRolesAvailable)); //Melihat is daftar Role
+router.post('/admin/add_role', asyncHandler(CookieMiddleware),asyncHandler(addRoles)); //Menambah is daftar Role
+router.post('/admin/upd_role', asyncHandler(CookieMiddleware),asyncHandler(updRoles)); //Merubah is daftar Role
+router.post('/admin/del_role', asyncHandler(CookieMiddleware),asyncHandler(delRoles)); //menghapus is daftar Role
 
-router.get('/admin/get_icons', asyncHandler(authBearerMiddleware),asyncHandler(getIcons)); //Melihat is daftar IconsPrimeNG
-router.get('/admin/get_menus', asyncHandler(authBearerMiddleware),asyncHandler(getMenusAvailable)); //Melihat is daftar menu
-router.post('/admin/add_menu', asyncHandler(authBearerMiddleware),asyncHandler(addMenus)); //Menambah is daftar Menu
-router.post('/admin/upd_menu', asyncHandler(authBearerMiddleware),asyncHandler(updMenus)); //Merubah is daftar Menu
-router.post('/admin/del_menu', asyncHandler(authBearerMiddleware),asyncHandler(delMenus)); //menghapus is daftar Menu
+router.get('/admin/get_icons', asyncHandler(CookieMiddleware),asyncHandler(getIcons)); //Melihat is daftar IconsPrimeNG
+router.get('/admin/get_menus', asyncHandler(CookieMiddleware),asyncHandler(getMenusAvailable)); //Melihat is daftar menu
+router.post('/admin/add_menu', asyncHandler(CookieMiddleware),asyncHandler(addMenus)); //Menambah is daftar Menu
+router.post('/admin/upd_menu', asyncHandler(CookieMiddleware),asyncHandler(updMenus)); //Merubah is daftar Menu
+router.post('/admin/del_menu', asyncHandler(CookieMiddleware),asyncHandler(delMenus)); //menghapus is daftar Menu
 
 
 
-router.get('/admin/get_groups', asyncHandler(authBearerMiddleware),asyncHandler(getGroupsAvailable)); //Melihat is daftar Group
-router.post('/admin/add_group', asyncHandler(authBearerMiddleware),asyncHandler(addGroups)); //Menambah is daftar Group
-router.post('/admin/upd_group', asyncHandler(authBearerMiddleware),asyncHandler(updGroups)); //Merubah is daftar Group
-router.post('/admin/upd_group_menu', asyncHandler(authBearerMiddleware),asyncHandler(updGroupMenu)); //Merubah is daftar Group
-router.post('/admin/del_group', asyncHandler(authBearerMiddleware),asyncHandler(delGroups)); //menghapus is daftar Group
+router.get('/admin/get_groups', asyncHandler(CookieMiddleware),asyncHandler(getGroupsAvailable)); //Melihat is daftar Group
+router.post('/admin/add_group', asyncHandler(CookieMiddleware),asyncHandler(addGroups)); //Menambah is daftar Group
+router.post('/admin/upd_group', asyncHandler(CookieMiddleware),asyncHandler(updGroups)); //Merubah is daftar Group
+router.post('/admin/upd_group_menu', asyncHandler(CookieMiddleware),asyncHandler(updGroupMenu)); //Merubah is daftar Group
+router.post('/admin/del_group', asyncHandler(CookieMiddleware),asyncHandler(delGroups)); //menghapus is daftar Group
 
-router.get('/admin/get_users', asyncHandler(authBearerMiddleware),asyncHandler(getUsersAvailable)); //Melihat is daftar User
-router.post('/admin/add_user', asyncHandler(authBearerMiddleware),asyncHandler(addUsers)); //Menambah is daftar User
-router.post('/admin/upd_user', asyncHandler(authBearerMiddleware),asyncHandler(updUsers)); //Merubah is daftar User
-router.post('/admin/del_user', asyncHandler(authBearerMiddleware),asyncHandler(delUsers)); //menghapus is daftar User
+router.get('/admin/get_users', asyncHandler(CookieMiddleware),asyncHandler(getUsersAvailable)); //Melihat is daftar User
+router.post('/admin/add_user', asyncHandler(CookieMiddleware),asyncHandler(addUsers)); //Menambah is daftar User
+router.post('/admin/upd_user', asyncHandler(CookieMiddleware),asyncHandler(updUsers)); //Merubah is daftar User
+router.post('/admin/del_user', asyncHandler(CookieMiddleware),asyncHandler(delUsers)); //menghapus is daftar User
 
 // router.get('/warehouse/get_jobs/available', asyncHandler(authBearerMiddleware),asyncHandler(viewQShopeePosItem));// Untuk mengambil Jobs / POS barang list dalam Inquery Shopee yang available
 // router.get('/warehouse/get_packages', asyncHandler(authBearerMiddleware),asyncHandler(getPackageJobAvailable));// Untuk mengambil Packaging list dalam Jobs yang available

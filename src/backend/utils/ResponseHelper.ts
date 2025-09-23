@@ -12,6 +12,7 @@ export class ResponseHelper {
     res.status(statusCode).json(responseObject);
     return Promise.resolve(); // <--- tambahkan ini
   }
+
   static sendWithCookies<T>(
     res: Response,
     responseObject: ApiResponse<T>,
@@ -24,10 +25,11 @@ export class ResponseHelper {
       try {
         res.cookie(cookie.name, cookie.value, cookie.options || {});
       } catch (error) {
-        logInfo("Error : ",error)
+        logInfo("Error Cookee : ",error)
         // logError(error+"");
       }
     });
+
     res.status(statusCode).json(responseObject);
     return Promise.resolve(); // <--- tambahkan ini
   }

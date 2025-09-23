@@ -7,7 +7,7 @@ import {
 import backendRouter from './backend/routes/api.routes'
 import express from 'express';
 import { join, resolve } from 'node:path';
-
+import cookieParser from 'cookie-parser';
 const browserDistFolder = join(import.meta.dirname, '../browser');
 const serverDistFolder = join(import.meta.dirname); // Folder dist/server
 
@@ -15,6 +15,7 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /******************** API SERVER *********************/
+app.use(cookieParser("ajinomotocapmangkokmerahdelimaputihputihmel")); // Ini Penting sekali
 app.use(express.json()); // <-- Tambah ini agar API bisa menerima JSON body
 // ---- Tambah route API di sini ----
 // app.get('/api/health', (req, res) => {

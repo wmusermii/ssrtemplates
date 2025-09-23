@@ -54,8 +54,8 @@ export class Login {
 
         if(data.code === 20000) {
           this.loading=false;
-          this.ssrStorage.setItem('token', data.data.token);
-          delete data.data.userinfo.password;
+          // this.ssrStorage.setItem('token', data.data.token);
+          // delete data.data.userinfo.password;
           this.ssrStorage.setItem('C_INFO', data.data.userinfo);
           this.router.navigate(['/dashboard']);
         } else {
