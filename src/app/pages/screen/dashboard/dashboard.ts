@@ -62,7 +62,7 @@ export class Dashboard implements OnInit {
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
     const sessionDate:any = this.ssrStorage.getItem("FETCHTIME")
-    console.log("USER INFO ", this.userInfo);
+    // console.log("USER INFO ", this.userInfo);
 
     // this._refreshCountInvoices();
   }

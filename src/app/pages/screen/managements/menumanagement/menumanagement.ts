@@ -26,6 +26,7 @@ import { TooltipModule } from 'primeng/tooltip';
   styleUrl: './menumanagement.css'
 })
 export class Menumanagement implements OnInit {
+  currentUrl: string = '';
   home: MenuItem | undefined;
   breaditems: MenuItem[] | undefined;
   //##########################################################
@@ -45,7 +46,7 @@ export class Menumanagement implements OnInit {
   showDetailForm:any = {show:false, action:"add"};
   showDetailDelete:boolean = false;
   errorMessage:any = {error:false, severity:"error", message:"ini test", icon:"pi pi-exclamation-circle"};
-
+  aclMenublob: any[] = [];
   menuForm = new FormGroup({
       nameMenu: new FormControl('', [Validators.required]),
       pathMenu: new FormControl(''),
@@ -60,9 +61,11 @@ export class Menumanagement implements OnInit {
   }
   constructor(private router: Router, private ssrStorage: LocalstorageService) { }
   async ngOnInit(): Promise<void> {
+    this.currentUrl = this.router.url;
+    console.log('Current URL:', this.currentUrl);
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
-    // console.log("USER INFO ", this.userInfo);
+    // // console.log("USER INFO ", this.userInfo);
     this.cols = [
         { field: 'idMenu', header: 'Id' },
         { field: 'nameMenu', header: 'Menu' },
@@ -111,6 +114,42 @@ export class Menumanagement implements OnInit {
               console.log("Response Error Catch /v2/admin/get_roles", err);
             });
   }
+  async _refreshACLMenu(): Promise<void> {
+      const payload: any = { routeUrl: this.currentUrl };
+
+      this.loading = true;
+
+      try {
+        const res = await fetch('/v2/auth/aclattrb', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`,
+            'x-client': 'angular-ssr'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        console.log("Response dari API /v2/auth/aclattrb", res);
+
+        const data = await res.json();
+        console.log("Response dari API /v2/auth/aclattrb", data);
+
+        this.loading = false;
+
+        if (data.code === 20000) {
+          const dataRecordsMenu: any = cloneDeep(data.data);
+          this.aclMenublob = dataRecordsMenu.roles;
+        } else {
+          this.aclMenublob = [];
+        }
+
+      } catch (err) {
+        console.log("Response Error Catch /v2/auth/aclattrb", err);
+        this.aclMenublob = [];
+        this.loading = false;
+      }
+    }
   async _refreshIconData(){
       this.loading=true;
           fetch('/v2/admin/get_icons', {

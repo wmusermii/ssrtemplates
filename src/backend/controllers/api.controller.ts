@@ -687,7 +687,6 @@ export async function getGroupsAvailable(req: Request, res: Response, next: Next
     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 }
-
 export async function addGroups(req: Request, res: Response, next: NextFunction) {
   try {
     console.log("####################################### addGroups");
@@ -720,7 +719,6 @@ export async function updGroups(req: Request, res: Response, next: NextFunction)
     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 }
-
 export async function updGroupMenu(req: Request, res: Response, next: NextFunction) {
   try {
     console.log("####################################### updGroupMenu");
@@ -737,12 +735,76 @@ export async function updGroupMenu(req: Request, res: Response, next: NextFuncti
     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 }
-
-
-
 export async function delGroups(req: Request, res: Response, next: NextFunction) {
   try {
     console.log("####################################### delGroups");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.dellGroupService(userInfo,req.body);
+    if (packageResult.code === 20000) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+
+export async function getUsersAvailable(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### getUsersAvailable");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.getGroupsService(userInfo);
+    if (packageResult.code === 20000 && packageResult.data.length > 0) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    // next(error);
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function addUsers(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### addUsers");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.addGroupService(userInfo,req.body);
+    if (packageResult.code === 20000) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function updUsers(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### updUsers");
+    const userInfo: any = req.userInfo;
+    const packageResult = await apiService.updGroupService(userInfo,req.body);
+    if (packageResult.code === 20000) {
+      await ResponseHelper.send(res, packageResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+
+export async function delUsers(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### delUsers");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.dellGroupService(userInfo,req.body);
     if (packageResult.code === 20000) {

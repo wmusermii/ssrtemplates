@@ -3,7 +3,9 @@
     <p-breadcrumb [model]="breaditems" [home]="home" />
   </div>
   <p-table #table [columns]="cols" [value]="roles" class="w-full" stripedRows="true" showGridlines="true"
-    scrollable="true" selectionMode="single" [(selection)]="selectedRole" (onRowSelect)="onRowSelect($event)"
+    scrollable="true"
+    [selectionMode]="aclMenublob.includes('up') ? 'single' : null"
+    [(selection)]="selectedRole" (onRowSelect)="onRowSelect($event)"
     [paginator]="true" [rows]="rows" [tableStyle]="{ 'min-width': '40rem' }" [rowsPerPageOptions]="[50, 100]">
     <ng-template #caption>
       <div class="flex flex-col gap-2">

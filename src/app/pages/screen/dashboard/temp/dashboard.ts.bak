@@ -42,7 +42,7 @@ export class Dashboard implements OnInit {
   ngOnInit(): void {
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
-    console.log("USER INFO ", this.userInfo);
+    // console.log("USER INFO ", this.userInfo);
     this._refreshCountInvoices();
     this._refreshCountSKU();
 

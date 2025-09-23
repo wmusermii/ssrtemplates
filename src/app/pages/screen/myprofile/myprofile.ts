@@ -45,7 +45,7 @@ export class Myprofile implements OnInit {
   ngOnInit(): void {
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
-    console.log("USER INFO ", this.userInfo);
+    // console.log("USER INFO ", this.userInfo);
     this.breaditems = [{ label: 'Privacy' }, { label: 'Profile' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
     if (this.userInfo) {

@@ -76,7 +76,7 @@ export class Groupmanagement implements OnInit {
     this.currentUrl = this.router.url;
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
-    console.log("USER INFO ", this.userInfo);
+    // console.log("USER INFO ", this.userInfo);
     this.cols = [
       { field: 'idgroup', header: 'Group Id' },
       { field: 'groupname', header: 'Name' },
@@ -90,6 +90,7 @@ export class Groupmanagement implements OnInit {
     this.breaditems = [{ label: 'Management' }, { label: 'Groups' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
     await this._refreshACLMenu();
+    console.log("MENU ACL ", this.aclMenublob);
     if (this.aclMenublob.includes("rd")) {
       await this._refreshListData();
       await this._refreshListRoles();
@@ -570,7 +571,6 @@ export class Groupmanagement implements OnInit {
       const payload: any = { routeUrl: this.currentUrl };
       console.log("PAYLOAD ATTRB ", payload);
       this.loading = true;
-
       try {
         const res = await fetch('/v2/auth/aclattrb', {
           method: 'POST',
@@ -595,7 +595,7 @@ export class Groupmanagement implements OnInit {
         } else {
           this.aclMenublob = [];
         }
-        console.log("ACL MENU INI ", this.aclMenublob);
+
       } catch (err) {
         console.log("Response Error Catch /v2/auth/aclattrb", err);
         this.aclMenublob = [];

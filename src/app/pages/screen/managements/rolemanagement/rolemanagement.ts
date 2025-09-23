@@ -61,7 +61,8 @@ export class Rolemanagement implements OnInit {
     console.log('Current URL:', this.currentUrl);
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
-    // console.log("USER INFO ", this.userInfo);
+    //##########################################################
+    // // console.log("USER INFO ", this.userInfo);
     this.cols = [
       { field: 'idRole', header: 'Id Role' },
       { field: 'roleName', header: 'Name' },
@@ -69,6 +70,7 @@ export class Rolemanagement implements OnInit {
     ];
     this.breaditems = [{ label: 'Management' }, { label: 'Role' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
+    //##########################################################
     await this._refreshACLMenu();
     if (this.aclMenublob.includes("rd")) {
       await this._refreshListData();
@@ -115,7 +117,7 @@ export class Rolemanagement implements OnInit {
   }
   async _refreshACLMenu(): Promise<void> {
     const payload: any = { routeUrl: this.currentUrl };
-    console.log("PAYLOAD ATTRB ", payload);
+
     this.loading = true;
 
     try {
@@ -142,17 +144,13 @@ export class Rolemanagement implements OnInit {
       } else {
         this.aclMenublob = [];
       }
-      console.log("ACL MENU INI ", this.aclMenublob);
+
     } catch (err) {
       console.log("Response Error Catch /v2/auth/aclattrb", err);
       this.aclMenublob = [];
       this.loading = false;
     }
   }
-
-
-
-
   onGlobalSearch() {
     console.log("Global filter : ", this.globalFilter);
     const term = this.globalFilter.trim().toLowerCase();

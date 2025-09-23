@@ -8,7 +8,7 @@ import { ShopeeService } from "./shopee/shopee.service";
 import nodemailer from 'nodemailer';
 import { promises as fs } from 'fs';
 // import { WarehouseRepository } from "../repositories/warehouse.repository";
-import { OpnameRepository } from "../repositories/opname.repository";
+
 import { Request } from "express";
 import { RoleRepository } from "../repositories/role.repository";
 import { MenuRepository } from "../repositories/menu.repository";
@@ -554,7 +554,6 @@ export class ApiService {
     //################## Berhasil Isi #######################
     return ApiResponse.success(groupResult, "Record updated");
   }
-
   async updGroupMenuService(userinfo: any, payload:any) {
     payload = {...payload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{updated_by:userinfo.iduser}}
     const groupResult = await this.groupRepo.updGroupMenu(payload);
@@ -562,7 +561,6 @@ export class ApiService {
     //################## Berhasil Isi #######################
     return ApiResponse.success(groupResult, "Record updated");
   }
-
   async dellGroupService(userinfo: any, payload:any) {
     const groupResult = await this.groupRepo.delGroup(payload);
     if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to delete data!");
@@ -570,6 +568,38 @@ export class ApiService {
     return ApiResponse.success(groupResult, "Record deleted");
   }
 
+  async getUsersService(userinfo: any) {
+    const userResult = await this.userRepo.findAllGroup();
+    if (!userResult) return ApiResponse.successNoData(userResult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(userResult, "Records found");
+  }
+  async getUserByIdService(userinfo: any, payload:any) {
+    const userResult = await this.userRepo.findAllGroupById(payload.idRole);
+    if (!userResult) return ApiResponse.successNoData(userResult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(userResult, "Records found");
+  }
+  async addUserService(userinfo: any, payload:any) {
+    payload = {...payload, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
+    const userResult = await this.userRepo.addGroup(payload);
+    if (!userResult) return ApiResponse.successNoData(userResult, "Unable to add data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(userResult, "Record added");
+  }
+  async updUserService(userinfo: any, payload:any) {
+    payload = {...payload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{updated_by:userinfo.iduser}}
+    const userResult = await this.userRepo.updGroup(payload);
+    if (!userResult) return ApiResponse.successNoData(userResult, "Unable to update data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(userResult, "Record updated");
+  }
+  async dellUserService(userinfo: any, payload:any) {
+    const userResult = await this.userRepo.delGroup(payload);
+    if (!userResult) return ApiResponse.successNoData(userResult, "Unable to delete data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(userResult, "Record deleted");
+  }
 
 
 
