@@ -161,7 +161,7 @@ export class Groupmanagement implements OnInit {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
+        // 'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       }
     })
@@ -189,7 +189,7 @@ export class Groupmanagement implements OnInit {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
+        // 'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       }
     })
@@ -318,7 +318,7 @@ export class Groupmanagement implements OnInit {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
+        // 'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
@@ -354,7 +354,7 @@ export class Groupmanagement implements OnInit {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
+        // 'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
@@ -389,7 +389,7 @@ export class Groupmanagement implements OnInit {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
+        // 'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
@@ -423,7 +423,7 @@ export class Groupmanagement implements OnInit {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
+        // 'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
@@ -576,7 +576,7 @@ export class Groupmanagement implements OnInit {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.token}`,
+            // 'Authorization': `Bearer ${this.token}`,
             'x-client': 'angular-ssr'
           },
           body: JSON.stringify(payload)

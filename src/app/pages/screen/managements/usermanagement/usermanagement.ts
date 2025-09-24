@@ -200,14 +200,8 @@ export class Usermanagement implements OnInit {
               if (data.code === 20000) {
                 const dataRecordsTemp = cloneDeep(data.data);
                 this.groups = dataRecordsTemp;
-                // this.allGroups = this.groups;
-                // this.totalGroups = this.allGroups.length;
-                // this.loading = false;
               } else {
-                // this.groups = [];
-                // this.totalGroups = this.groups.length;
-                // this.loading = false;
-                // this.showErrorPage = { show: true, message: data.message }
+                this.groups = [];
               }
             })
             .catch(err => {

@@ -90,7 +90,7 @@ export class Menumanagement implements OnInit {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${this.token}`,
+              // 'Authorization': `Bearer ${this.token}`,
               'x-client': 'angular-ssr'
             }
           })
@@ -129,7 +129,7 @@ export class Menumanagement implements OnInit {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.token}`,
+            // 'Authorization': `Bearer ${this.token}`,
             'x-client': 'angular-ssr'
           },
           body: JSON.stringify(payload)
@@ -161,7 +161,7 @@ export class Menumanagement implements OnInit {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${this.token}`,
+              // 'Authorization': `Bearer ${this.token}`,
               'x-client': 'angular-ssr'
             }
           })
@@ -270,7 +270,7 @@ export class Menumanagement implements OnInit {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
+        // 'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
@@ -306,7 +306,7 @@ export class Menumanagement implements OnInit {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
+        // 'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
@@ -339,7 +339,7 @@ export class Menumanagement implements OnInit {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
+        // 'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
