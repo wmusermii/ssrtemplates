@@ -167,13 +167,7 @@ export async function registUser(req: Request, res: Response) {
             </div>
             </body>
             </html>`;
-
-      const kirimemail = await apiService.sendEmailNotification(email,"User Registration", htmlMessage);
-      if(kirimemail.code === 20000) {
-        await ResponseHelper.send(res, ApiResponse.success(kirimemail.data, "Success"));return;
-      } else {
-        await ResponseHelper.send(res, ApiResponse.success(insertUser.data, "Success"));return;
-      }
+      await ResponseHelper.send(res, ApiResponse.success(insertUser.data, "Success"));return;
   } catch (error) {
     logError("Error auth.controller : ", error)
     await ResponseHelper.send(res,ApiResponse.serverError(error+""));return;

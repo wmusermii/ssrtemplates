@@ -51,7 +51,7 @@ export class Sidebar implements OnInit, OnDestroy {
       this.loading = true;
       const attrbstring = atob(this.token!)
       const attrbObj:any = JSON.parse(attrbstring);
-      console.log("ATTRIBUTENYA ",attrbObj);
+
       this.user={name:attrbObj.fullname};
       this.userChange.emit(this.user);
       const datamenuString = attrbObj.menublob;
@@ -59,7 +59,7 @@ export class Sidebar implements OnInit, OnDestroy {
         this.listMenu = JSON.parse(datamenuString);
         await this.replaceLogoutWithCommand(this.listMenu);
         await this.expandAllPanelMenu(this.listMenu);
-        console.log("HASIL MENU AKHIR ", this.listMenu);
+        // console.log("HASIL MENU AKHIR ", this.listMenu);
       }
       this.loading=false;
     } catch (error) {
@@ -99,7 +99,6 @@ export class Sidebar implements OnInit, OnDestroy {
             this.listMenu = JSON.parse(datamenuString);
             await this.replaceLogoutWithCommand(this.listMenu);
             await this.expandAllPanelMenu(this.listMenu);
-            console.log("HASIL MENU AKHIR ", this.listMenu);
           }
         } else {
           this.listMenu = [];

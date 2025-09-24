@@ -148,7 +148,7 @@ export class Groupmanagement implements OnInit {
           this.groups = [];
           this.totalGroups = this.groups.length;
           this.loading = false;
-          this.showErrorPage = { show: true, message: data.message }
+          // this.showErrorPage = { show: true, message: data.message }
         }
       })
       .catch(err => {
@@ -419,6 +419,7 @@ export class Groupmanagement implements OnInit {
   }
 
   async _saveDeleteData(payload: any) {
+    console.log("Payload delete ",payload);
     fetch('/v2/admin/del_group', {
       method: 'POST',
       headers: {
@@ -569,7 +570,6 @@ export class Groupmanagement implements OnInit {
 
   async _refreshACLMenu(): Promise<void> {
       const payload: any = { routeUrl: this.currentUrl };
-      console.log("PAYLOAD ATTRB ", payload);
       this.loading = true;
       try {
         const res = await fetch('/v2/auth/aclattrb', {

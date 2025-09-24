@@ -30,7 +30,7 @@ export class AuthService {
       return ApiResponse.successNoData([], "Invalid menublob format!");
     }
     const resultObj = await this.findMenuByRoute(menublobObj, payload.routeUrl);
-    console.log("RESPONSE FIND MENU ", resultObj);
+    // console.log("RESPONSE FIND MENU ", resultObj);
     if (!resultObj) {
       return ApiResponse.successNoData(resultObj, "Incorrect Group Attribute!");
     }

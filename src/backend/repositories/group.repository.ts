@@ -33,7 +33,7 @@ export class GroupRepository {
   }
 
   async delGroup(payload: any) {
-    const query = await db('m_group').delete().where("idGroup", payload.idGroup);
+    const query = await db('m_group').delete().where("idgroup", payload.idgroup);
     return query;
   }
 

@@ -383,7 +383,6 @@ export class Usermanagement implements OnInit {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
