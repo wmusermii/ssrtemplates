@@ -80,11 +80,11 @@ export class Menumanagement implements OnInit {
     console.log("MENU ACL ", this.aclMenublob);
     if (this.aclMenublob.includes("rd")) {
        await this._refreshIconData();
-       await this._refreshListData();
+       const dataRecords = await this._refreshListData();
     }
 
   }
-  async _refreshListData():Promise<void>{
+  async _refreshListData():Promise<any>{
       this.loading=true;
           fetch('/v2/admin/get_menus', {
             method: 'GET',

@@ -644,7 +644,7 @@ async transformTreeToMenuModel(nodes: any[], isRoot = true): Promise<any[]> {
         {
           label: "Logout",
           icon: "pi pi-sign-out",
-          routerLink: "/privacy/logout"
+          routerLink: []
         }
       ]
     });

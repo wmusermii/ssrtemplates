@@ -57,8 +57,9 @@ export class Sidebar implements OnInit, OnDestroy {
       const datamenuString = attrbObj.menublob;
       if (datamenuString) {
         this.listMenu = JSON.parse(datamenuString);
-        this.replaceLogoutWithCommand(this.listMenu);
-        this.expandAllPanelMenu(this.listMenu);
+        await this.replaceLogoutWithCommand(this.listMenu);
+        await this.expandAllPanelMenu(this.listMenu);
+        console.log("HASIL MENU AKHIR ", this.listMenu);
       }
       this.loading=false;
     } catch (error) {
@@ -96,8 +97,9 @@ export class Sidebar implements OnInit, OnDestroy {
           const datamenuString = data.data.menublob;
           if (datamenuString) {
             this.listMenu = JSON.parse(datamenuString);
-            this.replaceLogoutWithCommand(this.listMenu);
-            this.expandAllPanelMenu(this.listMenu);
+            await this.replaceLogoutWithCommand(this.listMenu);
+            await this.expandAllPanelMenu(this.listMenu);
+            console.log("HASIL MENU AKHIR ", this.listMenu);
           }
         } else {
           this.listMenu = [];
@@ -110,17 +112,18 @@ export class Sidebar implements OnInit, OnDestroy {
       });
   }
   // helper recursive function
-  replaceLogoutWithCommand(items: any[]) {
+  async replaceLogoutWithCommand(items: any[]):Promise<void> {
   for (const item of items) {
     if (item.label === 'Logout') {
       // RouterLink dummy supaya PrimeNG tetap render icon
-      item.routerLink = '/';
-
       // Tetapkan command tanpa event
-      item.command = () => {
+      item.command = (event?: any) => {
+         if (event && event.originalEvent) {
+          event.originalEvent.preventDefault(); // cegah navigasi
+          event.originalEvent.stopPropagation(); // cegah bubbling
+        }
         this.openLogoutDialog(); // jalankan dialog logout
       };
-
       // Pastikan icon tetap ada
       item.icon = item.icon || 'pi pi-sign-out';
       // console.log('LOGOUT ITEM:', item);
@@ -135,7 +138,7 @@ export class Sidebar implements OnInit, OnDestroy {
   // Trigger re-render menu
   this.listMenu = [...this.listMenu];
 }
-expandAllPanelMenu(items: any[]) {
+async expandAllPanelMenu(items: any[]):Promise<void> {
   for (const item of items) {
     item.expanded = true; // set expanded
     if (item.items && item.items.length > 0) {
@@ -185,9 +188,6 @@ expandAllPanelMenu(items: any[]) {
       .then(async res => {
         console.log("Response dari API  /auth/logout", res);
         if (!res.ok) throw new Error('Logout Gagal');
-        // if(!res.ok) {
-        //   return;
-        // }
         return res.json();
       })
       .then(async data => {

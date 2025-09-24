@@ -118,7 +118,7 @@ async findAllUsers(userinfo: any) {
     return result;
   }
   async addUser(payload: any) {
-    const query = await db('m_user').insert(payload).returning("ididusergroup");
+    const query = await db('m_user').insert(payload).returning("iduser");
     return query;
   }
   async updUser(payload: any) {

@@ -576,13 +576,18 @@ export class ApiService {
     return ApiResponse.success(userResult, "Records found");
   }
   async addUserService(userinfo: any, payload:any) {
-    payload = {...payload, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
+    const iduserGenerated = await this.generateRandomId()
+    payload.status = payload.status?1:0;
+
+    payload = {...payload,...{iduser:iduserGenerated}, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
     const userResult = await this.userRepo.addUser(payload);
     if (!userResult) return ApiResponse.successNoData(userResult, "Unable to add data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(userResult, "Record added");
   }
   async updUserService(userinfo: any, payload:any) {
+
+    payload.status = payload.status?1:0;
     payload = {...payload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{updated_by:userinfo.iduser}}
     const userResult = await this.userRepo.updUser(payload);
     if (!userResult) return ApiResponse.successNoData(userResult, "Unable to update data!");
@@ -605,6 +610,11 @@ export class ApiService {
     const pad = (n: number) => String(n).padStart(2, '0');
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
   }
-
+  private async generateRandomId(length: number = 9): Promise<string> {
+    const min = Math.pow(10, length - 1);
+    const max = Math.pow(10, length) - 1;
+    const id = Math.floor(Math.random() * (max - min + 1) + min).toString();
+    return id;
+  }
 }
 

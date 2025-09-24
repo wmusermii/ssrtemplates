@@ -37,7 +37,7 @@ export class Usermanagement implements OnInit {
   loading: boolean = false;
   cols!: Column[];
   rows = 50;
-  idRoleOld: string = "";
+  idUserOld: string = "";
   users!: UserField[];
   totalUsers: number = 0;
   allUser!: UserField[];
@@ -90,14 +90,23 @@ export class Usermanagement implements OnInit {
     // this.errorMessage={error:false, severity:"info", message:"", icon:"pi pi-send"};
   }
   onRowSelect(event: any) {
-    console.log('Selected Role:', event.data);
+    console.log('Selected User:', event.data);
     const dataObj = event.data
-    this.idRoleOld = dataObj.idRole
+    this.idUserOld = dataObj.iduser
+    const groupObj:any = this.groups.find(g => g.idgroup === dataObj.idgroup) || {};
+    const passwordControl = this.userForm.get('password');
+    if (passwordControl) {
+      passwordControl.clearValidators(); // hapus semua validator
+      passwordControl.updateValueAndValidity(); // refresh validasi
+    }
+
       this.userForm.patchValue({
       "username": dataObj.username,
       "password": null,
       "fullname": dataObj.fullname,
-      "email": dataObj.username,
+      "email": dataObj.email,
+      "idgroup": dataObj.idgroup,
+      "idgroupObj":groupObj,
       "status": dataObj.status === 1?true:false
     }
     )
@@ -109,7 +118,7 @@ export class Usermanagement implements OnInit {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.token}`,
+          // 'Authorization': `Bearer ${this.token}`,
           'x-client': 'angular-ssr'
         }
       })
@@ -152,7 +161,7 @@ export class Usermanagement implements OnInit {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.token}`,
+            // 'Authorization': `Bearer ${this.token}`,
             'x-client': 'angular-ssr'
           },
           body: JSON.stringify(payload)
@@ -185,7 +194,7 @@ export class Usermanagement implements OnInit {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${this.token}`,
+              // 'Authorization': `Bearer ${this.token}`,
               'x-client': 'angular-ssr'
             }
           })
@@ -232,6 +241,8 @@ export class Usermanagement implements OnInit {
       "status": true
     }
     )
+    this.setCreateMode();
+
     this.showDetailForm = { show: true, action: "add" };
   }
   async _delUser(event: any) {
@@ -244,19 +255,52 @@ export class Usermanagement implements OnInit {
       return; // Form invalid, jangan lanjut
     }
     this.loading = true;
-    const objPayload = this.userForm.value;
+    let objPayload = this.userForm.value;
     console.log("Payload form ", objPayload);
-    // if (this.showDetailForm.action == "add") {
-    //   this._saveAddData(objPayload)
-    // } else {
-    //   this._saveEditData(objPayload, this.idRoleOld)
-    // }
-    // const payload = {credential:btoa(`${objPayload.username}:${objPayload.password}`)}
-    // const credential = btoa(`${objPayload.username}:${objPayload.password}`);
+    const selectedGroup:any = objPayload.idgroupObj;
+    objPayload.idgroup = selectedGroup?.idgroup;
+    delete objPayload.idgroupObj;
+    if (this.showDetailForm.action == "add") {
+      //########### CHECK PANJANG USER ##############
+      let usernameLength = objPayload?.username
+      if((usernameLength ?? "").length < 6) {
+        this.loading = false;
+        this.errorMessage ={ error: true, severity: "error", message: "Username cannot less than 6 characters", icon: "pi pi-exclamation-circle" };
+        return;
+      }
+      // ########## CHECK PASSWORD ATTRIBUTE ########
+      const policy = {
+        minLength: 8,
+        requireUppercase: true,
+        requireNumber: true,
+        requireSpecialChar: true,
+        allowedSpecialChars: "!@#$%^&*()_+[]{}|;:,.?~-"
+      };
+      const resultValidasiPassword = this._validatePassword(objPayload?.password!, policy);
 
+      if (!resultValidasiPassword.valid) {
+        this.loading = false;
+        this.errorMessage ={ error: true, severity: "error", message: resultValidasiPassword.errors, icon: "pi pi-exclamation-circle" };
+      } else {
+        this._saveAddData(objPayload);
+      }
+
+
+    } else {
+      console.log("IdUserOLD : ", this.idUserOld);
+      this._saveEditData(objPayload, this.idUserOld)
+    }
   }
   onCancel() {
+    this.setCreateMode();
     this.showDetailForm = { show: false, action: "add" };
+  }
+  setCreateMode() {
+    const passwordControl = this.userForm.get('password');
+    if (passwordControl) {
+      passwordControl.setValidators([Validators.required]);
+      passwordControl.updateValueAndValidity();
+    }
   }
   async onOkDelete() {
     this.loading = true;
@@ -268,11 +312,10 @@ export class Usermanagement implements OnInit {
     this.showDetailDelete = false;
   }
   _saveAddData(payload: any) {
-    fetch('/v2/admin/add_role', {
+    fetch('/v2/admin/add_user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
@@ -283,13 +326,13 @@ export class Usermanagement implements OnInit {
         if (!res.ok) throw new Error('Error add data');
         return res.json();
       })
-      .then(data => {
+      .then(async data => {
         // console.log("Response dari API DATA ", JSON.parse(data));
         console.log("Response dari API DATA ", data);
         this.loading = false;
         if (data.code === 20000) {
           this.showDetailForm = { show: false, action: "add" };
-          this._refreshListData();
+          await this._refreshListData();
         } else {
           this.errorMessage = { error: true, severity: "error", message: `${data.message}`, icon: "pi pi-times" }
         }
@@ -300,15 +343,14 @@ export class Usermanagement implements OnInit {
         this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
       });
   }
-  _saveEditData(payload: any, idRoleOld: string) {
-
-    payload = { ...payload, ...{ idRoleOld: idRoleOld } }
-
-    fetch('/v2/admin/upd_role', {
+  _saveEditData(payload: any, idUser: string) {
+    payload = { ...payload, ...{ iduser: idUser } };
+    delete payload.password;
+    console.log("Payload Edit ", payload);
+    fetch('/v2/admin/upd_user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
@@ -337,11 +379,11 @@ export class Usermanagement implements OnInit {
       });
   }
   async _saveDeleteData(payload: any) {
-    fetch('/v2/admin/del_role', {
+    fetch('/v2/admin/del_user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
+        // 'Authorization': `Bearer ${this.token}`,
         'x-client': 'angular-ssr'
       },
       body: JSON.stringify(payload)
@@ -368,6 +410,43 @@ export class Usermanagement implements OnInit {
         this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
       });
   }
+
+
+  _validatePassword(password: string, policy: PasswordPolicy): PasswordValidationResult {
+  const errors: string[] = [];
+
+  if (policy.minLength && password.length < policy.minLength) {
+    errors.push(`Password must be at least ${policy.minLength} characters long`);
+  }
+
+  if (policy.requireUppercase && !/[A-Z]/.test(password)) {
+    errors.push('Password must contain at least 1 uppercase letter');
+  }
+
+  if (policy.requireNumber && !/[0-9]/.test(password)) {
+    errors.push('Password must contain at least 1 number');
+  }
+
+  if (policy.requireSpecialChar) {
+    // default aman (tidak termasuk < > " ' ` \ /)
+    const safeSpecials =
+      policy.allowedSpecialChars || "!@#$%^&*()_+[]{}|;:,.?~-";
+
+    const regex = new RegExp(
+      `[${safeSpecials.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}]`
+    );
+
+    if (!regex.test(password)) {
+      errors.push('Password must contain at least 1 special character');
+    }
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+}
+
 }
 interface UserField {
   iduser?: string | null;
@@ -390,4 +469,17 @@ interface Column {
   header?: string | null;
   class?: string | null;
   cellclass?: string | null;
+}
+
+interface PasswordPolicy {
+  minLength?: number;
+  requireUppercase?: boolean;
+  requireNumber?: boolean;
+  requireSpecialChar?: boolean;
+  allowedSpecialChars?: string; // whitelist karakter khusus
+}
+
+interface PasswordValidationResult {
+  valid: boolean;
+  errors: string[];
 }
