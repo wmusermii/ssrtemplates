@@ -1,22 +1,20 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { createRequire } from 'module';
-import { logInfo } from '../utils/logger';
+import type { Knex } from 'knex';
+import knex from 'knex/knex.js';
+import { config } from './environment';
 
-const require = createRequire(import.meta.url);
-const knex = require('knex');
+const knexConfig: Knex.Config = {
+    client: 'pg',
+    connection: {
+        host: config.db.host,
+        port: config.db.port,
+        user: config.db.user,
+        password: config.db.pass,
+        database: config.db.name,
+    },
+    pool: { min: 2, max: 10 },
+    debug: false,
+};
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const dbPath = path.join(__dirname, 'data', 'admdb.sqlite');
-logInfo("INI ALAMAT TABLENYA : ",dbPath)
-const db = knex({
-  client: 'better-sqlite3',
-  connection: {
-    filename: dbPath,
-  },
-  useNullAsDefault: true,
-});
+const db: Knex = knex(knexConfig);
 
 export default db;

@@ -1,8 +1,27 @@
 import { Router } from 'express';
-import { ResponseHelper } from '../utils/ResponseHelper';
-import { addGroups, addMenus, addRoles,  addUsers,  delGroups,  delMenus, delRoles, delUsers, echo, generateQShopee, generateQShopeeCurrent, generateQShopeeJobs, getAllSKUAvailable, getAllSKUOnTransaction, getAllStockopname, getBestDataToPrint, getCountInvoicesAvailable, getCountSKUAvailable, getGroupsAvailable, getIcons,  getMenusAvailable, getQShopee, getQShopeeAttribute, getQShopeeToday, getRolesAvailable, getShopInfo, getShopPerformance, getStockDetailopnameByIdOP, getStockDetailopnameByIdOPExcel, getUsersAvailable, insertStockDetailopname, insertStockopname, sendingEmailTo, sendingPrinting,  updateQShopeeAttribute, updateUser, updGroupMenu, updGroups, updMenus, updRoles, updUsers } from '../controllers/api.controller';
+import {
+    addGroups,
+    addMenus,
+    addRoles,
+    addUsers,
+    delGroups,
+    delMenus,
+    delRoles,
+    delUsers,
+    echo,
+    getGroupsAvailable,
+    getIcons,
+    getMenusAvailable,
+    getRolesAvailable,
+    getUsersAvailable,
+    updateUser,
+    updGroupMenu,
+    updGroups,
+    updMenus,
+    updRoles,
+    updUsers,
+} from '../controllers/api.controller';
 import { attrb, getaclattrb, login, logout, registUser } from '../controllers/auth.controller';
-import { authBearerMiddleware } from '../middlewares/authmiddleware';
 import { asyncHandler } from '../middlewares/asyncHandler';
 import { CookieMiddleware } from '../middlewares/cookiemiddleware';
 const router = Router();
@@ -40,8 +59,6 @@ router.get('/admin/get_menus', asyncHandler(CookieMiddleware),asyncHandler(getMe
 router.post('/admin/add_menu', asyncHandler(CookieMiddleware),asyncHandler(addMenus)); //Menambah is daftar Menu
 router.post('/admin/upd_menu', asyncHandler(CookieMiddleware),asyncHandler(updMenus)); //Merubah is daftar Menu
 router.post('/admin/del_menu', asyncHandler(CookieMiddleware),asyncHandler(delMenus)); //menghapus is daftar Menu
-
-
 
 router.get('/admin/get_groups', asyncHandler(CookieMiddleware),asyncHandler(getGroupsAvailable)); //Melihat is daftar Group
 router.post('/admin/add_group', asyncHandler(CookieMiddleware),asyncHandler(addGroups)); //Menambah is daftar Group
