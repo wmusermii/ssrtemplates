@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { ButtonModule } from 'primeng/button';
+import cloneDeep from 'lodash-es/cloneDeep';
 
 @Component({
   standalone:true,
@@ -15,6 +16,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export class Sidebar implements OnInit, OnDestroy {
   loading: boolean = true;
+
   token: string | null | undefined = undefined;
   dropdownClicked = false;
   openDropdownId: string | null = null;
@@ -164,19 +166,6 @@ async expandAllPanelMenu(items: any[]):Promise<void> {
 
   async confirmLogout() {
     this.loading = true;
-    // this.showLogoutDialog = false;
-    // this.showConfirmDialog = false;
-    // try {
-    //   await this.ssrStorage.clear();
-    //   setTimeout(() => {
-    //     this.router.navigate(['/login']);
-    //   }, 50);
-    // } catch (error) {
-    //   console.error('Error saat clear storage:', error);
-    //   // Tetap navigasi meskipun error
-    //   console.log("sidebar Error saat clear storage tiba tiba");
-    //   this.router.navigate(['/login']);
-    // }
      fetch('/v2/auth/logout', {
       method: 'GET',
       headers: {
@@ -208,4 +197,5 @@ async expandAllPanelMenu(items: any[]):Promise<void> {
         this.showConfirmDialog = true;
       });
   }
+
 }

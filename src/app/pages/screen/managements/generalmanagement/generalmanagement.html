@@ -11,87 +11,155 @@
       </p-tablist>
       <p-tabpanels>
         <p-tabpanel value="0">
-          <h2 class="text-lg font-semibold text-gray-800 mb-2">Application Information</h2>
+          <!-- <h2 class="text-lg font-semibold text-gray-800 mb-2">Application Information</h2> -->
           <form [formGroup]="generalForm" (ngSubmit)="_generalOnSubmit()" class="space-y-4">
-            <div [hidden]="!errorMessage.error" class="mb-2">
-              <p-message [severity]="errorMessage.severity" [text]="errorMessage.message" [icon]="errorMessage.icon"
+            <div [hidden]="!errorMessageG.error" class="mb-2">
+              <p-message [severity]="errorMessageG.severity" [text]="errorMessageG.message" [icon]="errorMessageG.icon"
                 styleClass="p-message p-component block">
               </p-message>
             </div>
             <div class="relative">
-              <div class="flex flex-col mb-2">
-                <label for="title" class="mb-2">Application Name</label>
-                <input type="text" class="w-full" pInputText formControlName="title" id="title"/>
-              </div>
-              <div class="flex flex-col mb-2">
-                <label for="cookietime" class="mb-2">Maximum force loggout time</label>
-                <div class="flex items-center gap-2"><input type="text" class="w-32" placeholder="ex: 5s,15m,1h" pInputText formControlName="cookietime" id="cookietime"/>
-                <i>Put with proper string to make this worked</i></div>
-
-              </div>
-              <div class="flex flex-col mb-2">
-                <label for="maxloginattempt" class="mb-2">Maximum login attempt</label>
-                <div class="flex items-center gap-2">
-                  <input type="text" class="w-32 text-end" pInputText formControlName="maxloginattempt" id="maxloginattempt"/>
-                <i>Time login failled will suspended!</i></div>
-              </div>
-              <div class="flex flex-col mb-2">
-                <p-divider align="left" type="solid"><b>Account setting</b>
+              <div class="flex flex-col mb-6">
+                <p-divider align="left" type="solid"><b>Application Properties</b>
                 </p-divider>
               </div>
-              <div class="flex flex-col mb-2">
+              <div class="flex flex-col mb-6">
+                <label for="title" class="mb-2">Application Name</label>
+                <input type="text" class="w-full" pInputText formControlName="title" id="title" />
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="cookietime" class="mb-2">Maximum expired session time</label>
+                <div class="flex items-center gap-2"><input type="text" class="w-16" placeholder="1h" pInputText
+                    formControlName="cookietime" id="cookietime" />
+                  <i>ex: 60s, 15m, 1h</i>
+                </div>
+
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="maxloginattempt" class="mb-2">Maximum login attempt</label>
+                <div class="flex items-center gap-2">
+                  <input type="text" class="w-16 text-end" pInputText formControlName="maxloginattempt"
+                    id="maxloginattempt" />
+                  <i>Times failled login then the user will be suspended!</i>
+                </div>
+              </div>
+              <div class="flex flex-col mb-6">
+                <p-divider align="left" type="solid"><b>Account credential setting</b>
+                </p-divider>
+              </div>
+              <div class="flex flex-col mb-6">
                 <label for="userMinLength" class="mb-2">Minimum characters of user</label>
                 <div class="flex items-center gap-2">
-                  <input type="text" class="w-32 text-end" pInputText formControlName="userMinLength" id="userMinLength"/>
-                <i>Cannot create user if less character!</i></div>
+                  <input type="text" class="w-16 text-end" pInputText formControlName="userMinLength"
+                    id="userMinLength" />
+                  characters. <i>(Cannot create username less than this length of characters)</i>
+                </div>
               </div>
-              <div class="flex flex-col mb-2">
+              <div class="flex flex-col mb-6">
                 <label for="minLength" class="mb-2">Minimum characters of password</label>
                 <div class="flex items-center gap-2">
-                  <input type="text" class="w-32 text-end" pInputText formControlName="minLength" id="minLength"/>
-                <i>Cannot input password if less than!</i></div>
+                  <input type="text" class="w-16 text-end" pInputText formControlName="minLength" id="minLength" />
+                  characters. <i>(Cannot create password less than this length of characters)</i>
+                </div>
               </div>
-              <div class="flex flex-col mb-2">
-                <label for="userMinLength" class="mb-2">Minimum characters of user</label>
+              <div class="flex flex-col mb-6">
+                <label for="requireUppercase" class="mb-2">Use minimum one capital of password</label>
                 <div class="flex items-center gap-2">
-                  <input type="text" class="w-32 text-end" pInputText formControlName="userMinLength" id="userMinLength"/>
-                <i>Cannot create user if less character!</i></div>
+                  <p-toggleswitch formControlName="requireUppercase" id="requireUppercase" />
+                  <i>{{generalForm.get('requireUppercase')?.value}}</i>
+                </div>
               </div>
-              <div class="flex flex-col mb-2">
-                <label for="userMinLength" class="mb-2">Minimum characters of user</label>
+              <div class="flex flex-col mb-6">
+                <label for="requireNumber" class="mb-2">Use minimum one number of password</label>
                 <div class="flex items-center gap-2">
-                  <input type="text" class="w-32 text-end" pInputText formControlName="userMinLength" id="userMinLength"/>
-                <i>Cannot create user if less character!</i></div>
+                  <p-toggleswitch formControlName="requireNumber" id="requireNumber" />
+                  <i>{{generalForm.get('requireNumber')?.value}}</i>
+                </div>
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="requireSpecialChar" class="mb-2">Use minimum one special character of password</label>
+                <div class="flex items-center gap-2">
+                  <p-toggleswitch formControlName="requireSpecialChar" id="requireSpecialChar" />
+                  <i>{{generalForm.get('requireSpecialChar')?.value}}</i>
+                </div>
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="allowedSpecialChars" class="mb-2">Allowed special characters</label>
+                <input type="text" class="w-full" pInputText formControlName="allowedSpecialChars"
+                  id="allowedSpecialChars" />
               </div>
             </div>
             <!-- Button -->
-            <button pButton type="submit" class="w-38 mt-4" [disabled]="!generalForm.valid" style="margin-top: 1.5rem;"
-              label="Update"></button>
+            <div class="flex justify-end">
+              <button pButton type="submit" class="w-38 mt-4" icon="pi pi-save" [disabled]="!generalForm.valid"
+                style="margin-top: 1.5rem;" label="Update"></button>
+            </div>
           </form>
         </p-tabpanel>
         <p-tabpanel value="1">
-          <p class="m-0">
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem
-            aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni
-            dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius
-            modi.
-          </p>
+          <form [formGroup]="smtpForm" (ngSubmit)="_smtpOnSubmit()" class="space-y-4">
+            <div [hidden]="!errorMessageS.error" class="mb-2">
+              <p-message [severity]="errorMessageS.severity" [text]="errorMessageS.message" [icon]="errorMessageS.icon"
+                styleClass="p-message p-component block">
+              </p-message>
+            </div>
+            <div class="relative">
+              <div class="flex flex-col mb-6">
+                <p-divider align="left" type="solid"><b>Email Properties</b>
+                </p-divider>
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="service" class="mb-2">Service</label>
+                <input type="text" class="w-full" pInputText formControlName="service" id="service" />
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="smtp" class="mb-2">Smtp</label>
+                <input type="text" class="w-full" pInputText formControlName="smtp" id="smtp" />
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="usermail" class="mb-2">Mail user</label>
+                <input type="text" class="w-full" pInputText formControlName="usermail" id="usermail" />
+              </div>
+               <div class="flex flex-col mb-6">
+                <label for="password" class="mb-2">Mail password</label>
+                <input type="text" class="w-full" pInputText formControlName="password" id="password" />
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="port" class="mb-2">Port</label>
+                <input type="text" class="w-full" pInputText formControlName="port" id="port" />
+              </div>
+            </div>
+            <!-- Button -->
+            <div class="flex justify-end">
+              <button pButton type="submit" class="w-38 mt-4" icon="pi pi-save" [disabled]="!smtpForm.valid"
+                style="margin-top: 1.5rem;" label="Update"></button>
+            </div>
+          </form>
         </p-tabpanel>
         <p-tabpanel value="2">
           <p class="m-0">
-            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti
-            atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique
-            sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum
-            facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil
-            impedit quo minus.
+            This tabs is only for database migration to other RDBMS except SQLite. If Test connection success means you could migrate data from Embeded to target database
           </p>
         </p-tabpanel>
       </p-tabpanels>
     </p-tabs>
   </div>
 
-
+<div *ngIf="loading"
+    class="absolute inset-0 flex items-center justify-center rounded-md z-50 bg-[rgba(255,255,255,0.5)]">
+    <div role="status">
+      <svg aria-hidden="true" class="inline w-24 h-24 text-gray-200 animate-spin dark:text-gray-600 fill-red-600"
+        viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+          fill="currentColor" />
+        <path
+          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+          fill="currentFill" />
+      </svg>
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
 
 
 </main>

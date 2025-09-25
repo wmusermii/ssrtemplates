@@ -17,11 +17,13 @@ import { TabsModule } from 'primeng/tabs';
 import { TreeModule } from 'primeng/tree';
 import { DividerModule } from 'primeng/divider';
 import { LocalstorageService } from '../../../../guard/ssr/localstorage/localstorage.service';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import cloneDeep from 'lodash-es/cloneDeep';
 
 @Component({
   standalone:true,
   selector: 'app-generalmanagement',
-  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, TreeModule, DragDropModule, TabsModule,DividerModule],
+  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, TreeModule, DragDropModule, TabsModule,DividerModule,ToggleSwitchModule],
   templateUrl: './generalmanagement.html',
   styleUrl: './generalmanagement.css'
 })
@@ -38,28 +40,175 @@ export class Generalmanagement implements OnInit {
    generalForm = new FormGroup({
       title: new FormControl('', [Validators.required]),
       cookietime: new FormControl('', [Validators.required]),
-      maxloginattempt: new FormControl(100, [Validators.required]),
-      userMinLength: new FormControl(6, [Validators.required]),
-      minLength:new FormControl(8, [Validators.required]),
-      requireUppercase:new FormControl(true),
-      requireNumber:new FormControl(true),
-      requireSpecialChar:new FormControl(true),
-      allowedSpecialChars:new FormControl('!@#$%^&*()_+[]{}|;:,.?~-'),
+      maxloginattempt: new FormControl(0, [Validators.required]),
+      userMinLength: new FormControl(0, [Validators.required]),
+      minLength:new FormControl(0, [Validators.required]),
+      requireUppercase:new FormControl(false),
+      requireNumber:new FormControl(false),
+      requireSpecialChar:new FormControl(false),
+      allowedSpecialChars:new FormControl(''),
+  });
+
+   smtpForm = new FormGroup({
+      service: new FormControl('', [Validators.required]),
+      smtp: new FormControl('', [Validators.required]),
+      usermail: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
+      port:new FormControl('', [Validators.required]),
   });
 
 
 
-  errorMessage: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" }
+  errorMessageG: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" }
+  errorMessageS: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" }
+  errorMessageD: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" }
   constructor(private router: Router, private ssrStorage: LocalstorageService) { }
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.breaditems = [{ label: 'Management' }, { label: 'General' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
+    await this._refreshGeneralData();
+    await this._refreshPasswordData();
+    await this._refreshSMTPData();
   }
   _generalOnSubmit(){
 
   }
   _smtpOnSubmit(){
 
+  }
+  async _refreshGeneralData():Promise<void>{
+    this.loading=true;
+            const payload = {paramgroup: "GENERAL"}
+                fetch('/v2/admin/get_parambygroup', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'x-client': 'angular-ssr'
+                  },
+                    body:JSON.stringify(payload)
+                })
+                  .then(res => {
+                    console.log("Response dari API  /v2/admin/get_parambygroup", res);
+                    if (!res.ok) throw new Error('get Title Gagal');
+                    return res.json();
+                  })
+                  .then(data => {
+                    console.log("Response dari API /v2/admin/get_parambygroup", data);
+                    this.loading=false;
+
+                    if (data.code === 20000) {
+                      const dataRecordsTemp = cloneDeep(data.data);
+                      this.generalForm.patchValue(
+                        {
+                          title: dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "title").paramvalue,
+                          cookietime: dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "cookietime").paramvalue,
+                          maxloginattempt: dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "maxloginattempt").paramvalue,
+                          userMinLength: dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "userMinLength").paramvalue,
+                        }
+                      )
+
+                      this.loading=false;
+                    } else {
+
+                      this.loading=false;
+                    }
+                  })
+                  .catch(err => {
+                    this.loading=false;
+                    console.log("Response Error Catch /v2/admin/get_parambygroup", err);
+                  });
+  }
+  async _refreshPasswordData():Promise<void>{
+    this.loading=true;
+            const payload = {paramgroup: "PASSATTRB"}
+                fetch('/v2/admin/get_parambygroup', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'x-client': 'angular-ssr'
+                  },
+                    body:JSON.stringify(payload)
+                })
+                  .then(res => {
+                    console.log("Response dari API  /v2/admin/get_parambygroup", res);
+                    if (!res.ok) throw new Error('get Title Gagal');
+                    return res.json();
+                  })
+                  .then(data => {
+                    console.log("Response dari API /v2/admin/get_parambygroup", data);
+                    this.loading=false;
+
+                    if (data.code === 20000) {
+                      const dataRecordsTemp = cloneDeep(data.data);
+                      this.generalForm.patchValue(
+                        {
+                            minLength:dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "minLength").paramvalue,
+                            requireUppercase:dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "requireUppercase").paramvalue==='true'?true:false,
+                            requireNumber:dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "requireNumber").paramvalue==='true'?true:false,
+                            requireSpecialChar:dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "requireSpecialChar").paramvalue==='true'?true:false,
+                            allowedSpecialChars:dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "allowedSpecialChars").paramvalue,
+                        }
+                      )
+
+                      this.loading=false;
+                    } else {
+
+                      this.loading=false;
+                    }
+                  })
+                  .catch(err => {
+                    this.loading=false;
+                    console.log("Response Error Catch /v2/admin/get_parambygroup", err);
+                  });
+  }
+  async _refreshSMTPData(){
+    this.loading=true;
+            const payload = {paramgroup: "SMTPATTRB"}
+                fetch('/v2/admin/get_parambygroup', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'x-client': 'angular-ssr'
+                  },
+                    body:JSON.stringify(payload)
+                })
+                  .then(res => {
+                    console.log("Response dari API  /v2/admin/get_parambygroup", res);
+                    if (!res.ok) throw new Error('get Title Gagal');
+                    return res.json();
+                  })
+                  .then(data => {
+                    console.log("Response dari API /v2/admin/get_parambygroup", data);
+                    this.loading=false;
+
+                    if (data.code === 20000) {
+                      const dataRecordsTemp = cloneDeep(data.data);
+                      this.smtpForm.patchValue(
+                        {
+                            service:dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "service").paramvalue,
+                            smtp:dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "smtp").paramvalue,
+                            usermail:dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "usermail").paramvalue,
+                            password:dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "password").paramvalue,
+                            port:dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "port").paramvalue
+                        }
+                      )
+                      this.loading=false;
+                    } else {
+
+                      this.loading=false;
+                    }
+                  })
+                  .catch(err => {
+                    this.loading=false;
+                    console.log("Response Error Catch /v2/admin/get_parambygroup", err);
+                  });
+  }
+  // Helper getter untuk akses kontrol form di template
+  get gf() {
+    return this.generalForm.controls;
+  }
+  get sf() {
+    return this.smtpForm.controls;
   }
 
 }
