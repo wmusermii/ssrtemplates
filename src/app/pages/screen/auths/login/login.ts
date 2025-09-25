@@ -1,5 +1,5 @@
 import { CommonModule, NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,6 +7,7 @@ import { PasswordModule } from 'primeng/password';
 import { MessageModule } from 'primeng/message';
 import { Router, RouterModule } from '@angular/router';
 import { LocalstorageService } from '../../../../guard/ssr/localstorage/localstorage.service';
+import cloneDeep from 'lodash-es/cloneDeep';
 @Component({
   standalone:true,
   selector: 'app-login',
@@ -14,9 +15,10 @@ import { LocalstorageService } from '../../../../guard/ssr/localstorage/localsto
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
-export class Login {
+export class Login implements OnInit {
   ssrStorage = inject(LocalstorageService);
   submitted = false;
+  titleText:string = "Undefined";
   errorMessage:any = {error:false, severity:"info", message:"ini test", icon:"pi pi-times"};
   loading = false;
   loginForm = new FormGroup({
@@ -74,7 +76,44 @@ export class Login {
     return this.loginForm.controls;
   }
   constructor(private router: Router){}
+  async ngOnInit(): Promise<void> {
+    await this._refreshListData()
+  }
   _changeError(){
     this.errorMessage={error:false, severity:"info", message:"", icon:"pi pi-send"};
+  }
+  async _refreshListData():Promise<any>{
+        this.loading=true;
+        const payload = {paramgroup: "GENERAL", paramkey:"title"}
+            fetch('/v2/admin/get_parambykey', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-client': 'angular-ssr'
+              },
+                body:JSON.stringify(payload)
+            })
+              .then(res => {
+                console.log("Response dari API  /v2/admin/get_parambykey", res);
+                if (!res.ok) throw new Error('get Title Gagal');
+                return res.json();
+              })
+              .then(data => {
+                console.log("Response dari API /v2/admin/get_parambykey", data);
+                this.loading=false;
+
+                if (data.code === 20000) {
+                  const dataRecordsTemp = cloneDeep(data.data);
+                  this.titleText = dataRecordsTemp.paramvalue;
+                  this.loading=false;
+                } else {
+
+                  this.loading=false;
+                }
+              })
+              .catch(err => {
+                this.loading=false;
+                console.log("Response Error Catch /v2/admin/get_parambykey", err);
+              });
   }
 }

@@ -90,7 +90,6 @@ export class Menumanagement implements OnInit {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              // 'Authorization': `Bearer ${this.token}`,
               'x-client': 'angular-ssr'
             }
           })

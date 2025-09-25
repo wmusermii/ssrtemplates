@@ -33,6 +33,11 @@ export const routes: Routes = [
        loadComponent:() => import("./pages/screen/dashboard/dashboard").then(m => m.Dashboard)
       },
       {
+       path:'management/general',
+       canActivate:[authGuard],
+       loadComponent:() => import("./pages/screen/managements/generalmanagement/generalmanagement").then(m => m.Generalmanagement)
+      },
+      {
        path:'management/user',
        canActivate:[authGuard],
        loadComponent:() => import("./pages/screen/managements/usermanagement/usermanagement").then(m => m.Usermanagement)

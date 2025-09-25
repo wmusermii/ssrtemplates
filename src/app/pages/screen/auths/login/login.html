@@ -68,17 +68,17 @@
   <!-- Left side (illustration) -->
   <div class="lg:w-1/2 flex flex-col items-center justify-center p-2 lg:p-8 text-center lg:text-left">
     <img src="./loginlogo.png" alt="Flowable Integration" class="w-2/4 h-auto mb-2 lg:mb-2" />
-    <h1 class="text2xl font-light text-black italic">NDP Proxy</h1>
+    <h1 class="text2xl font-light text-black italic">{{titleText}}</h1>
   </div>
 
   <!-- Right side (form card) -->
   <div class="lg:w-1/2 flex items-center justify-center p-6">
     <div class="bg-white shadow-lg rounded-lg w-full max-w-md p-8">
       <!-- Title -->
-      <h2 class="text-2xl font-bold text-gray-800 mb-2">Masuk ke akun Anda</h2>
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">Login to your account</h2>
       <p class="text-sm text-gray-600 mb-6">
-        Baru di Website IDX?
-        <a [routerLink]="'/registration'" class="text-red-600 hover:underline">Daftar disini</a>
+        New in {{titleText}}?
+        <a [routerLink]="'/registration'" class="text-red-600 hover:underline">Register</a>
       </p>
 
       <!-- Login form -->
@@ -88,7 +88,6 @@
             styleClass="p-message p-component block">
           </p-message>
         </div>
-        <!-- Email -->
         <div class="relative">
           <div class="flex flex-col mb-2">
             <label for="username" class="mb-2">Username</label>
@@ -122,7 +121,7 @@
       </div>
       <!-- Forgot password -->
       <div class="text-right mt-3">
-        <a href="javascript:void(0)" class="text-sm text-red-600 hover:underline">Lupa Kata Sandi?</a>
+        <a href="javascript:void(0)" class="text-sm text-red-600 hover:underline">Forgot password ?</a>
       </div>
     </div>
   </div>

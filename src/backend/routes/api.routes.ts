@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addGroups, addMenus, addRoles,  addUsers,  delGroups,  delMenus, delRoles, delUsers, echo, getGroupsAvailable, getIcons,  getMenusAvailable, getRolesAvailable, getUsersAvailable, updateUser, updGroupMenu, updGroups, updMenus, updRoles, updUsers } from '../controllers/api.controller';
+import { addGroups, addMenus, addRoles,  addUsers,  delGroups,  delMenus, delRoles, delUsers, echo, getGroupsAvailable, getIcons,  getMenusAvailable, getParamsByGroup, getParamsByKey, getRolesAvailable, getUsersAvailable, updateUser, updGroupMenu, updGroups, updMenus, updRoles, updUsers } from '../controllers/api.controller';
 import { attrb, getaclattrb, login, logout, registUser } from '../controllers/auth.controller';
 import { asyncHandler } from '../middlewares/asyncHandler';
 import { CookieMiddleware } from '../middlewares/cookiemiddleware';
@@ -15,8 +15,12 @@ router.post('/auth/registuser', asyncHandler(registUser));
 router.get('/auth/attrb',asyncHandler(CookieMiddleware), asyncHandler(attrb));
 router.post('/auth/aclattrb', asyncHandler(CookieMiddleware),asyncHandler(getaclattrb));
 router.post('/auth/updateuser', asyncHandler(CookieMiddleware),asyncHandler(updateUser));
+//##################################### AUTH ROUTES END #############
 
-//##################################### AUTH ROUTES #############
+//##################################### WEB ADMIN ROUTES #############
+router.post('/admin/get_parambygroup', asyncHandler(CookieMiddleware),asyncHandler(getParamsByGroup));
+router.post('/admin/get_parambykey', asyncHandler(getParamsByKey));
+
 
 router.get('/admin/get_roles', asyncHandler(CookieMiddleware),asyncHandler(getRolesAvailable)); //Melihat is daftar Role
 router.post('/admin/add_role', asyncHandler(CookieMiddleware),asyncHandler(addRoles)); //Menambah is daftar Role
@@ -29,8 +33,6 @@ router.post('/admin/add_menu', asyncHandler(CookieMiddleware),asyncHandler(addMe
 router.post('/admin/upd_menu', asyncHandler(CookieMiddleware),asyncHandler(updMenus)); //Merubah is daftar Menu
 router.post('/admin/del_menu', asyncHandler(CookieMiddleware),asyncHandler(delMenus)); //menghapus is daftar Menu
 
-
-
 router.get('/admin/get_groups', asyncHandler(CookieMiddleware),asyncHandler(getGroupsAvailable)); //Melihat is daftar Group
 router.post('/admin/add_group', asyncHandler(CookieMiddleware),asyncHandler(addGroups)); //Menambah is daftar Group
 router.post('/admin/upd_group', asyncHandler(CookieMiddleware),asyncHandler(updGroups)); //Merubah is daftar Group
@@ -41,7 +43,7 @@ router.get('/admin/get_users', asyncHandler(CookieMiddleware),asyncHandler(getUs
 router.post('/admin/add_user', asyncHandler(CookieMiddleware),asyncHandler(addUsers)); //Menambah is daftar User
 router.post('/admin/upd_user', asyncHandler(CookieMiddleware),asyncHandler(updUsers)); //Merubah is daftar User
 router.post('/admin/del_user', asyncHandler(CookieMiddleware),asyncHandler(delUsers)); //menghapus is daftar User
-
+//##################################### WEB ADMIN ROUTES END #############
 
 //##################################### EMAIL #############
 // router.post('/warehouse/send_email', asyncHandler(sendingEmailTo));// Untuk cek apaka package yang di ambil sudah diambil user lain

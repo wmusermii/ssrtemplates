@@ -10,6 +10,7 @@ import { Request } from "express";
 import { RoleRepository } from "../repositories/role.repository";
 import { MenuRepository } from "../repositories/menu.repository";
 import { GroupRepository } from "../repositories/group.repository";
+import { ParamRepository } from "../repositories/param.repository";
 export class ApiService {
   // private shopeeRepo = new ShopeeRepository();
   private userRepo = new UserRepository();
@@ -17,7 +18,7 @@ export class ApiService {
   private roleRepo = new RoleRepository();
   private menuRepo = new MenuRepository();
   private groupRepo = new GroupRepository();
-
+  private paramRepo = new ParamRepository()
 
   // async sendEmailNotification(to: string, subject: string, message: string) {
   //   // console.log('sendEmailNotification called with:', { to, subject, message });
@@ -63,6 +64,23 @@ export class ApiService {
       return ApiResponse.success(userResult, "Success update");
     }
   }
+
+  async getParamsByGroupService(userinfo: any, payload:any) {
+    const paramResult = await this.paramRepo.findParamByGroup(payload);
+    if (!paramResult) return ApiResponse.successNoData(paramResult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(paramResult, "Records found");
+  }
+  async getParamsByKeyService(userinfo: any, payload:any) {
+    const paramResult = await this.paramRepo.findParamByKey(payload);
+    if (!paramResult) return ApiResponse.successNoData(paramResult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(paramResult, "Records found");
+  }
+
+
+
+
   async getRolesService(userinfo: any) {
     const roleResult = await this.roleRepo.findAllRole();
     if (!roleResult) return ApiResponse.successNoData(roleResult, "Unable to get data!");

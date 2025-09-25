@@ -1,0 +1,97 @@
+<main class="pt-2 max-w-screen-xl mx-auto px-2 mb-6">
+  <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
+    <p-breadcrumb [model]="breaditems" [home]="home" />
+  </div>
+  <div class="card py-4">
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0">General</p-tab>
+        <p-tab value="1">SMTP</p-tab>
+        <p-tab value="2">Databases</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="0">
+          <h2 class="text-lg font-semibold text-gray-800 mb-2">Application Information</h2>
+          <form [formGroup]="generalForm" (ngSubmit)="_generalOnSubmit()" class="space-y-4">
+            <div [hidden]="!errorMessage.error" class="mb-2">
+              <p-message [severity]="errorMessage.severity" [text]="errorMessage.message" [icon]="errorMessage.icon"
+                styleClass="p-message p-component block">
+              </p-message>
+            </div>
+            <div class="relative">
+              <div class="flex flex-col mb-2">
+                <label for="title" class="mb-2">Application Name</label>
+                <input type="text" class="w-full" pInputText formControlName="title" id="title"/>
+              </div>
+              <div class="flex flex-col mb-2">
+                <label for="cookietime" class="mb-2">Maximum force loggout time</label>
+                <div class="flex items-center gap-2"><input type="text" class="w-32" placeholder="ex: 5s,15m,1h" pInputText formControlName="cookietime" id="cookietime"/>
+                <i>Put with proper string to make this worked</i></div>
+
+              </div>
+              <div class="flex flex-col mb-2">
+                <label for="maxloginattempt" class="mb-2">Maximum login attempt</label>
+                <div class="flex items-center gap-2">
+                  <input type="text" class="w-32 text-end" pInputText formControlName="maxloginattempt" id="maxloginattempt"/>
+                <i>Time login failled will suspended!</i></div>
+              </div>
+              <div class="flex flex-col mb-2">
+                <p-divider align="left" type="solid"><b>Account setting</b>
+                </p-divider>
+              </div>
+              <div class="flex flex-col mb-2">
+                <label for="userMinLength" class="mb-2">Minimum characters of user</label>
+                <div class="flex items-center gap-2">
+                  <input type="text" class="w-32 text-end" pInputText formControlName="userMinLength" id="userMinLength"/>
+                <i>Cannot create user if less character!</i></div>
+              </div>
+              <div class="flex flex-col mb-2">
+                <label for="minLength" class="mb-2">Minimum characters of password</label>
+                <div class="flex items-center gap-2">
+                  <input type="text" class="w-32 text-end" pInputText formControlName="minLength" id="minLength"/>
+                <i>Cannot input password if less than!</i></div>
+              </div>
+              <div class="flex flex-col mb-2">
+                <label for="userMinLength" class="mb-2">Minimum characters of user</label>
+                <div class="flex items-center gap-2">
+                  <input type="text" class="w-32 text-end" pInputText formControlName="userMinLength" id="userMinLength"/>
+                <i>Cannot create user if less character!</i></div>
+              </div>
+              <div class="flex flex-col mb-2">
+                <label for="userMinLength" class="mb-2">Minimum characters of user</label>
+                <div class="flex items-center gap-2">
+                  <input type="text" class="w-32 text-end" pInputText formControlName="userMinLength" id="userMinLength"/>
+                <i>Cannot create user if less character!</i></div>
+              </div>
+            </div>
+            <!-- Button -->
+            <button pButton type="submit" class="w-38 mt-4" [disabled]="!generalForm.valid" style="margin-top: 1.5rem;"
+              label="Update"></button>
+          </form>
+        </p-tabpanel>
+        <p-tabpanel value="1">
+          <p class="m-0">
+            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem
+            aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni
+            dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius
+            modi.
+          </p>
+        </p-tabpanel>
+        <p-tabpanel value="2">
+          <p class="m-0">
+            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti
+            atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique
+            sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum
+            facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil
+            impedit quo minus.
+          </p>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+
+
+
+
+</main>
