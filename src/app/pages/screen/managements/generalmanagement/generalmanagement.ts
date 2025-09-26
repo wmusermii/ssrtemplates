@@ -70,11 +70,23 @@ export class Generalmanagement implements OnInit {
     await this._refreshPasswordData();
     await this._refreshSMTPData();
   }
-  _generalOnSubmit(){
-
+  async _generalOnSubmit(){
+    if(this.generalForm.valid) {
+      console.log("General value : ", this.generalForm.value);
+      let payload:any = this.generalForm.value;
+      this.loading=true
+      payload = {...payload, ...{paramgroup:'GENERAL'}}
+      await this._updateGeneralData(payload);
+    }
   }
-  _smtpOnSubmit(){
-
+  async _smtpOnSubmit(){
+    if(this.smtpForm.valid) {
+      console.log("SMTP value : ", this.smtpForm.value);
+      let payload:any = this.smtpForm.value;
+      this.loading=true
+      payload = {...payload, ...{paramgroup:'SMTPATTRB'}}
+      await this._updateGeneralData(payload);
+    }
   }
   async _refreshGeneralData():Promise<void>{
     this.loading=true;
@@ -210,7 +222,37 @@ export class Generalmanagement implements OnInit {
   get sf() {
     return this.smtpForm.controls;
   }
-
+  async _updateGeneralData(payload:any):Promise<void> {
+    this.loading=true;
+            // const payload = {paramgroup: "SMTPATTRB"}
+                fetch('/v2/admin/upd_parambygroup', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'x-client': 'angular-ssr'
+                  },
+                    body:JSON.stringify(payload)
+                })
+                  .then(res => {
+                    console.log("Response dari API  /v2/admin/upd_parambygroup", res);
+                    if (!res.ok) throw new Error('get Title Gagal');
+                    return res.json();
+                  })
+                  .then(data => {
+                    console.log("Response dari API /v2/admin/upd_parambygroup", data);
+                    this.loading=false;
+                    if (data.code === 20000) {
+                      // const dataRecordsTemp = cloneDeep(data.data);
+                      this.loading=false;
+                    } else {
+                      this.loading=false;
+                    }
+                  })
+                  .catch(err => {
+                    this.loading=false;
+                    console.log("Response Error Catch /v2/admin/upd_parambygroup", err);
+                  });
+  }
 }
 interface dataField {
   id?: number | null;

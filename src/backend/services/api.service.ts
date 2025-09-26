@@ -77,7 +77,21 @@ export class ApiService {
     //################## Berhasil Isi #######################
     return ApiResponse.success(paramResult, "Records found");
   }
+  async updParamsByGroupService(userinfo: any, payload:any) {
+    // const paramResult = await this.paramRepo.findParamByGroup(payload);
+    const paramgroup = payload.paramgroup;
+    const results:any[]= [];
 
+    for (const [key, value] of Object.entries(payload)) {
+      const updateScript:any = {paramkey:key, paramvalue:value+""}
+      const updateRecords = await this.paramRepo.updParamByKey(updateScript);
+      results.push(updateRecords);
+    }
+
+    if (results.length < 1) return ApiResponse.successNoData(results, "Unable to update data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(results, "Records found");
+  }
 
 
 

@@ -140,6 +140,44 @@
           <p class="m-0">
             This tabs is only for database migration to other RDBMS except SQLite. If Test connection success means you could migrate data from Embeded to target database
           </p>
+          <form [formGroup]="smtpForm" (ngSubmit)="_smtpOnSubmit()" class="space-y-4">
+            <div [hidden]="!errorMessageS.error" class="mb-2">
+              <p-message [severity]="errorMessageS.severity" [text]="errorMessageS.message" [icon]="errorMessageS.icon"
+                styleClass="p-message p-component block">
+              </p-message>
+            </div>
+            <div class="relative">
+              <div class="flex flex-col mb-6">
+                <p-divider align="left" type="solid"><b>Database Migration</b>
+                </p-divider>
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="service" class="mb-2">Service</label>
+                <input type="text" class="w-full" pInputText formControlName="service" id="service" />
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="smtp" class="mb-2">Smtp</label>
+                <input type="text" class="w-full" pInputText formControlName="smtp" id="smtp" />
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="usermail" class="mb-2">Mail user</label>
+                <input type="text" class="w-full" pInputText formControlName="usermail" id="usermail" />
+              </div>
+               <div class="flex flex-col mb-6">
+                <label for="password" class="mb-2">Mail password</label>
+                <input type="text" class="w-full" pInputText formControlName="password" id="password" />
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="port" class="mb-2">Port</label>
+                <input type="text" class="w-full" pInputText formControlName="port" id="port" />
+              </div>
+            </div>
+            <!-- Button -->
+            <div class="flex justify-end">
+              <button pButton type="submit" class="w-38 mt-4" icon="pi pi-save" [disabled]="!smtpForm.valid"
+                style="margin-top: 1.5rem;" label="Update"></button>
+            </div>
+          </form>
         </p-tabpanel>
       </p-tabpanels>
     </p-tabs>
