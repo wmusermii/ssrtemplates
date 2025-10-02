@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addGroups, addMenus, addRoles,  addUsers,  delGroups,  delMenus, delRoles, delUsers, echo, getGroupsAvailable, getIcons,  getMenusAvailable, getParamsByGroup, getParamsByKey, getRolesAvailable, getUsersAvailable, updateUser, updGroupMenu, updGroups, updMenus, updParamsByGroup, updRoles, updUsers } from '../controllers/api.controller';
+import { addGroups, addMenus, addRoles,  addUsers,  delGroups,  delMenus, delRoles, delUsers, echo, getGroupsAvailable, getIcons,  getMenusAvailable, getParamsByGroup, getParamsByKey, getRolesAvailable, getTestDatabase, getUsersAvailable, updateUser, updGroupMenu, updGroups, updMenus, updParamsByGroup, updRoles, updUsers } from '../controllers/api.controller';
 import { attrb, getaclattrb, login, logout, registUser } from '../controllers/auth.controller';
 import { asyncHandler } from '../middlewares/asyncHandler';
 import { CookieMiddleware } from '../middlewares/cookiemiddleware';
@@ -16,6 +16,9 @@ router.get('/auth/attrb',asyncHandler(CookieMiddleware), asyncHandler(attrb));
 router.post('/auth/aclattrb', asyncHandler(CookieMiddleware),asyncHandler(getaclattrb));
 router.post('/auth/updateuser', asyncHandler(CookieMiddleware),asyncHandler(updateUser));
 //##################################### AUTH ROUTES END #############
+
+router.post('/admin/test_database', asyncHandler(CookieMiddleware),asyncHandler(getTestDatabase)); //Melihat is daftar IconsPrimeNG
+
 
 //##################################### WEB ADMIN ROUTES #############
 router.post('/admin/get_parambygroup', asyncHandler(CookieMiddleware),asyncHandler(getParamsByGroup));

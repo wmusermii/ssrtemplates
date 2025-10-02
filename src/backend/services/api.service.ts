@@ -65,6 +65,16 @@ export class ApiService {
     }
   }
 
+async getTestDatabase(config: any) {
+  logInfo("DATABASE CONFIG : ", config)
+  // {"config":{"client":"pg","condatabase":"ndp_proxy","conhost":"localhost","conport":5432,"conuser":"postgres","conpassword":"postgres","conoption":{}}}
+
+  return ApiResponse.successNoData(config, "Unable to get data!");
+  //################## Berhasil Isi #######################
+  // return ApiResponse.success(paramResult, "Records found");
+}
+
+
   async getParamsByGroupService(userinfo: any, payload:any) {
     const paramResult = await this.paramRepo.findParamByGroup(payload);
     if (!paramResult) return ApiResponse.successNoData(paramResult, "Unable to get data!");
@@ -131,12 +141,14 @@ export class ApiService {
     //################## Berhasil Isi #######################
     return ApiResponse.success(roleResult, "Record deleted");
   }
+
   async getIconService(userinfo: any) {
     const iconResult = await this.menuRepo.findAllIconsPrime();
     if (!iconResult) return ApiResponse.successNoData(iconResult, "Unable to get data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(iconResult, "Records found");
   }
+
   async getMenusService(userinfo: any) {
     const menuResult = await this.menuRepo.findAllMenu();
     if (!menuResult) return ApiResponse.successNoData(menuResult, "Unable to get data!");
@@ -252,7 +264,7 @@ export class ApiService {
 
 
 
-
+//############################################ HELPER UTIL###############################################################
   private toDatetimeString(unix: number): string {
     const date = new Date(unix * 1000);
     const pad = (n: number) => String(n).padStart(2, '0');
