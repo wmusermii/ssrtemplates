@@ -96,7 +96,7 @@ export async function getTestDatabase(req: Request, res: Response, next: NextFun
   try {
     console.log("####################################### getTestDatabase");
     const userInfo: any = req.userInfo;
-    const paramResult = await apiService.getTestDatabase(req.body);
+    const paramResult = await apiService.getTestDatabaseService(req.body);
     if (paramResult.code === 20000) {
       await ResponseHelper.send(res, paramResult);
       return;
@@ -110,7 +110,24 @@ export async function getTestDatabase(req: Request, res: Response, next: NextFun
     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 }
-
+export async function goMigrateDatabase(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### goMigrateDatabase");
+    const userInfo: any = req.userInfo;
+    const paramResult = await apiService.goMigratetDatabaseService(req.body);
+    if (paramResult.code === 20000) {
+      await ResponseHelper.send(res, paramResult);
+      return;
+    } else {
+      await ResponseHelper.send(res, paramResult);
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    // next(error);
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
 
 export async function getRolesAvailable(req: Request, res: Response, next: NextFunction) {
   try {

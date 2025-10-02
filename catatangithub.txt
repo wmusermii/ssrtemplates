@@ -1,0 +1,42 @@
+-- 1. Buat database
+CREATE DATABASE ndb_proxy;
+
+-- 2. Buat user dengan password
+CREATE USER ndb_proxy WITH PASSWORD 'ndb_proxy';
+
+-- 3. Berikan semua hak ke user tersebut di database ndb_proxy
+GRANT ALL PRIVILEGES ON DATABASE ndb_proxy TO ndb_proxy;
+
+-- 4. Setelah itu connect ke database ndb_proxy dulu, lalu jalankan ini supaya user bisa CRUD di tabel yang dibuat:
+\c ndb_proxy;
+
+-- Berikan hak di semua schema yang ada
+GRANT ALL PRIVILEGES ON SCHEMA public TO ndb_proxy;
+
+-- Agar otomatis punya hak di tabel baru yang dibuat
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+GRANT ALL PRIVILEGES ON TABLES TO ndb_proxy;
+
+-- Hak untuk sequence (biasanya dipakai auto increment id)
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+GRANT ALL PRIVILEGES ON SEQUENCES TO ndb_proxy;
+
+-- Melihat Hak dari tabel
+SELECT grantee, privilege_type, table_name
+FROM information_schema.role_table_grants
+WHERE grantee = 'ndb_proxy';
+
+Solusi: login dulu pakai superuser (postgres), lalu kasih hak berikut di database ndb_proxy:
+
+-- Berikan hak CREATE dan USAGE di schema public
+GRANT USAGE, CREATE ON SCHEMA public TO ndb_proxy;
+
+-- Berikan hak penuh di schema public (opsional, biar bebas)
+GRANT ALL PRIVILEGES ON SCHEMA public TO ndb_proxy;
+
+-- Supaya tabel baru otomatis diwariskan ke user ini
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+GRANT ALL PRIVILEGES ON TABLES TO ndb_proxy;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+GRANT ALL PRIVILEGES ON SEQUENCES TO ndb_proxy;

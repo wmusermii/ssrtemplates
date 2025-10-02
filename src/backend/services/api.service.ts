@@ -11,6 +11,8 @@ import { RoleRepository } from "../repositories/role.repository";
 import { MenuRepository } from "../repositories/menu.repository";
 import { GroupRepository } from "../repositories/group.repository";
 import { ParamRepository } from "../repositories/param.repository";
+import Database from "../database/dbClient";
+// import Database from "../database/dbClient";
 export class ApiService {
   // private shopeeRepo = new ShopeeRepository();
   private userRepo = new UserRepository();
@@ -65,15 +67,175 @@ export class ApiService {
     }
   }
 
-async getTestDatabase(config: any) {
+async getTestDatabaseService(config: any):Promise<any> {
   logInfo("DATABASE CONFIG : ", config)
   // {"config":{"client":"pg","condatabase":"ndp_proxy","conhost":"localhost","conport":5432,"conuser":"postgres","conpassword":"postgres","conoption":{}}}
+  Database.init({
+    client: config.config.client,
+    connection: {
+      host: config.config.conhost,
+      port: config.config.conport,
+      user: config.config.conuser,
+      password: config.config.conpassword,
+      database: config.config.condatabase,
+    },
+    pool: { min: 2, max: 100 },
+  })
+  const result = await Database.testConnection();
+  if (result.success) {
+    await Database.destroy();
+    // console.log(result.message);
+     return ApiResponse.success(result.success, result.message);
+  } else {
+    await Database.destroy();
+    return ApiResponse.successNoData(result.error, result.message);
+  }
 
-  return ApiResponse.successNoData(config, "Unable to get data!");
   //################## Berhasil Isi #######################
-  // return ApiResponse.success(paramResult, "Records found");
+  // return ApiResponse.success({}, "Database connection OK ✅");
 }
+async goMigratetDatabaseService(config: any):Promise<any> {
+  logInfo("DATABASE MIGRATE CONFIG : ", config)
+  // {"config":{"client":"pg","condatabase":"ndp_proxy","conhost":"localhost","conport":5432,"conuser":"postgres","conpassword":"postgres","conoption":{}}}
+  Database.init({
+    client: config.config.client,
+    connection: {
+      host: config.config.conhost,
+      port: config.config.conport,
+      user: config.config.conuser,
+      password: config.config.conpassword,
+      database: config.config.condatabase,
+    },
+    pool: { min: 2, max: 100 },
+  })
+  const result = await Database.testConnection();
+  if (result.success) {
+    const db = Database.get();
+    try {
+      // Table m_group
+    await db.raw(`
+        CREATE TABLE IF NOT EXISTS m_group (
+          idgroup VARCHAR(50) NOT NULL PRIMARY KEY,
+          groupname VARCHAR(100) NOT NULL,
+          menublob TEXT DEFAULT '[]',
+          description VARCHAR(100),
+          created_at TIMESTAMP,
+          created_by VARCHAR(100) DEFAULT 'system',
+          updated_at TIMESTAMP,
+          updated_by VARCHAR(100),
+          deleteable INTEGER DEFAULT 1,
+          status INTEGER DEFAULT 1
+        );
+      `);
+      // Table m_icons
+      await db.raw(`
+        CREATE TABLE IF NOT EXISTS m_icons (
+          id SERIAL PRIMARY KEY,
+          code VARCHAR(1000),
+          type VARCHAR(50) DEFAULT 'prime',
+          codeother VARCHAR(1000),
+          description VARCHAR(200)
+        );
+      `);
 
+      // Table m_menus
+  await db.raw(`
+    CREATE TABLE "m_menus" (
+  "idMenu" SERIAL PRIMARY KEY,
+  "nameMenu" VARCHAR(100) NOT NULL,
+  "pathMenu" VARCHAR(1000) DEFAULT '/',
+  "idAppMenu" INTEGER DEFAULT 0,
+  "created_at" TIMESTAMP,
+  "created_by" VARCHAR(100) DEFAULT 'SYSTEM',
+  "updated_at" TIMESTAMP,
+  "updated_by" VARCHAR(100),
+  "iconMenu" VARCHAR(100)
+);
+  `);
+
+  // Table m_param
+  await db.raw(`
+    CREATE TABLE IF NOT EXISTS m_param (
+      id SERIAL PRIMARY KEY,
+      paramgroup VARCHAR(100) DEFAULT '100',
+      paramkey VARCHAR(255),
+      paramvalue TEXT,
+      created_by VARCHAR(100),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_by VARCHAR(100),
+      updated_at TIMESTAMP
+    );
+  `);
+
+  // Table m_role
+  await db.raw(`
+    CREATE TABLE IF NOT EXISTS "m_role" (
+      "idRole" VARCHAR(10) NOT NULL PRIMARY KEY,
+      "roleName" VARCHAR(200) DEFAULT 'undefined',
+      "roleDescription" VARCHAR(1000) DEFAULT 'undefined',
+      "created_at" TIMESTAMP,
+      "deleteable" INTEGER DEFAULT 1
+    );
+  `);
+
+  // Table m_user
+  await db.raw(`
+    CREATE TABLE IF NOT EXISTS m_user (
+      iduser VARCHAR(50) NOT NULL PRIMARY KEY,
+      username VARCHAR(100) NOT NULL,
+      password VARCHAR(255) NOT NULL,
+      created_by VARCHAR(100) DEFAULT 'SYSTEM' NOT NULL,
+      created_at TIMESTAMP,
+      updated_by VARCHAR(100),
+      updated_at TIMESTAMP,
+      idgroup VARCHAR(50),
+      fullname VARCHAR(200),
+      mobile VARCHAR(20) DEFAULT '20',
+      email VARCHAR(200),
+      is_twofa_enabled INTEGER DEFAULT 0,
+      twofa_secret VARCHAR(255),
+      deleteable INTEGER DEFAULT 1,
+      status INTEGER DEFAULT 1
+    );
+  `);
+    // INSERT DATABASE PERLAHAN
+      logInfo("Inserting Users...");
+      let allUsers:any[] = await this.userRepo.findAllUserMigrate()
+      const cleanUsers = allUsers.map(({ groupname, ...rest }) => rest);// Hapus kolom "groupname" karena tidak ada di struktur m_user
+      await db("m_user").insert(cleanUsers);
+      logInfo("Inserting Roles...");
+      let allRoles = await this.roleRepo.findAllRole();
+      await db("m_role").insert(allRoles);
+      logInfo("Inserting Params...");
+      let allParam:any[] = await this.paramRepo.findParamForMigration();
+      await db("m_param").insert(allParam);
+      logInfo("Inserting Menus...");
+      let allMenus:any[] = await this.menuRepo.findAllMenuMigrate();
+      await db("m_menus").insert(allMenus);
+      logInfo("Inserting Icons...");
+      let allIcons:any[] = await this.menuRepo.findAllIconsPrimeMigrate();
+      await db("m_icons").insert(allIcons);
+      logInfo("Inserting Groups...");
+      let allGroups:any[] = await this.groupRepo.findAllGroupMigrate();
+      await db("m_group").insert(allGroups);
+      console.log("✅ Tables created successfully");
+      await Database.destroy();
+      return ApiResponse.success(true, "✅ Tables created successfully");
+    } catch (error) {
+
+       return ApiResponse.successNoData(false, "✅ Unable to create tables");
+    }
+
+    // console.log(result.message);
+
+  } else {
+    await Database.destroy();
+    return ApiResponse.successNoData(result.error, result.message);
+  }
+
+  //################## Berhasil Isi #######################
+  // return ApiResponse.success({}, "Database connection OK ✅");
+}
 
   async getParamsByGroupService(userinfo: any, payload:any) {
     const paramResult = await this.paramRepo.findParamByGroup(payload);

@@ -82,7 +82,8 @@ export class Generalmanagement implements OnInit {
     await this._refreshPasswordData();
     await this._refreshSMTPData();
   }
-  _onChangeListener() {
+  onChangeListener(event: Event) {
+    console.log('Change detected, readyMigrate:', this.readyMigrate);
     this.readyMigrate = false;
   }
   async _generalOnSubmit() {
@@ -105,17 +106,27 @@ export class Generalmanagement implements OnInit {
   }
   async _databaseOnTestConnection() {
     if (this.databaseForm.valid) {
-      console.log("database Test : ", this.databaseForm.value);
       this.loading = true;
       let payloadConfig: any = this.databaseForm.value;
       payloadConfig.client = payloadConfig?.clientObj?.key
-      delete payloadConfig.clientObj;
+      // delete payloadConfig.clientObj;
       console.log("Payload Test : ", payloadConfig);
       await this._testDatabaseConnection(payloadConfig);
     }
   }
-  async _testDatabaseConnection(optionconfig:any): Promise<void> {
+  async _databaseOnMigrate() {
+    if (this.databaseForm.valid) {
+      this.loading = true;
+      let payloadConfig: any = this.databaseForm.value;
+      payloadConfig.client = payloadConfig?.clientObj?.key
+      // delete payloadConfig.clientObj;
+      console.log("Payload Migration Test : ", payloadConfig);
+      await this._databaseMigration(payloadConfig);
+    }
+  }
 
+
+  async _testDatabaseConnection(optionconfig:any): Promise<void> {
     fetch('/v2/admin/test_database', {
       method: 'POST',
       headers: {
@@ -133,8 +144,11 @@ export class Generalmanagement implements OnInit {
         console.log("Response dari API /v2/admin/test_database", data);
         this.loading = false;
         if (data.code === 20000) {
+          this.errorMessageD ={ error: true, severity: "success", message: data.message, icon: "pi pi-check" }
+          this.readyMigrate=true;
           this.loading = false;
         } else {
+          this.errorMessageD ={ error: true, severity: "error", message: data.data.message, icon: "pi pi-exclamation-circle" }
           this.loading = false;
         }
       })
@@ -144,8 +158,37 @@ export class Generalmanagement implements OnInit {
       });
   }
 
-  async _databaseMigration(): Promise<void> {
-
+  async _databaseMigration(optionconfig:any): Promise<void> {
+      fetch('/v2/admin/migrate_database', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-client': 'angular-ssr'
+      },
+      body: JSON.stringify({config:optionconfig})
+    })
+      .then(res => {
+        console.log("Response dari API  /v2/admin/migrate_database", res);
+        // if (!res.ok) throw new Error('get Test Gagal');
+        return res.json();
+      })
+      .then(data => {
+        console.log("Response dari API /v2/admin/migrate_database", data);
+        this.loading = false;
+        if (data.code === 20000) {
+          this.errorMessageD ={ error: true, severity: "success", message: data.message, icon: "pi pi-check" }
+          this.readyMigrate=false;
+          this.loading = false;
+        } else {
+          this.errorMessageD ={ error: true, severity: "error", message: data.data.message, icon: "pi pi-exclamation-circle" }
+          this.readyMigrate=false;
+          this.loading = false;
+        }
+      })
+      .catch(err => {
+        this.loading = false;
+        console.log("Response Error Catch /v2/admin/migrate_database", err);
+      });
   }
 
 

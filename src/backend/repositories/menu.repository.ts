@@ -14,6 +14,19 @@ export class MenuRepository {
     ]).from('m_menus as mm').orderBy("mm.created_at");
     return result;
   }
+  async findAllMenuMigrate() {
+    const result = await db.select([
+      'mm.nameMenu',
+      'mm.pathMenu',
+      'mm.idAppMenu',
+      'mm.created_at',
+      'mm.created_by',
+      'mm.updated_at',
+      'mm.updated_by',
+      'mm.iconMenu'
+    ]).from('m_menus as mm').orderBy("mm.created_at");
+    return result;
+  }
   async findAllMenuById(idMenu:string) {
     const result = await db.select([
       'mm.idMenu',
@@ -43,6 +56,15 @@ export class MenuRepository {
   async findAllIconsPrime() {
     const result = await db.select([
       'mi.id',
+      'mi.code',
+      'mi.type',
+      'mi.codeother',
+      'mi.description'
+    ]).from('m_icons as mi').where("mi.type","prime").orderBy("mi.description");
+    return result;
+  }
+  async findAllIconsPrimeMigrate() {
+    const result = await db.select([
       'mi.code',
       'mi.type',
       'mi.codeother',

@@ -9,6 +9,18 @@ export class GroupRepository {
     ]).from('m_group as mg').whereNot("mg.idgroup", "100000000001").orderBy("mg.groupname", "asc");
     return result;
   }
+  async findAllGroupMigrate() {
+    const result = await db.select([
+      'mg.idgroup',
+      'mg.groupname',
+      'mg.menublob',
+      'mg.description',
+    ]).from('m_group as mg').orderBy("mg.groupname", "asc");
+    return result;
+  }
+
+
+
   async findAllGroupById(idGroup:string) {
     const result = await db.select([
       'mg.idgroup',

@@ -79,6 +79,25 @@ export class UserRepository {
     return query;
   }
 //################################################################## FOR CRUD #############################################
+  async findAllUserMigrate() {
+    const result = await db.select([
+      'mu.iduser',
+      'mu.username',
+      'mu.password',
+      'mu.fullname',
+      'mu.mobile',
+      'mu.email',
+      'mu.idgroup',
+      'mu.deleteable',
+      'mu.created_by',
+      'mu.created_at',
+      'mu.updated_by',
+      'mu.updated_at',
+      'mu.status',
+      'mg.groupname',
+    ]).from('m_user as mu').innerJoin("m_group as mg","mu.idgroup","mg.idgroup");
+    return result;
+  }
 async findAllUsers(userinfo: any) {
     const result = await db.select([
       'mu.iduser',

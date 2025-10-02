@@ -1,5 +1,13 @@
 import db from '../database/client';
 export class ParamRepository {
+  async findParamForMigration() {
+    const result = await db.select([
+      'mg.paramgroup',
+      'mg.paramkey',
+      'mg.paramvalue',
+    ]).from('m_param as mg').orderBy("mg.id", "asc");
+    return result;
+  }
   async findParamByGroup(payload:any) {
     const result = await db.select([
       'mg.id',

@@ -141,8 +141,8 @@
             This tabs is only for database migration to other RDBMS except SQLite. If Test connection success means you could migrate data from Embeded to target database
           </p>
           <form [formGroup]="databaseForm" (ngSubmit)="_databaseOnTestConnection()" class="space-y-4">
-            <div [hidden]="!errorMessageS.error" class="mb-2">
-              <p-message [severity]="errorMessageS.severity" [text]="errorMessageS.message" [icon]="errorMessageS.icon"
+            <div [hidden]="!errorMessageD.error" class="mb-2 mt-4">
+              <p-message [severity]="errorMessageD.severity" [text]="errorMessageD.message" [icon]="errorMessageD.icon"
                 styleClass="p-message p-component block">
               </p-message>
             </div>
@@ -158,32 +158,32 @@
               </div>
               <div class="flex flex-col mb-2">
                 <label for="conhost" class="mb-2">Host</label>
-                <input type="text" class="w-full" pInputText formControlName="conhost" id="conhost" />
+                <input type="text" class="w-full" (change)="onChangeListener($event)" pInputText formControlName="conhost" id="conhost" />
               </div>
               <div class="flex flex-col mb-2">
                 <label for="condatabase" class="mb-2">Database / SID</label>
-                <input type="text" class="w-full" pInputText formControlName="condatabase" id="condatabase" />
+                <input type="text" class="w-full" (change)="onChangeListener($event)" pInputText formControlName="condatabase" id="condatabase" />
               </div>
                <div class="flex flex-col mb-2">
                 <label for="conport" class="mb-2">Port</label>
-                <input type="text" class="w-full" pInputText formControlName="conport" id="conport" />
+                <input type="text" class="w-full" (change)="onChangeListener($event)" pInputText formControlName="conport" id="conport" />
               </div>
               <div class="flex flex-col mb-2">
                 <label for="conuser" class="mb-2">User Name</label>
-                <input type="text" class="w-full" pInputText formControlName="conuser" id="conuser" />
+                <input type="text" class="w-full" (change)="onChangeListener($event)" pInputText formControlName="conuser" id="conuser" />
               </div>
               <div class="flex flex-col mb-2">
                 <label for="conpassword" class="mb-2">Password</label>
                 <p-password formControlName="conpassword" class="w-full" [feedback]="false"
-              styleClass="w-full" inputStyleClass="w-full" [toggleMask]="true"></p-password>
+              styleClass="w-full" inputStyleClass="w-full" onchange="onChangeListener($event)" [toggleMask]="true"></p-password>
               </div>
             </div>
             <!-- Button -->
             <div class="flex justify-end gap-2">
               <button pButton type="submit" class="w-38 mt-4" icon="pi pi-database" [disabled]="!databaseForm.valid"
                 style="margin-top: 1.5rem;" label="Test Connection"></button>&nbsp;
-              <button pButton type="button" class="w-38 mt-4" severity="warn" icon="pi pi-link" [disabled]="!readyMigrate"
-                style="margin-top: 1.5rem;" label="Start Migration"></button>
+              <button pButton type="button" (click)="_databaseOnMigrate()" class="w-38 mt-4" severity="warn" icon="pi pi-link" [disabled]="!readyMigrate"
+                style="margin-top: 1.5rem;" label="Migrate Data"></button>
             </div>
           </form>
         </p-tabpanel>

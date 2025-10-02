@@ -1,5 +1,7 @@
 import { base64url, EncryptJWT, jwtDecrypt, JWTPayload, jwtVerify, SignJWT } from "jose";
 import { logError, logInfo } from "./logger";
+import { ParamRepository } from "../repositories/param.repository";
+
 // import dotenv from "dotenv";
 // import { env } from "../config/env";
 
@@ -7,6 +9,7 @@ import { logError, logInfo } from "./logger";
 const SECRET = "ajinomotocapmangkokmerahdelimaputihputihmel";
 const secretKey = base64url.decode(SECRET);
 export class EncryptDecryptJwt {
+
  // 🔹 Enkripsi Payload menjadi JWT
   static async encrypt(payload: JWTPayload): Promise<string> {
     return await new EncryptJWT(payload)
@@ -31,10 +34,16 @@ export class EncryptDecryptJwt {
   }
 
   static async generateToken(userData: any): Promise<string> {
+    const paramRepo = new ParamRepository()
+    //####################### GET PARAM DULU ##################
+    const paramResult = await paramRepo.findParamByKey({paramgroup:"GENERAL", paramkey:"cookietime"});
+    logInfo("Hasil dari param di cookie ", paramResult);
+    const ExpireSession:string = paramResult.paramvalue
+    //#############################################
     return await new SignJWT(userData)
       .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
       .setIssuedAt()
-      .setExpirationTime("60m") // Token berlaku selama 60 m
+      .setExpirationTime(ExpireSession) // Token berlaku selama 60 m
       .sign(secretKey);
   };
   static async verifyToken(token: string):Promise<any>{

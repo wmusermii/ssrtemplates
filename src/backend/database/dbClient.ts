@@ -1,37 +1,59 @@
-import knex, { Knex } from "knex";
+// db.ts
+import { createRequire } from "module";
+import type { Knex } from "knex";
+
+const require = createRequire(import.meta.url);
+const knex = require("knex");
 
 class Database {
   private static instance: Knex | null = null;
 
-  // init koneksi pertama kali
-  static init(config: Knex.Config): Knex {
+  static init(config: Knex.Config) {
+
+    // console.log("Config : ", config);
+
     if (!Database.instance) {
       Database.instance = knex(config);
+      console.log("Database initialized ✅");
     }
     return Database.instance;
   }
 
-  // ambil instance yang sudah ada
-  static get(): Knex {
-    if (!Database.instance) {
-      throw new Error("Database belum di-initialize. Panggil Database.init(config) dulu.");
-    }
-    return Database.instance;
-  }
-
-  // optional: tes koneksi
   static async testConnection() {
-    const db = Database.get();
-    const result = await db.raw("select 1+1 as result");
-    console.log("Tes koneksi sukses:", result.rows || result);
+    if (!Database.instance) throw new Error("Database belum di-init");
+    try {
+      await Database.instance.raw("select 1+1 as result");
+      return {
+        success: true,
+        message: "Database connection OK ✅",
+      };
+    } catch (err: any) {
+      // PostgreSQL / MySQL / SQLite biasanya kasih error code
+      return {
+        success: false,
+        message: "Database connection FAILED ❌",
+        error: {
+          code: err.code || null,       // contoh: 28P01 (invalid_password)
+          detail: err.detail || null,   // keterangan tambahan (kalau ada)
+          hint: err.hint || null,
+          routine: err.routine || null,
+          message: err.message,         // pesan utama
+        },
+      };
+    }
   }
 
-  // optional: tutup koneksi
+
+  static get(): Knex {
+    if (!Database.instance) throw new Error("Database belum di-init");
+    return Database.instance;
+  }
+
   static async destroy() {
     if (Database.instance) {
       await Database.instance.destroy();
       Database.instance = null;
-      console.log("Koneksi database ditutup");
+      console.log("Database connection closed ❎");
     }
   }
 }
