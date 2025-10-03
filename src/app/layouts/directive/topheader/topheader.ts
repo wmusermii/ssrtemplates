@@ -52,12 +52,12 @@ export class Topheader implements OnInit, OnDestroy {
       }
     })
       .then(res => {
-        console.log("Response dari API  /auth/attrb", res);
+        // console.log("Response dari API  /auth/attrb", res);
         if (!res.ok) throw new Error('Attrb Gagal');
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /auth/attrb ", data);
+        // console.log("Response dari API /auth/attrb ", data);
         if (data.code === 20000) {
           const datamenuString = data.data.menublob;
           if (datamenuString) {

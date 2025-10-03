@@ -136,12 +136,12 @@ export class Generalmanagement implements OnInit {
       body: JSON.stringify({config:optionconfig})
     })
       .then(res => {
-        console.log("Response dari API  /v2/admin/test_database", res);
+        // console.log("Response dari API  /v2/admin/test_database", res);
         // if (!res.ok) throw new Error('get Test Gagal');
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /v2/admin/test_database", data);
+        // console.log("Response dari API /v2/admin/test_database", data);
         this.loading = false;
         if (data.code === 20000) {
           this.errorMessageD ={ error: true, severity: "success", message: data.message, icon: "pi pi-check" }
@@ -168,12 +168,12 @@ export class Generalmanagement implements OnInit {
       body: JSON.stringify({config:optionconfig})
     })
       .then(res => {
-        console.log("Response dari API  /v2/admin/migrate_database", res);
+        // console.log("Response dari API  /v2/admin/migrate_database", res);
         // if (!res.ok) throw new Error('get Test Gagal');
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /v2/admin/migrate_database", data);
+        // console.log("Response dari API /v2/admin/migrate_database", data);
         this.loading = false;
         if (data.code === 20000) {
           this.errorMessageD ={ error: true, severity: "success", message: data.message, icon: "pi pi-check" }
@@ -204,12 +204,12 @@ export class Generalmanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API  /v2/admin/get_parambygroup", res);
+        // console.log("Response dari API  /v2/admin/get_parambygroup", res);
         if (!res.ok) throw new Error('get Title Gagal');
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /v2/admin/get_parambygroup", data);
+        // console.log("Response dari API /v2/admin/get_parambygroup", data);
         this.loading = false;
 
         if (data.code === 20000) {
@@ -246,12 +246,12 @@ export class Generalmanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API  /v2/admin/get_parambygroup", res);
+        // console.log("Response dari API  /v2/admin/get_parambygroup", res);
         if (!res.ok) throw new Error('get Title Gagal');
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /v2/admin/get_parambygroup", data);
+        // console.log("Response dari API /v2/admin/get_parambygroup", data);
         this.loading = false;
 
         if (data.code === 20000) {
@@ -289,12 +289,12 @@ export class Generalmanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API  /v2/admin/get_parambygroup", res);
+        // console.log("Response dari API  /v2/admin/get_parambygroup", res);
         if (!res.ok) throw new Error('get Title Gagal');
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /v2/admin/get_parambygroup", data);
+        // console.log("Response dari API /v2/admin/get_parambygroup", data);
         this.loading = false;
 
         if (data.code === 20000) {
@@ -341,12 +341,12 @@ export class Generalmanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API  /v2/admin/upd_parambygroup", res);
+        // console.log("Response dari API  /v2/admin/upd_parambygroup", res);
         if (!res.ok) throw new Error('get Title Gagal');
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /v2/admin/upd_parambygroup", data);
+        // console.log("Response dari API /v2/admin/upd_parambygroup", data);
         this.loading = false;
         if (data.code === 20000) {
           // const dataRecordsTemp = cloneDeep(data.data);

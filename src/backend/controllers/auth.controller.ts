@@ -6,8 +6,59 @@ import { ApiResponse } from '../utils/apiResponse';
 import { AuthService } from '../services/auth.service';
 import { EncryptDecryptJwt } from '../utils/encryptdecryptJwt';
 import { ApiService } from '../services/api.service';
+import { log } from 'console';
 const authService = new AuthService();
 const apiService = new ApiService();
+// export async function login(req: Request, res: Response, next: NextFunction) {
+//   const { credential } = req.body;
+//   try {
+//     const decoded = Buffer.from(credential, 'base64').toString('utf-8');
+//     const [username, password] = decoded.split(':');
+//     const user = await authService.login(username, password);
+//     let dataTemp:any = user.data;
+//     const data:any = {
+//       ...dataTemp,
+//       ua: req.headers['user-agent'],
+//       ip: req.ip
+//     }
+//     let tokenCookie = null;
+//     if(user.code === 20000) {
+//       const token = await EncryptDecryptJwt.generateToken(data);
+//       delete data.password;
+//       tokenCookie = await EncryptDecryptJwt.generateToken(data);
+//       const uInfo = JSON.parse(JSON.stringify(data)); // agar data tidak hilang
+//       for (const key in user.data) {
+//         if (user.data.hasOwnProperty(key)) {
+//           delete user.data[key];
+//         }
+//       }
+//       // logInfo("############################UINFO 2 : ",uInfo)
+//       delete uInfo.menublob;
+//       user.data.token = token;
+//       user.data.userinfo = uInfo;
+//     }
+//     const optionCookie:any[]=[
+//       {
+//         name: 'x_token',
+//         value: tokenCookie,
+//         options: {
+//           httpOnly: true,   // Melindungi dari akses JavaScript
+//           secure: false,     // Hanya dikirim melalui HTTPS jika true
+//           signed:true,
+//           sameSite: 'strict', // Mencegah CSRF
+//           maxAge: convertToMaxAge("15m")  // Cookie berlaku selama 15 menit
+//         }
+//       }
+//     ]
+//     // await ResponseHelper.send(res, user);return;
+//     // console.log("COOKENYA ",optionCookie);
+//     await ResponseHelper.sendWithCookies(res, user, optionCookie);return;
+//   } catch (error) {
+//     logError("Error auth.controller : ", error)
+//     // next(error);
+//     await ResponseHelper.send(res,ApiResponse.serverError(error+""));return;
+//   }
+// }
 export async function login(req: Request, res: Response, next: NextFunction) {
   const { credential } = req.body;
   try {
@@ -22,36 +73,37 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     }
     let tokenCookie = null;
     if(user.code === 20000) {
-      const token = await EncryptDecryptJwt.generateToken(data);
-      delete data.password;
-      tokenCookie = await EncryptDecryptJwt.generateToken(data);
-      const uInfo = JSON.parse(JSON.stringify(data)); // agar data tidak hilang
-      for (const key in user.data) {
-        if (user.data.hasOwnProperty(key)) {
-          delete user.data[key];
-        }
-      }
-      // logInfo("############################UINFO 2 : ",uInfo)
-      delete uInfo.menublob;
-      user.data.token = token;
-      user.data.userinfo = uInfo;
+            const token = await EncryptDecryptJwt.generateToken(data);
+            delete data.password;
+            tokenCookie = await EncryptDecryptJwt.generateToken(data);
+            const uInfo = JSON.parse(JSON.stringify(data)); // agar data tidak hilang
+            for (const key in user.data) {
+              if (user.data.hasOwnProperty(key)) {
+                delete user.data[key];
+              }
+            }
+            // logInfo("############################UINFO 2 : ",uInfo)
+            delete uInfo.menublob;
+            user.data.token = token;
+            user.data.userinfo = uInfo;
+            const optionCookie:any[]=[
+            {
+              name: 'x_token',
+              value: tokenCookie,
+              options: {
+                httpOnly: true,   // Melindungi dari akses JavaScript
+                secure: false,     // Hanya dikirim melalui HTTPS jika true
+                signed:true,
+                sameSite: 'strict', // Mencegah CSRF
+                maxAge: convertToMaxAge("15m")  // Cookie berlaku selama 15 menit
+              }
+            }
+          ]
+          await ResponseHelper.sendWithCookies(res, user, optionCookie);return;
+    } else {
+        await ResponseHelper.send(res, user);return;
     }
-    const optionCookie:any[]=[
-      {
-        name: 'x_token',
-        value: tokenCookie,
-        options: {
-          httpOnly: true,   // Melindungi dari akses JavaScript
-          secure: false,     // Hanya dikirim melalui HTTPS jika true
-          signed:true,
-          sameSite: 'strict', // Mencegah CSRF
-          maxAge: convertToMaxAge("15m")  // Cookie berlaku selama 15 menit
-        }
-      }
-    ]
-    // await ResponseHelper.send(res, user);return;
-    // console.log("COOKENYA ",optionCookie);
-    await ResponseHelper.sendWithCookies(res, user, optionCookie);return;
+
   } catch (error) {
     logError("Error auth.controller : ", error)
     // next(error);

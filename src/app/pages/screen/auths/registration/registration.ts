@@ -82,12 +82,12 @@ onSubmit() {
       body: JSON.stringify(this.registerForm.value)
     })
       .then(res => {
-        console.log("Response dari API ", res);
+        // console.log("Response dari API ", res);
         if (!res.ok) throw new Error('Login gagal');
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API DATA ", data);
+        // // console.log("Response dari API DATA ", data);
         this.loading=false;
         if(data.code === 20000) {
           this.successRegistration={success:true, message:`Registration Success and ${data.message}`, title:"Success Register!"};
@@ -106,13 +106,13 @@ onSubmit() {
   //     body: JSON.stringify(payload)
   //   })
   //     .then(res => {
-  //       console.log("Response dari API ", res);
+  //       // console.log("Response dari API ", res);
   //       // logInfo
   //       if (!res.ok) throw new Error('Login gagal');
   //       return res.json();
   //     })
   //     .then(data => {
-  //       console.log("Response dari API DATA ", data);
+  //       // // console.log("Response dari API DATA ", data);
   //       this.loading=false;
   //       this.successRegistration={success:true, message:`Registration Success and ${data.message}`, title:"Success Register!"};
   //     })

@@ -39,12 +39,12 @@ export class Sidenavilayout implements OnInit {
                   body:JSON.stringify(payload)
               })
                 .then(res => {
-                  console.log("Response dari API  /v2/admin/get_parambykey", res);
+                  // // console.log("Response dari API  /v2/admin/get_parambykey", res);
                   if (!res.ok) throw new Error('get Title Gagal');
                   return res.json();
                 })
                 .then(data => {
-                  console.log("Response dari API /v2/admin/get_parambykey", data);
+                  //// console.log("Response dari API /v2/admin/get_parambykey", data);
                   // this.loading=false;
 
                   if (data.code === 20000) {

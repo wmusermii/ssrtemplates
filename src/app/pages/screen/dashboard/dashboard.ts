@@ -102,12 +102,12 @@ export class Dashboard implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API /shopee/gen_qshopeeCurrent 0", res);
+        // console.log("Response dari API /shopee/gen_qshopeeCurrent 0", res);
         if (!res.ok) throw new Error('q_shopee Gagal');
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /shopee/gen_qshopeeCurrent 1", data);
+        // console.log("Response dari API /shopee/gen_qshopeeCurrent 1", data);
         if (data.code === 20000) {
           console.log("FETCH SETELAH GENERATE ");
           this.loading = false;
@@ -137,12 +137,12 @@ export class Dashboard implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API  /shopee/get_positem", res);
+        // console.log("Response dari API  /shopee/get_positem", res);
         if (!res.ok) throw new Error('get QShopee Gagal');
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /shopee/get_positem ", data);
+        // console.log("Response dari API /shopee/get_positem ", data);
         this.loading=false;
         if (data.code === 20000) {
           this.showProcedPostDialog = true;

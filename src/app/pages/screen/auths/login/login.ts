@@ -33,8 +33,6 @@ export class Login implements OnInit {
     }
     this.loading = true;
     const objPayload = this.loginForm.value;
-    console.log("Payload form ", objPayload);
-    // const payload = {credential:btoa(`${objPayload.username}:${objPayload.password}`)}
     const credential = btoa(`${objPayload.username}:${objPayload.password}`);
     fetch('/v2/auth/login', {
       method: 'POST',
@@ -45,22 +43,21 @@ export class Login implements OnInit {
       body: JSON.stringify({ credential })
     })
       .then(res => {
-        console.log("Response dari API ", res);
+        // console.log("Response dari API ", res);
         // logInfo
-        if (!res.ok) throw new Error('Login gagal');
+        // if (!res.ok) throw new Error('Login gagal');
+        // return res.json();
         return res.json();
       })
       .then(data => {
-        // console.log("Response dari API DATA ", JSON.parse(data));
-        console.log("Response dari API DATA ", data);
-
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // // console.log("Response dari API DATA ", data);
         if(data.code === 20000) {
           this.loading=false;
-          // this.ssrStorage.setItem('token', data.data.token);
-          // delete data.data.userinfo.password;
           this.ssrStorage.setItem('C_INFO', data.data.userinfo);
           this.router.navigate(['/dashboard']);
         } else {
+          this.loading=false;
           this.errorMessage = {error:true, severity:"error", message:`${data.message}`, icon:"pi pi-times"}
         }
       })
@@ -94,12 +91,12 @@ export class Login implements OnInit {
                 body:JSON.stringify(payload)
             })
               .then(res => {
-                console.log("Response dari API  /v2/admin/get_parambykey", res);
+                // // console.log("Response dari API  /v2/admin/get_parambykey", res);
                 if (!res.ok) throw new Error('get Title Gagal');
                 return res.json();
               })
               .then(data => {
-                console.log("Response dari API /v2/admin/get_parambykey", data);
+                //// console.log("Response dari API /v2/admin/get_parambykey", data);
                 this.loading=false;
 
                 if (data.code === 20000) {

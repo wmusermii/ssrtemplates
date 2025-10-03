@@ -127,7 +127,7 @@ export class Groupmanagement implements OnInit {
       }
     })
       .then(res => {
-        console.log("Response dari API  /v2/admin/get_groups", res);
+        // console.log("Response dari API  /v2/admin/get_groups", res);
         // if (!res.ok) throw new Error('get get_groups Gagal');
         // if (!res.ok){
         //   this.showErrorPage = {show:true, message:res}
@@ -135,7 +135,7 @@ export class Groupmanagement implements OnInit {
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /v2/admin/get_groups", data);
+        // console.log("Response dari API /v2/admin/get_groups", data);
         this.loading = false;
         this.groups = []; this.allGroups = [];
         if (data.code === 20000) {
@@ -166,11 +166,11 @@ export class Groupmanagement implements OnInit {
       }
     })
       .then(res => {
-        console.log("Response dari API  /v2/admin/get_roles", res);
+        // console.log("Response dari API  /v2/admin/get_roles", res);
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /v2/admin/get_roles", data);
+        // console.log("Response dari API /v2/admin/get_roles", data);
         if (data.code === 20000) {
           const dataRecordsTemp = cloneDeep(data.data);
           this.rolesData = dataRecordsTemp;
@@ -194,12 +194,12 @@ export class Groupmanagement implements OnInit {
       }
     })
       .then(res => {
-        console.log("Response dari API  /v2/admin/get_menus", res);
+        // console.log("Response dari API  /v2/admin/get_menus", res);
         if (!res.ok) throw new Error('get get_menus Gagal');
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /v2/admin/get_menus", data);
+        // console.log("Response dari API /v2/admin/get_menus", data);
         // this.loading=false;
         // this.menus=[];this.allMenus=[];
         if (data.code === 20000) {
@@ -324,14 +324,14 @@ export class Groupmanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API ", res);
+        // console.log("Response dari API ", res);
         // logInfo
         if (!res.ok) throw new Error('Error add data');
         return res.json();
       })
       .then(data => {
-        // console.log("Response dari API DATA ", JSON.parse(data));
-        console.log("Response dari API DATA ", data);
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // // console.log("Response dari API DATA ", data);
         this.loading = false;
         if (data.code === 20000) {
           this.showDetailForm = { show: false, action: "add" };
@@ -360,14 +360,14 @@ export class Groupmanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API ", res);
+        // console.log("Response dari API ", res);
         // logInfo
         if (!res.ok) throw new Error('Error update data');
         return res.json();
       })
       .then(data => {
-        // console.log("Response dari API DATA ", JSON.parse(data));
-        console.log("Response dari API DATA ", data);
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // // console.log("Response dari API DATA ", data);
         this.loading = false;
         if (data.code === 20000) {
           this.showDetailForm = { show: false, action: "add" };
@@ -395,14 +395,14 @@ export class Groupmanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API ", res);
+        // console.log("Response dari API ", res);
         // logInfo
         if (!res.ok) throw new Error('Error add data');
         return res.json();
       })
       .then(data => {
-        // console.log("Response dari API DATA ", JSON.parse(data));
-        console.log("Response dari API DATA UPD MENUBLOB", data);
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // console.log("Response dari API DATA UPD MENUBLOB", data);
         this.loading = false;
         if (data.code === 20000) {
           // this.showDetailForm = { show: false, action: "add" };
@@ -430,14 +430,14 @@ export class Groupmanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API ", res);
+        // console.log("Response dari API ", res);
         // logInfo
         if (!res.ok) throw new Error('Error add data');
         return res.json();
       })
       .then(async data => {
-        // console.log("Response dari API DATA ", JSON.parse(data));
-        console.log("Response dari API DATA ", data);
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // // console.log("Response dari API DATA ", data);
         // this.loading=false;
         if (data.code === 20000) {
           await this._refreshListData();
@@ -582,10 +582,10 @@ export class Groupmanagement implements OnInit {
           body: JSON.stringify(payload)
         });
 
-        console.log("Response dari API /v2/auth/aclattrb", res);
+        // console.log("Response dari API /v2/auth/aclattrb", res);
 
         const data = await res.json();
-        console.log("Response dari API /v2/auth/aclattrb", data);
+        // console.log("Response dari API /v2/auth/aclattrb", data);
 
         this.loading = false;
 

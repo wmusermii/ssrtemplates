@@ -3,13 +3,27 @@ import { addGroups, addMenus, addRoles,  addUsers,  delGroups,  delMenus, delRol
 import { attrb, getaclattrb, login, logout, registUser } from '../controllers/auth.controller';
 import { asyncHandler } from '../middlewares/asyncHandler';
 import { CookieMiddleware } from '../middlewares/cookiemiddleware';
-import { authBearerMiddleware } from '../middlewares/authmiddleware';
+// import { authBearerMiddleware } from '../middlewares/authmiddleware';
+import rateLimit from 'express-rate-limit';
+import { ParamRepository } from '../repositories/param.repository';
 const router = Router();
 router.get('/echo', echo);
-//##################################### REAL FUNCTION#############
-
+//##################################### LIMIT RATE LOGIN #############
+// const paramRepo = new ParamRepository();
+// console.log("GET PARAM FOR RATE LIMIT ");
+// const MaxAttempt = await paramRepo.findParamByKey({paramgroup:"GENERAL", paramkey:"maxloginattempt"});
+// console.log("PARAM ", MaxAttempt);
+//#############################################################
+// const loginIpLimiter = rateLimit({
+//   windowMs: 60 * 1000, // 1 menit
+//   max: 3,             // max 20 request per IP per menit (sesuaikan)
+//   message: { message: 'Too many login attempts from this IP, try again later.' },
+//   standardHeaders: true,
+//   legacyHeaders: false
+// });
+const loginLimiter = await createLoginLimiter();
 //##################################### AUTH ROUTES #############
-router.post('/auth/login', asyncHandler(login));
+router.post('/auth/login', loginLimiter,asyncHandler(login));
 router.get('/auth/logout', asyncHandler(CookieMiddleware),asyncHandler(logout));
 router.post('/auth/registuser', asyncHandler(registUser));
 router.get('/auth/attrb',asyncHandler(CookieMiddleware), asyncHandler(attrb));
@@ -51,5 +65,29 @@ router.post('/admin/del_user', asyncHandler(CookieMiddleware),asyncHandler(delUs
 //##################################### EMAIL #############
 // router.post('/warehouse/send_email', asyncHandler(sendingEmailTo));// Untuk cek apaka package yang di ambil sudah diambil user lain
 //##################################### Printing #############
-
+async function createLoginLimiter() {
+  const defaultMax = 3;
+  try {
+    const paramRepo = new ParamRepository();
+    const row = await paramRepo.findParamByKey({ paramgroup: 'GENERAL', paramkey: 'maxloginattempt' });
+    const max = row && Number(row.paramvalue) ? Number(row.paramvalue) : defaultMax;
+    console.log('login limiter max set to', max);
+    return rateLimit({
+      windowMs: 60 * 1000,
+      max,
+      message: { message: 'Too many login attempts from this IP, try again later.' },
+      standardHeaders: true,
+      legacyHeaders: false
+    });
+  } catch (err) {
+    console.warn('Could not read param for rate limit, using default. Error:', err);
+    return rateLimit({
+      windowMs: 5 * 1000,
+      max: defaultMax,
+      message: { message: 'Too many login attempts from this IP, try again later.' },
+      standardHeaders: true,
+      legacyHeaders: false
+    });
+  }
+}
 export default router;

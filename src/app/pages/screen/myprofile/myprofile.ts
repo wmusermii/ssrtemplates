@@ -94,12 +94,12 @@ export class Myprofile implements OnInit {
           body: JSON.stringify(ObjectSubmited)
         })
           .then(res => {
-            console.log("Response dari API /auth/updateusere 0", res);
+            // console.log("Response dari API /auth/updateusere 0", res);
             if (!res.ok) throw new Error('q_shopee Gagal');
             return res.json();
           })
           .then(data => {
-            console.log("Response dari API /auth/updateuser 1", data);
+            // console.log("Response dari API /auth/updateuser 1", data);
             if (data.code === 20000) {
 
               this.loading = false;

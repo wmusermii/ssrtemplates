@@ -21,7 +21,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const ssrStorage = inject(LocalstorageService)
   const router = inject(Router);
   try {
-    console.log("[authGuard]", "FETCHING ATTRB");
+    // console.log("[authGuard]", "FETCHING ATTRB");
     const res = await fetch('/v2/auth/attrb', {
       method: 'GET',
       headers: {
@@ -36,7 +36,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
     }
     const data = await res.json();
     if (data.code === 20000) {
-      console.log("[authGuard] Data", data);
+      // console.log("[authGuard] Data", data);
       const blobMenu = btoa(JSON.stringify(data.data))
       ssrStorage.setItem("blob",blobMenu)
       return true

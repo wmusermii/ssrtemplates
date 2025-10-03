@@ -78,7 +78,7 @@ export class Sidebar implements OnInit, OnDestroy {
       }
     })
       .then(async res => {
-        console.log("Response dari API  /auth/attrb", res);
+        // console.log("Response dari API  /auth/attrb", res);
         // if (!res.ok) throw new Error('Attrb Gagal');
         if(!res.ok) {
           await this.ssrStorage.clear();
@@ -91,7 +91,7 @@ export class Sidebar implements OnInit, OnDestroy {
         return res.json();
       })
       .then(async data => {
-        console.log("Response dari API /auth/attrb ", data);
+        // console.log("Response dari API /auth/attrb ", data);
         if (data.code === 20000) {
           this.loading=false;
           this.user={name:data.data.fullname};
@@ -174,12 +174,12 @@ async expandAllPanelMenu(items: any[]):Promise<void> {
       }
     })
       .then(async res => {
-        console.log("Response dari API  /auth/logout", res);
+        // console.log("Response dari API  /auth/logout", res);
         if (!res.ok) throw new Error('Logout Gagal');
         return res.json();
       })
       .then(async data => {
-        console.log("Response dari API /auth/logout ", data);
+        // console.log("Response dari API /auth/logout ", data);
         if (data.code === 20000) {
           await this.ssrStorage.clear();
            this.showLogoutDialog = false;

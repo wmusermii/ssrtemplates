@@ -62,7 +62,7 @@ export class Menumanagement implements OnInit {
   constructor(private router: Router, private ssrStorage: LocalstorageService) { }
   async ngOnInit(): Promise<void> {
     this.currentUrl = this.router.url;
-    console.log('Current URL:', this.currentUrl);
+    // console.log('Current URL:', this.currentUrl);
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
     // // console.log("USER INFO ", this.userInfo);
@@ -94,12 +94,12 @@ export class Menumanagement implements OnInit {
             }
           })
             .then(res => {
-              console.log("Response dari API  /v2/admin/get_menus", res);
+              // console.log("Response dari API  /v2/admin/get_menus", res);
               if (!res.ok) throw new Error('get QShopee Gagal');
               return res.json();
             })
             .then(data => {
-              console.log("Response dari API /v2/admin/get_menus", data);
+              // console.log("Response dari API /v2/admin/get_menus", data);
               this.loading=false;
               this.menus=[];this.allMenus=[];
               if (data.code === 20000) {
@@ -134,10 +134,10 @@ export class Menumanagement implements OnInit {
           body: JSON.stringify(payload)
         });
 
-        console.log("Response dari API /v2/auth/aclattrb", res);
+        // console.log("Response dari API /v2/auth/aclattrb", res);
 
         const data = await res.json();
-        console.log("Response dari API /v2/auth/aclattrb", data);
+        // console.log("Response dari API /v2/auth/aclattrb", data);
 
         this.loading = false;
 
@@ -165,12 +165,12 @@ export class Menumanagement implements OnInit {
             }
           })
             .then(res => {
-              console.log("Response dari API  /v2/admin/get_icons", res);
+              // console.log("Response dari API  /v2/admin/get_icons", res);
               if (!res.ok) throw new Error('get QShopee Gagal');
               return res.json();
             })
             .then(data => {
-              console.log("Response dari API /v2/admin/get_icons", data);
+              // console.log("Response dari API /v2/admin/get_icons", data);
               this.loading=false;
               this.menus=[];this.allMenus=[];
               if (data.code === 20000) {
@@ -275,14 +275,14 @@ export class Menumanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API ", res);
+        // console.log("Response dari API ", res);
         // logInfo
         if (!res.ok) throw new Error('Error add data');
         return res.json();
       })
       .then(data => {
-        // console.log("Response dari API DATA ", JSON.parse(data));
-        console.log("Response dari API DATA ", data);
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // // console.log("Response dari API DATA ", data);
         this.loading=false;
         if(data.code === 20000) {
           this.showDetailForm = {show:false, action:"add"};
@@ -311,14 +311,14 @@ export class Menumanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API ", res);
+        // console.log("Response dari API ", res);
         // logInfo
         if (!res.ok) throw new Error('Error update data');
         return res.json();
       })
       .then(data => {
-        // console.log("Response dari API DATA ", JSON.parse(data));
-        console.log("Response dari API DATA ", data);
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // // console.log("Response dari API DATA ", data);
         this.loading=false;
         if(data.code === 20000) {
           this.showDetailForm = {show:false, action:"add"};
@@ -344,14 +344,14 @@ export class Menumanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API ", res);
+        // console.log("Response dari API ", res);
         // logInfo
         if (!res.ok) throw new Error('Error add data');
         return res.json();
       })
       .then(async data => {
-        // console.log("Response dari API DATA ", JSON.parse(data));
-        console.log("Response dari API DATA ", data);
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // // console.log("Response dari API DATA ", data);
         // this.loading=false;
         if(data.code === 20000) {
           await this._refreshListData();

@@ -58,7 +58,7 @@ export class Rolemanagement implements OnInit {
   }
   async ngOnInit(): Promise<void> {
     this.currentUrl = this.router.url;
-    console.log('Current URL:', this.currentUrl);
+    // console.log('Current URL:', this.currentUrl);
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
     //##########################################################
@@ -87,7 +87,7 @@ export class Rolemanagement implements OnInit {
       }
     })
       .then(res => {
-        console.log("Response dari API  /v2/admin/get_roles", res);
+        // console.log("Response dari API  /v2/admin/get_roles", res);
         // if (!res.ok) throw new Error('get get_roles Gagal');
         // if (!res.ok){
         //   this.showErrorPage = {show:true, message:res}
@@ -95,7 +95,7 @@ export class Rolemanagement implements OnInit {
         return res.json();
       })
       .then(data => {
-        console.log("Response dari API /v2/admin/get_roles", data);
+        // console.log("Response dari API /v2/admin/get_roles", data);
         this.loading = false;
         this.roles = []; this.allRoles = [];
         if (data.code === 20000) {
@@ -131,10 +131,10 @@ export class Rolemanagement implements OnInit {
         body: JSON.stringify(payload)
       });
 
-      console.log("Response dari API /v2/auth/aclattrb", res);
+      // console.log("Response dari API /v2/auth/aclattrb", res);
 
       const data = await res.json();
-      console.log("Response dari API /v2/auth/aclattrb", data);
+      // console.log("Response dari API /v2/auth/aclattrb", data);
 
       this.loading = false;
 
@@ -229,14 +229,14 @@ export class Rolemanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API ", res);
+        // console.log("Response dari API ", res);
         // logInfo
         if (!res.ok) throw new Error('Error add data');
         return res.json();
       })
       .then(data => {
-        // console.log("Response dari API DATA ", JSON.parse(data));
-        console.log("Response dari API DATA ", data);
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // // console.log("Response dari API DATA ", data);
         this.loading = false;
         if (data.code === 20000) {
           this.showDetailForm = { show: false, action: "add" };
@@ -265,14 +265,14 @@ export class Rolemanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API ", res);
+        // console.log("Response dari API ", res);
         // logInfo
         if (!res.ok) throw new Error('Error update data');
         return res.json();
       })
       .then(data => {
-        // console.log("Response dari API DATA ", JSON.parse(data));
-        console.log("Response dari API DATA ", data);
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // // console.log("Response dari API DATA ", data);
         this.loading = false;
         if (data.code === 20000) {
           this.showDetailForm = { show: false, action: "add" };
@@ -298,14 +298,14 @@ export class Rolemanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        console.log("Response dari API ", res);
+        // console.log("Response dari API ", res);
         // logInfo
         if (!res.ok) throw new Error('Error add data');
         return res.json();
       })
       .then(async data => {
-        // console.log("Response dari API DATA ", JSON.parse(data));
-        console.log("Response dari API DATA ", data);
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // // console.log("Response dari API DATA ", data);
         // this.loading=false;
         if (data.code === 20000) {
           await this._refreshListData();

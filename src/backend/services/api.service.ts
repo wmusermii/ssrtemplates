@@ -20,7 +20,7 @@ export class ApiService {
   private roleRepo = new RoleRepository();
   private menuRepo = new MenuRepository();
   private groupRepo = new GroupRepository();
-  private paramRepo = new ParamRepository()
+  private paramRepo = new ParamRepository();
 
   // async sendEmailNotification(to: string, subject: string, message: string) {
   //   // console.log('sendEmailNotification called with:', { to, subject, message });
