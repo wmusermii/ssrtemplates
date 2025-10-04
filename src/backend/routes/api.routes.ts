@@ -6,21 +6,10 @@ import { CookieMiddleware } from '../middlewares/cookiemiddleware';
 // import { authBearerMiddleware } from '../middlewares/authmiddleware';
 import rateLimit from 'express-rate-limit';
 import { ParamRepository } from '../repositories/param.repository';
+import { logInfo, logWarn } from '../utils/logger';
 const router = Router();
 router.get('/echo', echo);
 //##################################### LIMIT RATE LOGIN #############
-// const paramRepo = new ParamRepository();
-// console.log("GET PARAM FOR RATE LIMIT ");
-// const MaxAttempt = await paramRepo.findParamByKey({paramgroup:"GENERAL", paramkey:"maxloginattempt"});
-// console.log("PARAM ", MaxAttempt);
-//#############################################################
-// const loginIpLimiter = rateLimit({
-//   windowMs: 60 * 1000, // 1 menit
-//   max: 3,             // max 20 request per IP per menit (sesuaikan)
-//   message: { message: 'Too many login attempts from this IP, try again later.' },
-//   standardHeaders: true,
-//   legacyHeaders: false
-// });
 const loginLimiter = await createLoginLimiter();
 //##################################### AUTH ROUTES #############
 router.post('/auth/login', loginLimiter,asyncHandler(login));
@@ -71,7 +60,7 @@ async function createLoginLimiter() {
     const paramRepo = new ParamRepository();
     const row = await paramRepo.findParamByKey({ paramgroup: 'GENERAL', paramkey: 'maxloginattempt' });
     const max = row && Number(row.paramvalue) ? Number(row.paramvalue) : defaultMax;
-    console.log('login limiter max set to', max);
+    logInfo('login limiter max set to', max);
     return rateLimit({
       windowMs: 60 * 1000,
       max,
@@ -80,7 +69,7 @@ async function createLoginLimiter() {
       legacyHeaders: false
     });
   } catch (err) {
-    console.warn('Could not read param for rate limit, using default. Error:', err);
+    logWarn('Could not read param for rate limit, using default. Error:', err);
     return rateLimit({
       windowMs: 5 * 1000,
       max: defaultMax,
