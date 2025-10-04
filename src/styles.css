@@ -70,22 +70,6 @@ html, body {
   margin-right: 0.5rem;
 }
 
-/* .p-panelmenu .p-panelmenu-header {
-  display: flex!important;
-  justify-content: space-between!important;
-  align-items: center!important;
-  width: 100%!important;
-} */
-
-/* .p-panelmenu .p-panelmenu-header .p-panelmenu-header-icon {
-  margin-left: auto!important;
-  order: 2!important;
-} */
-
-/* .p-panelmenu .p-menuitem .p-panelmenu-icon {
-  margin-left: auto!important;
-  order: 2!important;
-} */
 .p-tree {
   width: 100% !important;
 }
