@@ -40,6 +40,7 @@ export class Dashboard implements OnInit {
   userInfo: any | undefined;
   date: Date | undefined = new Date(); // contoh
   disableBtn:boolean = true;
+  titleText:string ="undefined"
   currentDate: string | undefined;
   starttime:string ="00:00:01"
   endtime:string ="00:00:01"
@@ -64,7 +65,7 @@ export class Dashboard implements OnInit {
     const sessionDate:any = this.ssrStorage.getItem("FETCHTIME")
     // console.log("USER INFO ", this.userInfo);
 
-    // this._refreshCountInvoices();
+    this._refreshTitle();
   }
 
   async _popupShopee(){
@@ -165,6 +166,39 @@ export class Dashboard implements OnInit {
     this.ssrStorage.setItem("FORCEITEMID", this.selectProduct);
     this._goToPackaging();
   }
+  async _refreshTitle():Promise<any>{
+          // this.loading=true;
+          const payload = {paramgroup: "GENERAL", paramkey:"title"}
+              fetch('/v2/admin/get_parambykey', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-client': 'angular-ssr'
+                },
+                  body:JSON.stringify(payload)
+              })
+                .then(res => {
+                  // // console.log("Response dari API  /v2/admin/get_parambykey", res);
+                  if (!res.ok) throw new Error('get Title Gagal');
+                  return res.json();
+                })
+                .then(data => {
+                  //// console.log("Response dari API /v2/admin/get_parambykey", data);
+                  // this.loading=false;
+
+                  if (data.code === 20000) {
+                    const dataRecordsTemp = cloneDeep(data.data);
+                    this.titleText = dataRecordsTemp.paramvalue;
+
+                  } else {
+
+                    this.titleText = "Undefined"
+                  }
+                })
+                .catch(err => {;
+                  console.log("Response Error Catch /v2/admin/get_parambykey", err);
+                });
+    }
 }
 
 interface QueryFields {

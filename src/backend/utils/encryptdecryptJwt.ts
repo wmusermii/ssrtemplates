@@ -37,7 +37,7 @@ export class EncryptDecryptJwt {
     const paramRepo = new ParamRepository()
     //####################### GET PARAM DULU ##################
     const paramResult = await paramRepo.findParamByKey({paramgroup:"GENERAL", paramkey:"cookietime"});
-    logInfo("Hasil dari param di cookie ", paramResult);
+    // logInfo("Hasil dari param di cookie ", paramResult);
     const ExpireSession:string = paramResult.paramvalue
     //#############################################
     return await new SignJWT(userData)

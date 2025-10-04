@@ -53,7 +53,6 @@ export class Sidebar implements OnInit, OnDestroy {
       this.loading = true;
       const attrbstring = atob(this.token!)
       const attrbObj:any = JSON.parse(attrbstring);
-
       this.user={name:attrbObj.fullname};
       this.userChange.emit(this.user);
       const datamenuString = attrbObj.menublob;
