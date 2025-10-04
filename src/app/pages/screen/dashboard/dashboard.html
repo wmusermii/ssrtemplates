@@ -1,63 +1,10 @@
-<!-- <header class="pt-4 max-w-screen-xl mx-auto px-2 flex items-start justify-between">
-  <h1 class="text-lg font-bold m-0 p-0">{{userInfo.fullname}} ({{userInfo.groupname}})</h1>
-</header> -->
+
 <main class="pt-2 max-w-screen-xl mx-auto px-2 mb-6">
-  <!-- <div class="w-full pt-2 flex items-center gap-2 flex-wrap px-2 mb-6">
-    <p-chip [label]="skutotal" icon="pi pi-objects-column" class="border border-solid border-gray-300"
-      styleClass="custom-chip" />
-    <p-chip [label]="invoicetotalStr" icon="pi pi-receipt" class="border border-solid border-gray-300"
-      styleClass="custom-chip" />
-  </div> -->
   <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
     <h3 class="text-xl text-gray-400 font-medium p-0 m-0">Welcome to NDP Proxy Management {{currentDate}}</h3>
     <div class="md:items-center space-y-1 md:space-y-0 md:space-x-2">
-      <!-- <button pButton type="submit" (click)="_popupShopee()" class="w-full" [disabled]="disableBtn"
-        label="Generate Shopee Invoice"></button> -->
     </div>
   </div>
-  <!-- <div class="w-full bg-white py-3 px-5 rounded shadow mb-3 md:items-center">
-    <p-table [value]="QueriesDataPos"
-    [paginator]="true"
-    paginatorPosition="both"
-    selectionMode="single"
-    dataKey="item_id"
-    [(selection)]="selectProduct"
-    (onRowSelect)="_onRowSelect($event)"
-    [rows]="10" [rowsPerPageOptions]="[10, 50, 100]" class="w-full"
-      stripedRows="true" showGridlines="true" [tableStyle]="{ 'min-width': '30rem' }">
-      <ng-template pTemplate="caption">
-      <div class="flex items-center justify-between">
-        <h3>Items Requested</h3>
-      </div>
-    </ng-template>
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Item</th>
-          <th class="text-right">Qty</th>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="body" let-product>
-        <tr [pSelectableRow]="product">
-          <td>
-            <div class="flex items-start space-x-4">
-              <img [src]="product.image_url"
-                [alt]="product.name" class="w-16 h-16 object-cover rounded" />
-              <div>
-                <div class="font-bold text-lg text-gray-800">{{ product.item_name }}</div>
-                <div class="text-sm text-gray-500">{{ product.model_name }}</div>
-              </div>
-            </div>
-          </td>
-
-          <td class="text-right align-middle">
-            <span class="text-4xl font-semibold text-blue-700">{{ product.qty }}</span>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-
-  </div> -->
   <div *ngIf="loading"
     class="absolute inset-0 flex items-center justify-center rounded-md z-50 bg-white">
     <div role="status">
