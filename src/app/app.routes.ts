@@ -17,12 +17,12 @@ export const routes: Routes = [
         path: 'login',
         canActivate: [guestGuard],
         loadComponent: () => import("./pages/screen/auths/login/login").then(m => m.Login),
-        data: { title: 'Login - Admin Template' }
+        data: { title: 'Login - Flowable Simulator' }
       },
       {
         path: 'registration',
         loadComponent: () => import("./pages/screen/auths/registration/registration").then(m => m.Registration),
-        data: { title: 'Registration - Admin Template' }
+        data: { title: 'Registration - Flowable Simulator' }
       }
     ]
   },
@@ -34,43 +34,43 @@ export const routes: Routes = [
         path: 'dashboard',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/dashboard/dashboard").then(m => m.Dashboard),
-        data: { title: 'Dashboard - Admin Template' }
+        data: { title: 'Dashboard - Flowable Simulator' }
       },
       {
         path: 'management/general',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/managements/generalmanagement/generalmanagement").then(m => m.Generalmanagement),
-        data: { title: 'General Management - Admin Template' }
+        data: { title: 'General Management - Flowable Simulator' }
       },
       {
         path: 'management/user',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/managements/usermanagement/usermanagement").then(m => m.Usermanagement),
-        data: { title: 'User Management - Admin Template' }
+        data: { title: 'User Management - Flowable Simulator' }
       },
       {
         path: 'management/menus',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/managements/menumanagement/menumanagement").then(m => m.Menumanagement),
-        data: { title: 'Menu Management - Admin Template' }
+        data: { title: 'Menu Management - Flowable Simulator' }
       },
       {
         path: 'management/group',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/managements/groupmanagement/groupmanagement").then(m => m.Groupmanagement),
-        data: { title: 'Group Management - Admin Template' }
+        data: { title: 'Group Management - Flowable Simulator' }
       },
       {
         path: 'management/role',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/managements/rolemanagement/rolemanagement").then(m => m.Rolemanagement),
-        data: { title: 'Role Management - Admin Template' }
+        data: { title: 'Role Management - Flowable Simulator' }
       },
       {
         path: 'privacy/profile',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/myprofile/myprofile").then(m => m.Myprofile),
-        data: { title: 'My Profile - Admin Template' }
+        data: { title: 'My Profile - Flowable Simulator' }
       }
     ]
   },
