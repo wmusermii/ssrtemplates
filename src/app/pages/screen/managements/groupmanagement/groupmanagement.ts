@@ -248,11 +248,16 @@ export class Groupmanagement implements OnInit {
   }
   onRowSelectRole(event: any) {
     console.log('Selected Role:', event.data);
-    this.selectedRoles.push(event.data);
-    console.log("SELECTED ROLES ", this.selectedRoles);
+    // this.selectedRoles.push(event.data);
+    // console.log("SELECTED ROLES ", this.selectedRoles);
   }
   onRowUnselectRole(event: any) {
     this.selectedRoles = this.selectedRoles.filter(r => r.idRole !== event.data.idRole);
+  }
+  // Event ketika klik select-all checkbox di header
+  onHeaderCheckboxToggle(event: any) {
+    console.log('Header checkbox toggled:', event.checked);
+    console.log('Selected Roles:', this.selectedRoles);
   }
   async _menusAtGroup(event: any) {
     let menuBlob:any |undefined =event.menublob
