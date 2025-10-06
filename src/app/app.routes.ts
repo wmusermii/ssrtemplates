@@ -71,6 +71,18 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/myprofile/myprofile").then(m => m.Myprofile),
         data: { title: 'My Profile - Flowable Simulator' }
+      },
+      {
+        path: 'flowable/taskmanager',
+        canActivate: [authGuard],
+        loadComponent: () => import("./pages/screen/tasklist/tasklist").then(m => m.Tasklist),
+        data: { title: 'Task List - Flowable Simulator' }
+      },
+      {
+        path: 'channels/loanrequest',
+        canActivate: [authGuard],
+        loadComponent: () => import("./pages/screen/loanrequest/loanrequest").then(m => m.Loanrequest),
+        data: { title: 'Task List - Flowable Simulator' }
       }
     ]
   },
