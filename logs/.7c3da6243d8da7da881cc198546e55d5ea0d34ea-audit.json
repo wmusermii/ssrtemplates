@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Users\\Ygge\\Desktop\\Work\\ssrtemplates\\logs\\.7c3da6243d8da7da881cc198546e55d5ea0d34ea-audit.json",
+    "files": [
+        {
+            "date": 1759747037253,
+            "name": "C:\\Users\\Ygge\\Desktop\\Work\\ssrtemplates\\logs\\app-2025-10-06.log",
+            "hash": "00780a78d79faf8bc5da7bfd00d55661523692f947a7d5784178ba3cebb9c76d"
+        }
+    ],
+    "hashType": "sha256"
+}
