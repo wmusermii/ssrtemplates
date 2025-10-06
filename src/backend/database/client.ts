@@ -1,22 +1,22 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 import { logInfo } from '../utils/logger';
-
 const require = createRequire(import.meta.url);
 const knex = require('knex');
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const dbPath = path.join(__dirname, 'data', 'admdb.sqlite');
-logInfo("INI ALAMAT TABLENYA : ",dbPath)
+// Konfigurasi koneksi PostgreSQL
 const db = knex({
-  client: 'better-sqlite3',
+  client: 'pg',
   connection: {
-    filename: dbPath,
+    host: 'localhost',         // alamat host database (bisa IP/hostname)
+    port: 5432,                // port default PostgreSQL
+    user: 'ndb_proxy',          // username db
+    password: 'ndb_proxy',    // password db
+    database: 'ndb_proxy',        // nama database
+    ssl: false                 // bisa true jika connect ke server remote dengan SSL
   },
-  useNullAsDefault: true,
+  pool: {
+    min: 2,
+    max: 10
+  }
 });
-
+logInfo("Koneksi ke PostgreSQL berhasil");
 export default db;

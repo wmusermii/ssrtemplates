@@ -82,7 +82,6 @@
         <input type="text" class="w-full" pInputText formControlName="pathMenu" id="pathMenu"
           (change)="_changeError()" />
       </div>
-
       <div class="flex flex-col mb-2">
         <label for="iconMenu" class="mb-2 font-medium">Icon css class <i>(Optional)</i></label>
         <!-- <input type="text" class="w-full" pInputText formControlName="iconMenu" id="iconMenu" /> -->
@@ -93,7 +92,6 @@
             <i [class]="icon.code" class="mr-2"></i>
             {{ icon.description }}
           </ng-template>
-
           <!-- Template selected value -->
           <ng-template let-icon pTemplate="selectedItem">
             <i *ngIf="icon" [class]="icon.code" class="mr-2"></i>
@@ -101,7 +99,6 @@
           </ng-template>
         </p-select>
       </div>
-
       <!-- Buttons -->
       <div class="flex justify-end gap-4 pt-4">
         <button pButton type="button" (click)="onCancel()" class="px-6" severity="secondary" label="Cancel"

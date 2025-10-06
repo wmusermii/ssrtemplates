@@ -62,10 +62,10 @@ export class Menumanagement implements OnInit {
   constructor(private router: Router, private ssrStorage: LocalstorageService) { }
   async ngOnInit(): Promise<void> {
     this.currentUrl = this.router.url;
-    // console.log('Current URL:', this.currentUrl);
+
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
-    // // console.log("USER INFO ", this.userInfo);
+
     this.cols = [
         { field: 'idMenu', header: 'Id' },
         { field: 'nameMenu', header: 'Menu' },

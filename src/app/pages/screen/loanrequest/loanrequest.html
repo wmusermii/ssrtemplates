@@ -1,1 +1,39 @@
-<p>loanrequest works!</p>
+<main class="pt-2 max-w-screen-xl mx-auto px-2 mb-6">
+  <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
+    <p-breadcrumb [model]="breaditems" [home]="home" />
+  </div>
+  <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
+    <form [formGroup]="loanForm" (ngSubmit)="onSubmit()"
+      class="bg-white w-full space-y-4">
+      <div [hidden]="!errorMessage.error" class="mb-2">
+        <p-message [severity]="errorMessage.severity" [text]="errorMessage.message" [icon]="errorMessage.icon"
+          styleClass="p-message p-component block">
+        </p-message>
+      </div>
+      <!-- Header / Title -->
+      <div class="border-b pb-3 mb-2">
+        <h2 class="text-xl font-semibold text-gray-800 m-0 p-0">Loan Request Post</h2>
+      </div>
+      <div class="flex flex-col mb-2">
+        <label for="urlFlowable" class="mb-2 font-medium label-required">Url Path</label>
+        <input type="text" class="w-full" pInputText formControlName="urlFlowable" id="urlFlowable"
+          (change)="_changeError()" />
+      </div>
+      <div class="flex flex-col mb-2">
+        <label for="methodReqObj" class="mb-2 font-medium">Method</label>
+        <p-select id="methodReqObj" [options]="allMethod" formControlName="methodReqObj" optionLabel="label" placeholder="Select an method"
+          class="w-full" styleClass="w-full">
+        </p-select>
+      </div>
+      <div class="flex flex-col mb-2">
+        <label for="jsonBody" class="mb-2 font-medium label-required">JSON Body</label>
+        <textarea id="jsonBody" rows="30" class="w-full" pTextarea formControlName="jsonBody"></textarea>
+      </div>
+      <!-- Buttons -->
+      <div class="flex justify-end gap-4 pt-4">
+        <button pButton type="submit" class="px-6" [disabled]="!loanForm.valid" label="Save"></button>
+      </div>
+    </form>
+  </div>
+
+</main>
