@@ -141,7 +141,7 @@ async findAllUsers(userinfo: any) {
     return query;
   }
   async updUser(payload: any) {
-    console.log("PAYLOAD UPDATE ",payload);
+    // console.log("PAYLOAD UPDATE ",payload);
     const query = await db('m_user').update(payload).where("iduser", payload.iduser).returning("iduser");
     return query;
   }
