@@ -68,7 +68,7 @@ export class ApiService {
   }
 
 async getTestDatabaseService(config: any):Promise<any> {
-  logInfo("DATABASE CONFIG : ", config)
+  // logInfo("DATABASE CONFIG : ", config)
   // {"config":{"client":"pg","condatabase":"ndp_proxy","conhost":"localhost","conport":5432,"conuser":"postgres","conpassword":"postgres","conoption":{}}}
   Database.init({
     client: config.config.client,
@@ -90,13 +90,10 @@ async getTestDatabaseService(config: any):Promise<any> {
     await Database.destroy();
     return ApiResponse.successNoData(result.error, result.message);
   }
-
-  //################## Berhasil Isi #######################
-  // return ApiResponse.success({}, "Database connection OK ✅");
 }
 async goMigratetDatabaseService(config: any):Promise<any> {
   logInfo("DATABASE MIGRATE CONFIG : ", config)
-  // {"config":{"client":"pg","condatabase":"ndp_proxy","conhost":"localhost","conport":5432,"conuser":"postgres","conpassword":"postgres","conoption":{}}}
+
   Database.init({
     client: config.config.client,
     connection: {

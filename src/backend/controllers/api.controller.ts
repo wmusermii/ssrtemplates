@@ -16,16 +16,16 @@ export function echo(req: Request, res: Response, next: NextFunction) {
 
   }
 }
-//##################### PROCESS SHOPEE ######################
+
 export async function updateUser(req: Request, res: Response, next: NextFunction) {
   try {
 
     const { iduser, username, fullname, mobile, email, groupname, changepassword, password, cpassword } = req.body;
     const userInfo: any = req.userInfo;
     const payload = { iduser: iduser, username: username, fullname: fullname, mobile: mobile, email: email, groupname: groupname, password: password, changepassword: changepassword }
-    console.log("####################################### updateUser ", payload);
+    console.log("******  updateUser ", payload);
     const updateResult = await apiService.updateUser(payload, userInfo);
-    console.log("####################################### updateUser ", updateResult);
+    console.log("******  updateUser ", updateResult);
     if (updateResult.code === 20000) {
       await ResponseHelper.send(res, updateResult); return;
     } else {
@@ -37,12 +37,9 @@ export async function updateUser(req: Request, res: Response, next: NextFunction
     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 }
-//##################### PROCESS ELSE ######################
-
-
 export async function getParamsByGroup(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### getParamsByGroup");
+    console.log("******  getParamsByGroup");
     const userInfo: any = req.userInfo;
     const paramResult = await apiService.getParamsByGroupService(userInfo, req.body);
     if (paramResult.code === 20000 && paramResult.data.length > 0) {
@@ -59,7 +56,7 @@ export async function getParamsByGroup(req: Request, res: Response, next: NextFu
 }
 export async function updParamsByGroup(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### updParamsByGroup");
+    console.log("******  updParamsByGroup");
     const userInfo: any = req.userInfo;
     const paramResult = await apiService.updParamsByGroupService(userInfo, req.body);
     if (paramResult.code === 20000) {
@@ -76,7 +73,7 @@ export async function updParamsByGroup(req: Request, res: Response, next: NextFu
 }
 export async function getParamsByKey(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### getParamsByKey");
+    console.log("******  getParamsByKey");
     const userInfo: any = req.userInfo;
     const paramResult = await apiService.getParamsByKeyService(userInfo, req.body);
     if (paramResult.code === 20000) {
@@ -94,7 +91,7 @@ export async function getParamsByKey(req: Request, res: Response, next: NextFunc
 
 export async function getTestDatabase(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### getTestDatabase");
+    console.log("******  getTestDatabase");
     const userInfo: any = req.userInfo;
     const paramResult = await apiService.getTestDatabaseService(req.body);
     if (paramResult.code === 20000) {
@@ -112,7 +109,7 @@ export async function getTestDatabase(req: Request, res: Response, next: NextFun
 }
 export async function goMigrateDatabase(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### goMigrateDatabase");
+    console.log("******  goMigrateDatabase");
     const userInfo: any = req.userInfo;
     const paramResult = await apiService.goMigratetDatabaseService(req.body);
     if (paramResult.code === 20000) {
@@ -131,7 +128,7 @@ export async function goMigrateDatabase(req: Request, res: Response, next: NextF
 
 export async function getRolesAvailable(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### getRolesAvailable");
+    console.log("******  getRolesAvailable");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.getRolesService(userInfo);
     if (packageResult.code === 20000 && packageResult.data.length > 0) {
@@ -148,7 +145,7 @@ export async function getRolesAvailable(req: Request, res: Response, next: NextF
 }
 export async function addRoles(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### addRoles");
+    console.log("******  addRoles");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.addRoleService(userInfo,req.body);
     if (packageResult.code === 20000) {
@@ -164,7 +161,7 @@ export async function addRoles(req: Request, res: Response, next: NextFunction) 
 }
 export async function updRoles(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### updRoles");
+    console.log("******  updRoles");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.updRoleService(userInfo,req.body);
     if (packageResult.code === 20000) {
@@ -180,7 +177,7 @@ export async function updRoles(req: Request, res: Response, next: NextFunction) 
 }
 export async function delRoles(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### delRoles");
+    console.log("******  delRoles");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.dellRoleService(userInfo,req.body);
     if (packageResult.code === 20000) {
@@ -197,7 +194,7 @@ export async function delRoles(req: Request, res: Response, next: NextFunction) 
 
 export async function getIcons(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### getIcons");
+    console.log("******  getIcons");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.getIconService(userInfo);
     if (packageResult.code === 20000 && packageResult.data.length > 0) {
@@ -214,7 +211,7 @@ export async function getIcons(req: Request, res: Response, next: NextFunction) 
 }
 export async function getMenusAvailable(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### getMenusAvailable");
+    console.log("******  getMenusAvailable");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.getMenusService(userInfo);
     if (packageResult.code === 20000 && packageResult.data.length > 0) {
@@ -231,7 +228,7 @@ export async function getMenusAvailable(req: Request, res: Response, next: NextF
 }
 export async function addMenus(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### addMenus");
+    console.log("******  addMenus");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.addMenuService(userInfo,req.body);
     if (packageResult.code === 20000) {
@@ -247,7 +244,7 @@ export async function addMenus(req: Request, res: Response, next: NextFunction) 
 }
 export async function updMenus(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### updMenus");
+    console.log("******  updMenus");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.updMenuService(userInfo,req.body);
     if (packageResult.code === 20000) {
@@ -263,7 +260,7 @@ export async function updMenus(req: Request, res: Response, next: NextFunction) 
 }
 export async function delMenus(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### delMenus");
+    console.log("******  delMenus");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.dellMenuService(userInfo,req.body);
     if (packageResult.code === 20000) {
@@ -280,7 +277,7 @@ export async function delMenus(req: Request, res: Response, next: NextFunction) 
 
 export async function getGroupsAvailable(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### getGroupsAvailable");
+    console.log("******  getGroupsAvailable");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.getGroupsService(userInfo);
     if (packageResult.code === 20000 && packageResult.data.length > 0) {
@@ -297,7 +294,7 @@ export async function getGroupsAvailable(req: Request, res: Response, next: Next
 }
 export async function addGroups(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### addGroups");
+    console.log("******  addGroups");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.addGroupService(userInfo,req.body);
     if (packageResult.code === 20000) {
@@ -313,7 +310,7 @@ export async function addGroups(req: Request, res: Response, next: NextFunction)
 }
 export async function updGroups(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### updGroups");
+    console.log("******  updGroups");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.updGroupService(userInfo,req.body);
     if (packageResult.code === 20000) {
@@ -329,7 +326,7 @@ export async function updGroups(req: Request, res: Response, next: NextFunction)
 }
 export async function updGroupMenu(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### updGroupMenu");
+    console.log("******  updGroupMenu");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.updGroupMenuService(userInfo,req.body);
     if (packageResult.code === 20000) {
@@ -345,7 +342,7 @@ export async function updGroupMenu(req: Request, res: Response, next: NextFuncti
 }
 export async function delGroups(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### delGroups");
+    console.log("******  delGroups");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.dellGroupService(userInfo,req.body);
     if (packageResult.code === 20000) {
@@ -362,7 +359,7 @@ export async function delGroups(req: Request, res: Response, next: NextFunction)
 
 export async function getUsersAvailable(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### getUsersAvailable");
+    console.log("******  getUsersAvailable");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.getUsersService(userInfo);
     if (packageResult.code === 20000 && packageResult.data.length > 0) {
@@ -379,7 +376,7 @@ export async function getUsersAvailable(req: Request, res: Response, next: NextF
 }
 export async function addUsers(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### addUsers");
+    console.log("******  addUsers");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.addUserService(userInfo,req.body);
     if (packageResult.code === 20000) {
@@ -395,7 +392,7 @@ export async function addUsers(req: Request, res: Response, next: NextFunction) 
 }
 export async function updUsers(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### updUsers");
+    console.log("******  updUsers");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.updUserService(userInfo,req.body);
     if (packageResult.code === 20000) {
@@ -411,7 +408,7 @@ export async function updUsers(req: Request, res: Response, next: NextFunction) 
 }
 export async function delUsers(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("####################################### delUsers");
+    console.log("******  delUsers");
     const userInfo: any = req.userInfo;
     const packageResult = await apiService.dellUserService(userInfo,req.body);
     if (packageResult.code === 20000) {

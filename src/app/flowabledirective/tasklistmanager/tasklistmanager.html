@@ -1,0 +1,39 @@
+<div class="overflow-x-auto bg-white rounded-md shadow-sm shadow-gray-200">
+  <table class="min-w-full text-sm border-collapse rounded-md w-full">
+    <!-- Header -->
+    <thead class="bg-gray-100 text-gray-800 border-b border-gray-200/70 border-[0.5px] border-solid">
+      <tr>
+        <th
+          *ngFor="let col of columns"
+          class="px-4 py-3 text-left font-semibold uppercase text-sm tracking-wide border-r border-gray-200/70 border-[0.5px] border-solid last:border-r-0"
+        >
+          {{ col.header }}
+        </th>
+      </tr>
+    </thead>
+
+    <!-- Body -->
+    <tbody>
+      <tr
+        *ngFor="let item of data; let i = index"
+        (click)="onRowClick(item)"
+        class="cursor-pointer hover:bg-blue-50 even:bg-gray-50/40 transition-colors duration-150"
+      >
+        <td
+          *ngFor="let col of columns"
+          class="px-4 py-2 text-gray-800 border-t border-gray-200/70 border-[0.5px] border-solid"
+        >
+          {{ item[col.field] }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- No Data -->
+  <div
+    *ngIf="!data?.length"
+    class="text-center py-6 text-gray-500 text-sm border-t border-gray-200/70 border-[0.5px] border-solid"
+  >
+    No data available
+  </div>
+</div>
