@@ -8,9 +8,9 @@ const db = knex({
   connection: {
     host: 'localhost',         // alamat host database (bisa IP/hostname)
     port: 5432,                // port default PostgreSQL
-    user: 'ndb_proxy',          // username db
-    password: 'ndb_proxy',    // password db
-    database: 'ndb_proxy',        // nama database
+    user: 'postgres',          // username db
+    password: '123qwe',    // password db
+    database: 'ssr_template',        // nama database
     ssl: false                 // bisa true jika connect ke server remote dengan SSL
   },
   pool: {

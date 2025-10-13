@@ -81,36 +81,72 @@ export class Login implements OnInit {
   }
   async _refreshListData():Promise<any>{
         this.loading=true;
-        const payload = {paramgroup: "GENERAL", paramkey:"title"}
-            fetch('/v2/admin/get_parambykey', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'x-client': 'angular-ssr'
-              },
-                body:JSON.stringify(payload)
-            })
-              .then(res => {
-                // // console.log("Response dari API  /v2/admin/get_parambykey", res);
-                if (!res.ok) throw new Error('get Title Gagal');
-                return res.json();
-              })
-              .then(data => {
-                //// console.log("Response dari API /v2/admin/get_parambykey", data);
-                this.loading=false;
+        let useLogin = '';
 
-                if (data.code === 20000) {
-                  const dataRecordsTemp = cloneDeep(data.data);
-                  this.titleText = dataRecordsTemp.paramvalue;
-                  this.loading=false;
-                } else {
-
-                  this.loading=false;
-                }
+        await fetch('/v2/admin/get_parambykey', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-client': 'angular-ssr'
+            },
+              body:JSON.stringify({paramgroup: "GENERAL", paramkey:"useLogin"})
+          })
+          .then( res => {
+              if (!res.ok) throw new Error('get Title Gagal');
+              return res.json();
+          })
+          .then(data => {
+              //// console.log("Response dari API /v2/admin/get_parambykey", data);
+              useLogin = data.data.paramvalue;
+              console.log(data.data);
+               this.ssrStorage.setItem('USE_LOGIN', useLogin);
+          })
+          .catch(err => {
+              // this.loading=false;
+              console.log("Response Error Catch /v2/admin/get_parambykey", err);
+          });
+        
+          console.log('ISINYA USELOGIN COK',useLogin);
+        
+        if (useLogin == 'false') {
+           console.log('GAK PAKE LOGIN!!!!!!!!');
+           this.router.navigate(['/dashboard']);
+        }else{
+          const payload = {paramgroup: "GENERAL", paramkey:"title"}
+              await fetch('/v2/admin/get_parambykey', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-client': 'angular-ssr'
+                },
+                  body:JSON.stringify(payload)
               })
-              .catch(err => {
-                this.loading=false;
-                console.log("Response Error Catch /v2/admin/get_parambykey", err);
-              });
-  }
+                .then(res => {
+                  // // console.log("Response dari API  /v2/admin/get_parambykey", res);
+                  if (!res.ok) throw new Error('get Title Gagal');
+                  return res.json();
+                })
+                .then(data => {
+                  //// console.log("Response dari API /v2/admin/get_parambykey", data);
+                  this.loading=false;
+  
+                  if (data.code === 20000) {
+                    const dataRecordsTemp = cloneDeep(data.data);
+                    this.titleText = dataRecordsTemp.paramvalue;
+                    this.loading=false;
+                  } else {
+  
+                    this.loading=false;
+                  }
+                })
+                .catch(err => {
+                  this.loading=false;
+                  console.log("Response Error Catch /v2/admin/get_parambykey", err);
+                });
+              }
+
+        }
+
+
+
 }

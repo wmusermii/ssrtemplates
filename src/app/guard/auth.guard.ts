@@ -21,6 +21,12 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const ssrStorage = inject(LocalstorageService)
   const router = inject(Router);
   try {
+    const useLogin = ssrStorage.getItem('USE_LOGIN');
+
+    
+    // if (useLogin == 'true') {
+    // }
+    console.log('PAKE LOGIN INI BRO');
     // console.log("[authGuard]", "FETCHING ATTRB");
     const res = await fetch('/v2/auth/attrb', {
       method: 'GET',
@@ -30,10 +36,12 @@ export const authGuard: CanActivateFn = async (route, state) => {
       },
       credentials: 'include' // pastikan cookie dikirim bersama request
     });
+
     if (!res.ok) {
       // Token tidak valid atau error, izinkan akses guest
       return router.createUrlTree(['/login']);
     }
+    
     const data = await res.json();
     if (data.code === 20000) {
       // console.log("[authGuard] Data", data);
@@ -42,8 +50,11 @@ export const authGuard: CanActivateFn = async (route, state) => {
       return true
     } else {
       // return true;
-       return router.createUrlTree(['/login']);
+      return router.createUrlTree(['/login']);
     }
+    
+
+    return true;
   } catch (err) {
     console.log('Error cek token:', err);
     return true;

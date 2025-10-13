@@ -40,7 +40,7 @@ export class Sidebar implements OnInit, OnDestroy {
       console.log("TOKEN KOSONG : ", this.token);
       // this.router.navigate(['/login']);
     } else {
-      console.log("TOKEN ISI : ", "this.token");
+      console.log("TOKEN ISI : ", this.token);
       await this._getAttribute()
     }
   }

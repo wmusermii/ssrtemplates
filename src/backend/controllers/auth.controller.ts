@@ -59,6 +59,50 @@ const apiService = new ApiService();
 //     await ResponseHelper.send(res,ApiResponse.serverError(error+""));return;
 //   }
 // }
+export async function bypassLogin(req: Request, res: Response, next?: NextFunction) {
+  const user = await authService.selectGetUserByUserID('guestlogin');
+  let dataTemp:any = user.data;
+    const data:any = {
+      ...dataTemp,
+      ua: req.headers['user-agent'],
+      ip: req.ip
+    }
+
+    let tokenCookie = null;
+    if(user.code === 20000) {
+            const token = await EncryptDecryptJwt.generateToken(data);
+            delete data.password;
+            tokenCookie = await EncryptDecryptJwt.generateToken(data);
+            const uInfo = JSON.parse(JSON.stringify(data)); // agar data tidak hilang
+            for (const key in user.data) {
+              if (user.data.hasOwnProperty(key)) {
+                delete user.data[key];
+              }
+            }
+            // logInfo("############################UINFO 2 : ",uInfo)
+            delete uInfo.menublob;
+            user.data.token = token;
+            user.data.userinfo = uInfo;
+            const optionCookie:any[]=[
+            {
+              name: 'x_token',
+              value: tokenCookie,
+              options: {
+                httpOnly: true,   // Melindungi dari akses JavaScript
+                secure: false,     // Hanya dikirim melalui HTTPS jika true
+                signed:true,
+                sameSite: 'strict', // Mencegah CSRF
+                maxAge: convertToMaxAge("15m")  // Cookie berlaku selama 15 menit
+              }
+            }
+          ]
+          // await ResponseHelper.sendWithCookies(res, user, optionCookie);return;
+          return user;
+    } else {
+        await ResponseHelper.send(res, user);return;
+    }
+}
+
 export async function login(req: Request, res: Response, next: NextFunction) {
   const { credential } = req.body;
   try {
@@ -137,13 +181,24 @@ export async function attrb(req: Request, res: Response) {
     // logInfo("Auth.controller ",user);
     const data:any = req.userInfo;
     // console.log("USER INFO ",data.code);
-    if(data.code === 'ERR_JWT_EXPIRED') {
-      await ResponseHelper.send(res, ApiResponse.invalidToken(data.code));return;
-    } else {
-      await ResponseHelper.send(res, ApiResponse.success(data,"Success Attrb"));return;
+    if (req.authInfo?.useLogin == 'false' && data == undefined) {
+      console.log('MASUK BYPASS ATTRB');
+      let user = await bypassLogin(req, res);
+      const decoded = await EncryptDecryptJwt.verifyToken(user?.data.token)
+      req.userInfo = decoded; // Attach decoded payload ke request object
+      await ResponseHelper.send(res, ApiResponse.success(decoded,"Success Attrb"));return;
+    }else{
+      if(data.code === 'ERR_JWT_EXPIRED') {
+        await ResponseHelper.send(res, ApiResponse.invalidToken(data.code));return;
+      } else {
+        await ResponseHelper.send(res, ApiResponse.success(data,"Success Attrb"));return;
+      }
     }
+
+
   } catch (error) {
     logError("Error auth.controller : ", error)
+    console.log(error);
     await ResponseHelper.send(res,ApiResponse.serverError(error+""));return;
   }
 }
