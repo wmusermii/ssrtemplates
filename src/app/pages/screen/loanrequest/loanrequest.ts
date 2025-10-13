@@ -60,10 +60,11 @@ export class Loanrequest implements OnInit {
     let payloadTemp:any = this.loanForm.value;
     payloadTemp.methodReq = payloadTemp.methodReqObj.key;
     delete payloadTemp.methodReqObj;
+    payloadTemp.jsonBody = JSON.parse(payloadTemp.jsonBody);
     this.loading = true;
-    this.ssrStorage.setItem("urlflowable", payloadTemp.urlFlowable);
-    this.ssrStorage.setItem("methodReq", payloadTemp.methodReq);
-    this.ssrStorage.setItem("jsonBody", payloadTemp.jsonBody);
+    // this.ssrStorage.setItem("urlflowable", payloadTemp.urlFlowable);
+    // this.ssrStorage.setItem("methodReq", payloadTemp.methodReq);
+    // this.ssrStorage.setItem("jsonBody", payloadTemp.jsonBody);
     console.log("Payload Body ",payloadTemp );
   }
 }

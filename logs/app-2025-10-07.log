@@ -1,0 +1,25 @@
+[2025-10-07 17:40:40] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-07 17:40:40] INFO: login limiter max set to 3
+[2025-10-07 17:40:49] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-07 17:40:49] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-07 17:40:49] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-07 17:40:49] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-07 17:40:49] INFO: login limiter max set to 3
+[2025-10-07 17:40:49] INFO: login limiter max set to 3
+[2025-10-07 17:40:49] INFO: login limiter max set to 3
+[2025-10-07 17:40:49] INFO: login limiter max set to 3
+[2025-10-07 17:41:25] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-07 17:41:25] INFO: login limiter max set to 3
+[2025-10-07 17:47:57] INFO: DATABASE CONFIG :  {"config":{"client":"pg","clientObj":{"key":"pg","label":"Postgres"},"condatabase":"ndb_proxy","conhost":"localhost","conport":5432,"conuser":"ndb_proxy","conpassword":"ndb_proxy","conoption":{}}}
+[2025-10-07 17:51:10] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-07 17:51:10] INFO: login limiter max set to 3
+[2025-10-07 17:51:13] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-07 17:51:13] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-07 17:51:13] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-07 17:51:13] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-07 17:51:13] INFO: login limiter max set to 3
+[2025-10-07 17:51:13] INFO: login limiter max set to 3
+[2025-10-07 17:51:13] INFO: login limiter max set to 3
+[2025-10-07 17:51:13] INFO: login limiter max set to 3
+[2025-10-07 17:51:28] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-07 17:51:28] INFO: login limiter max set to 3

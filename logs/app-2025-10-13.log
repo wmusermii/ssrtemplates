@@ -1,0 +1,23 @@
+[2025-10-13 10:43:03] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-13 10:43:03] WARN: Could not read param for rate limit, using default. Error: {"code":"ECONNREFUSED"}
+[2025-10-13 10:43:10] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-13 10:43:10] WARN: Could not read param for rate limit, using default. Error: {"code":"ECONNREFUSED"}
+[2025-10-13 10:43:10] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-13 10:43:10] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-13 10:43:10] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-13 10:43:10] WARN: Could not read param for rate limit, using default. Error: {"code":"ECONNREFUSED"}
+[2025-10-13 10:43:10] WARN: Could not read param for rate limit, using default. Error: {"code":"ECONNREFUSED"}
+[2025-10-13 10:43:10] WARN: Could not read param for rate limit, using default. Error: {"code":"ECONNREFUSED"}
+[2025-10-13 10:43:36] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-13 10:43:36] WARN: Could not read param for rate limit, using default. Error: {"code":"ECONNREFUSED"}
+[2025-10-13 10:43:45] ERROR: Error api.controller :  {"code":"ECONNREFUSED"}
+[2025-10-13 11:32:58] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-13 11:32:58] INFO: login limiter max set to 3
+[2025-10-13 11:33:09] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-13 11:33:09] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-13 11:33:09] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-13 11:33:09] INFO: Koneksi ke PostgreSQL berhasil
+[2025-10-13 11:33:09] INFO: login limiter max set to 3
+[2025-10-13 11:33:09] INFO: login limiter max set to 3
+[2025-10-13 11:33:09] INFO: login limiter max set to 3
+[2025-10-13 11:33:09] INFO: login limiter max set to 3
