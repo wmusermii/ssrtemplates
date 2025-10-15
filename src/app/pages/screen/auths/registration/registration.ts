@@ -1,138 +1,144 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
 import { SelectModule } from 'primeng/select';
-// import { Subject } from 'rxjs';
+import { PasswordPolicy, PasswordValidationResult } from '../../managements/usermanagement/usermanagement';
 
 @Component({
-  standalone:true,
-  selector: 'app-registration',
-  imports: [CommonModule, FormsModule,ReactiveFormsModule, InputTextModule, PasswordModule, ButtonModule, MessageModule, SelectModule],
-  templateUrl: './registration.html',
-  styleUrl: './registration.css'
+    standalone: true,
+    selector: 'app-registration',
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, InputTextModule, PasswordModule, ButtonModule, MessageModule, SelectModule],
+    templateUrl: './registration.html',
+    styleUrl: './registration.css',
 })
 export class Registration {
-  errorRegistration:any={error:false, message:"Error Message", title:"Error!"}
-  successRegistration:any={success:false, message:"Registration Success", title:"Success!"}
-  optiongroup:any[]=[
-    {
-      code:'100000000002', label:'Supervisor', description:'Oversees the work of others, guiding and managing a team to ensure tasks are completed effectively'
-    },
-    {
-      code:'100000000003', label:'Spv Product', description:'Oversees the products, operating to ensure product inventory are completly adjust'
-    },
-    {
-      code:'100000000004', label:'Spv Warehouse', description:'Oversees the stores and warehouses status, and complete product disposition'
-    },
-    {
-      code:'100000000005', label:'Packager', description:'Responsible for the invoices and items requested checked!'
-    },
-    {
-      code:'100000000006', label:'Spv Packager', description:'Responsible for the invoices and items requested checked!'
-    },
-    {
-      code:'100000000007', label:'Operator', description:'Responsible for anything!'
+    errorRegistration: any = { error: false, message: 'Error Message', title: 'Error!' };
+    successRegistration: any = { success: false, message: 'Registration Success', title: 'Success!' };
+    registerForm = new FormGroup({
+        fullname: new FormControl('', [Validators.required]),
+        mobilename: new FormControl('', [Validators.required]),
+        email: new FormControl('', [Validators.required]),
+        username: new FormControl('', [Validators.required]),
+        password: new FormControl('', [Validators.required]),
+    });
+    loading = false;
+
+    // Helper getter untuk akses kontrol form di template
+    get f() {
+        return this.registerForm.controls;
     }
-  ]
-  registerForm = new FormGroup({
-      fullname: new FormControl('', [Validators.required]),
-      mobilename: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required]),
-      username: new FormControl('', [Validators.required]),
-      password: new FormControl(''),
-      groupCode: new FormControl('', [Validators.required]),
-  });
 
+    constructor(private router: Router) {}
 
-// Helper getter untuk akses kontrol form di template
-  get f() {
-    return this.registerForm.controls;
-  }
-constructor(private router: Router) {}
-loading = false;
-
-
-onRegister() {
-  if (this.registerForm.valid) {
-    console.log('Register data:', this.registerForm.value);
-    // TODO: Implementasi submit ke backend
-  }
-}
-
-onCancel() {
-  this.registerForm.reset();
-}
-onSubmit() {
-
-  if(this.registerForm.valid)
-  {
-    console.log("Value nya ", this.registerForm.value);
-  }
-  this.loading=true;
-
-  // const payload= {to:"wmusermii@gmail.com", subject:"User Registration", message:htmlMessage}
-   fetch('/v2/auth/registuser', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(this.registerForm.value)
-    })
-      .then(res => {
-        // console.log("Response dari API ", res);
-        if (!res.ok) throw new Error('Login gagal');
-        return res.json();
-      })
-      .then(data => {
-        // // console.log("Response dari API DATA ", data);
-        this.loading=false;
-        if(data.code === 20000) {
-          this.successRegistration={success:true, message:`Registration Success and ${data.message}`, title:"Success Register!"};
-        } else {
-          this.errorRegistration={error:true, message:data.message, title:"Error Registration!"};
+    onRegister() {
+        if (this.registerForm.valid) {
+            console.log('Register data:', this.registerForm.value);
         }
-      })
-      .catch(err => {
-        console.log("Response Error ", err);
-        this.loading=false;
-        this.errorRegistration={error:true, message:err.message, title:"Error!"};
-      });
-  //  fetch('/v2/warehouse/send_email', {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify(payload)
-  //   })
-  //     .then(res => {
-  //       // console.log("Response dari API ", res);
-  //       // logInfo
-  //       if (!res.ok) throw new Error('Login gagal');
-  //       return res.json();
-  //     })
-  //     .then(data => {
-  //       // // console.log("Response dari API DATA ", data);
-  //       this.loading=false;
-  //       this.successRegistration={success:true, message:`Registration Success and ${data.message}`, title:"Success Register!"};
-  //     })
-  //     .catch(err => {
-  //       console.log("Response Error ", err);
-  //       this.loading=false;
-  //       this.errorRegistration={error:true, message:err.message, title:"Error!"};
-  //     });
+    }
 
+    onCancel() {
+        this.registerForm.reset();
+    }
 
+    onSubmit() {
+        if (this.registerForm.invalid) return;
 
+        const registerFormValue = this.registerForm.value;
+        if (registerFormValue.username && registerFormValue.username.length < 6) {
+            this.errorRegistration = {
+                error: true,
+                severity: 'error',
+                message: 'Username cannot less than 6 characters',
+                icon: 'pi pi-exclamation-circle',
+            };
+            return;
+        }
+        // ########## CHECK PASSWORD ATTRIBUTE ########
+        const policy = {
+            minLength: 8,
+            requireUppercase: true,
+            requireNumber: true,
+            requireSpecialChar: true,
+            allowedSpecialChars: '!@#$%^&*()_+[]{}|;:,.?~-',
+        };
+        const resultValidasiPassword = this._validatePassword(registerFormValue?.password!, policy);
 
-}
-async cancelError(){
-  this.errorRegistration={error:false, message:"Error Message", title:"Error!"};
-  // this.router.navigate(['/login']);
-}
-async cancelSuccess(){
-  this.successRegistration={success:false, message:"Registration Success", title:"Success!"};
-  this.router.navigate(['/dashboard']);
-}
+        if (!resultValidasiPassword.valid) {
+            this.errorRegistration = { error: true, severity: 'error', message: resultValidasiPassword.errors, icon: 'pi pi-exclamation-circle' };
+            return;
+        }
 
+        this.loading = true;
+        fetch('/v2/auth/registuser', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(this.registerForm.value),
+        })
+            .then((res) => {
+                // console.log("Response dari API ", res);
+                if (!res.ok) throw new Error('Login gagal');
+                return res.json();
+            })
+            .then((data) => {
+                // // console.log("Response dari API DATA ", data);
+                this.loading = false;
+                if (data.code === 20000) {
+                    this.successRegistration = { success: true, message: `Registration Success and ${data.message}`, title: 'Success Register!' };
+                } else {
+                    this.errorRegistration = { error: true, message: data.message, title: 'Error Registration!' };
+                }
+            })
+            .catch((err) => {
+                console.log('Response Error ', err);
+                this.loading = false;
+                this.errorRegistration = { error: true, message: err.message, title: 'Error!' };
+            });
+    }
+
+    async cancelError() {
+        this.errorRegistration = { error: false, message: 'Error Message', title: 'Error!' };
+        // this.router.navigate(['/login']);
+    }
+
+    async cancelSuccess() {
+        this.successRegistration = { success: false, message: 'Registration Success', title: 'Success!' };
+        this.router.navigate(['/dashboard']);
+    }
+
+    _validatePassword(password: string, policy: PasswordPolicy): PasswordValidationResult {
+        const errors: string[] = [];
+
+        if (policy.minLength && password.length < policy.minLength) {
+            errors.push(`Password must be at least ${policy.minLength} characters long`);
+        }
+
+        if (policy.requireUppercase && !/[A-Z]/.test(password)) {
+            errors.push('Password must contain at least 1 uppercase letter');
+        }
+
+        if (policy.requireNumber && !/[0-9]/.test(password)) {
+            errors.push('Password must contain at least 1 number');
+        }
+
+        if (policy.requireSpecialChar) {
+            // default aman (tidak termasuk < > " ' ` \ /)
+            const safeSpecials = policy.allowedSpecialChars || '!@#$%^&*()_+[]{}|;:,.?~-';
+
+            const regex = new RegExp(`[${safeSpecials.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}]`);
+
+            if (!regex.test(password)) {
+                errors.push('Password must contain at least 1 special character');
+            }
+        }
+
+        return {
+            valid: errors.length === 0,
+            errors,
+        };
+    }
 }
