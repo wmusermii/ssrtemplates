@@ -6,17 +6,17 @@ html, body {
   @apply m-0 p-0 h-full;
 }
 :root {
-    --p-primary-color: #0000a7!important;          /* base */
+    --p-primary-color: #92e3a9!important;          /* base */
     --p-primary-color-text: #fff!important;        /* text on primary */
     --p-primary-100: #fff7ed!important;
     --p-primary-200: #ffedd5!important;
-    --p-primary-300: #b1b1f8!important;
-    --p-primary-400: #9696f9!important;
-    --p-primary-500: #8686fc!important;
-    --p-primary-600: #6c6cf9!important;
-    --p-primary-700: #5555cf!important;
-    --p-primary-800: #3d3db4!important;
-    --p-primary-900: #2626af!important;
+    --p-primary-300: #e5f6ea!important;
+    --p-primary-400: #d2f4dc!important;
+    --p-primary-500: #b9dbc3!important;
+    --p-primary-600: #a7d9b5!important;
+    --p-primary-700: #9ddaae!important;
+    --p-primary-800: #91dba6!important;
+    --p-primary-900: #92e3a9!important;
     --p-panelmenu-gap: 0.1rem!important;
     --p-form-field-border-radius: var(--p-border-radius-sm)!important;
     --p-menubar-border-color:transparent!important;

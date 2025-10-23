@@ -6,49 +6,9 @@
     "auditLog": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\.fad4e85db3982e52c70fb90e58ccd8d46fb6e026-audit.json",
     "files": [
         {
-            "date": 1758591567207,
-            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-09-23.log",
-            "hash": "82224502d32058f4d9ed0a3e403bf56859237538aa86ddd340a31c5a8ba92d5f"
-        },
-        {
-            "date": 1758647034442,
-            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-09-24.log",
-            "hash": "899f7d7093b4593f0ffded64c2658ccb07b6bb5d3489d9170d37a5bbba671e5f"
-        },
-        {
-            "date": 1758766311665,
-            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-09-25.log",
-            "hash": "8a80fa0a96559c8a2f3c50aaf4cc4883d1354d95cd0522a5970ab1151c3c9630"
-        },
-        {
-            "date": 1758872904069,
-            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-09-26.log",
-            "hash": "a376437be71ab9cd6b13ab6eb2d7066c6429705c651864df020e96dfe3f1e7c8"
-        },
-        {
-            "date": 1759389062024,
-            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-10-02.log",
-            "hash": "950bd92c974945aae91e74b7821828b542fd887d0e39c39e7395d2052d856e7c"
-        },
-        {
-            "date": 1759481822573,
-            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-10-03.log",
-            "hash": "7bde876a84770859e9b20d596ac64cb47ef823c0203aa4b28fffeb18ab178e5b"
-        },
-        {
-            "date": 1759564511836,
-            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-10-04.log",
-            "hash": "a0c5a73f38835944e3e9e03acfacb5e958a574af0a2f17e38e28dcb8bea68d5f"
-        },
-        {
-            "date": 1759661784446,
-            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-10-05.log",
-            "hash": "16b57c87f9a54586a92a89053eba950a99aab81d31a0e3faf24b1b777e46e970"
-        },
-        {
-            "date": 1759747400135,
-            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-10-06.log",
-            "hash": "c20ed7be5d28d390592a92ca10cdc8ececd583300df6f35c9dbedf29b17cee4c"
+            "date": 1761187627432,
+            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-10-23.log",
+            "hash": "d9bce886b498fa2060351cddf41e261770a607f34408e8b635b2d0ac43802405"
         }
     ],
     "hashType": "sha256"
