@@ -43,7 +43,7 @@ export class Parameterlist implements OnInit {
     if (this.aclMenublob.includes("rd")) {
       //  const dataRecords = await this._refreshListData();
     }
-    this.breaditems = [{ label: 'Siap-UBP' }, { label: 'Parameter List' }];
+    this.breaditems = [{ label: 'Siap-UBP' }, { label: 'Configurations' }, { label: 'Parameter List' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
   }
   async _refreshACLMenu(): Promise<void> {

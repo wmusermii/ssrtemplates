@@ -70,6 +70,16 @@ html, body {
   margin-right: 0.5rem;
 }
 
+.p-panelmenu-item-content {
+  width: 97%!important;
+}
+
+.p-panelmenu-item-link > svg {
+     order: 2;
+     margin-left: auto; /* dorong svg ke paling kanan */
+}
+
+
 .p-tree {
   width: 100% !important;
 }

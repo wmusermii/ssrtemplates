@@ -73,9 +73,15 @@ export const routes: Routes = [
         data: { title: 'Role Management - Admin Template' }
       },
       {
-        path: 'siapubp/parameterlist',
+        path: 'siapubp/configurations/parameterlist',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/simulatorhub/siapubp/parameterlist/parameterlist").then(m => m.Parameterlist),
+        data: { title: 'Role Management - Admin Template' }
+      },
+      {
+        path: 'siapubp/configurations/properties',
+        canActivate: [authGuard],
+        loadComponent: () => import("./pages/simulatorhub/siapubp/properties/properties").then(m => m.Properties),
         data: { title: 'Role Management - Admin Template' }
       },
       {
