@@ -4,6 +4,7 @@
     <p-breadcrumb [model]="breaditems" [home]="home" />
   </div>
   <app-tasklistmanager
+  [baseUrl]="baseUrl"
   (rowClick)="onRowSelected($event)"
   ></app-tasklistmanager>
 </main>
