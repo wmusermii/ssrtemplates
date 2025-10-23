@@ -1,0 +1,42 @@
+<div class="w-full">
+  <ul class="flex flex-col">
+    <ng-container *ngFor="let item of data">
+      <li class="border-b border-gray-100 dark:border-gray-700">
+        <!-- MENU HEADER -->
+        <div
+          class="flex items-center justify-between cursor-pointer px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-300 transition-colors"
+          (click)="onItemClick(item)"
+        >
+          <div class="flex items-center space-x-2">
+            <i
+              *ngIf="item.icon"
+              class="text-gray-600 dark:text-gray-300"
+              [ngClass]="item.icon"
+            ></i>
+            <span class="font-medium text-gray-700 dark:text-gray-200">
+              {{ item.label }}
+            </span>
+          </div>
+
+          <!-- Chevron kanan / bawah -->
+          <i
+            *ngIf="item.items?.length"
+            class="pi text-gray-500 dark:text-gray-300"
+            [ngClass]="{
+              'pi-chevron-down': isExpanded(item),
+              'pi-chevron-right': !isExpanded(item)
+            }"
+          ></i>
+        </div>
+
+        <!-- CHILDREN -->
+        <div
+          *ngIf="item.items && isExpanded(item)"
+          class="ml-4 border-l border-gray-200 dark:border-gray-700 pl-3 mt-1"
+        >
+          <app-custom-panel-menu [data]="item.items || []"></app-custom-panel-menu>
+        </div>
+      </li>
+    </ng-container>
+  </ul>
+</div>

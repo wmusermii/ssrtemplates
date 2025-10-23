@@ -1,5 +1,6 @@
 <nav class="p-4 space-y-2">
-      <p-panelmenu [model]="listMenu" class="w-full" [multiple]="true" [ariaExpanded]="true" />
+      <!-- <p-panelmenu [model]="listMenu" class="w-full" [multiple]="true" [ariaExpanded]="true" /> -->
+      <app-custom-panel-menu [data]="listMenu"></app-custom-panel-menu>
 </nav>
 <div *ngIf="showLogoutDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
   <div class="bg-white rounded-xl shadow-lg w-11/12 max-w-sm p-6 text-center">

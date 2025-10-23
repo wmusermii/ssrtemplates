@@ -6,11 +6,12 @@ import { CommonModule } from '@angular/common';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { ButtonModule } from 'primeng/button';
 import cloneDeep from 'lodash-es/cloneDeep';
+import { CustomPanelMenu } from '../custom-panel-menu/custom-panel-menu';
 
 @Component({
   standalone:true,
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterModule, PanelMenuModule, ButtonModule],
+  imports: [CommonModule, RouterModule, PanelMenuModule, ButtonModule, CustomPanelMenu],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css'
 })
@@ -60,7 +61,7 @@ export class Sidebar implements OnInit, OnDestroy {
         this.listMenu = JSON.parse(datamenuString);
         await this.replaceLogoutWithCommand(this.listMenu);
         await this.expandAllPanelMenu(this.listMenu);
-        // console.log("HASIL MENU AKHIR ", this.listMenu);
+        console.log("HASIL MENU AKHIR ", this.listMenu);
       }
       this.loading=false;
     } catch (error) {
