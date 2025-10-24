@@ -7,23 +7,24 @@ import { CookieMiddleware } from '../middlewares/cookiemiddleware';
 import rateLimit from 'express-rate-limit';
 import { ParamRepository } from '../repositories/param.repository';
 import { logInfo, logWarn } from '../utils/logger';
+import { getSiapUbpCompanies, getSiapUbpFormModel, getSiapUbpTableFields } from '../controllers/api.siapubp.controller';
 const router = Router();
 router.get('/echo', echo);
-//##################################### LIMIT RATE LOGIN #############
+//************************************* LIMIT RATE LOGIN *************
 const loginLimiter = await createLoginLimiter();
-//##################################### AUTH ROUTES #############
+//************************************* AUTH ROUTES *************
 router.post('/auth/login', loginLimiter,asyncHandler(login));
 router.get('/auth/logout', asyncHandler(CookieMiddleware),asyncHandler(logout));
 router.post('/auth/registuser', asyncHandler(registUser));
 router.get('/auth/attrb',asyncHandler(CookieMiddleware), asyncHandler(attrb));
 router.post('/auth/aclattrb', asyncHandler(CookieMiddleware),asyncHandler(getaclattrb));
 router.post('/auth/updateuser', asyncHandler(CookieMiddleware),asyncHandler(updateUser));
-//##################################### AUTH ROUTES END #############
+//************************************* AUTH ROUTES END *************
 
 router.post('/admin/test_database', asyncHandler(CookieMiddleware),asyncHandler(getTestDatabase)); //Mengetest database tujuan
 router.post('/admin/migrate_database', asyncHandler(CookieMiddleware),asyncHandler(goMigrateDatabase)); //Mengetest database tujuan
 
-//##################################### WEB ADMIN ROUTES #############
+//************************************* WEB ADMIN ROUTES *************
 router.post('/admin/get_parambygroup', asyncHandler(CookieMiddleware),asyncHandler(getParamsByGroup));
 router.post('/admin/get_parambykey', asyncHandler(getParamsByKey));
 router.post('/admin/upd_parambygroup', asyncHandler(updParamsByGroup));
@@ -49,11 +50,18 @@ router.get('/admin/get_users', asyncHandler(CookieMiddleware),asyncHandler(getUs
 router.post('/admin/add_user', asyncHandler(CookieMiddleware),asyncHandler(addUsers)); //Menambah is daftar User
 router.post('/admin/upd_user', asyncHandler(CookieMiddleware),asyncHandler(updUsers)); //Merubah is daftar User
 router.post('/admin/del_user', asyncHandler(CookieMiddleware),asyncHandler(delUsers)); //menghapus is daftar User
-//##################################### WEB ADMIN ROUTES END #############
+//************************************* WEB ADMIN ROUTES END *************
+/***********************FOR Siap UBP **************************************/
+// router.get('/siapubp/get_parambykey', asyncHandler(CookieMiddleware),asyncHandler(getUsersAvailable));
+router.get('/siapubp/get_tablefields', asyncHandler(CookieMiddleware),asyncHandler(getSiapUbpTableFields)); //Melihat is daftar User
+router.get('/siapubp/get_fieldmodel', asyncHandler(CookieMiddleware),asyncHandler(getSiapUbpFormModel));
+router.get('/siapubp/get_companies', asyncHandler(CookieMiddleware),asyncHandler(getSiapUbpCompanies));
 
-//##################################### EMAIL #############
+
+
+//************************************* EMAIL *************
 // router.post('/warehouse/send_email', asyncHandler(sendingEmailTo));// Untuk cek apaka package yang di ambil sudah diambil user lain
-//##################################### Printing #############
+//************************************* Printing *************
 async function createLoginLimiter() {
   const defaultMax = 3;
   try {

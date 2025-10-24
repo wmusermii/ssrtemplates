@@ -624,3 +624,5 @@
 [2025-10-23 17:34:23] WARN: Could not read param for rate limit, using default. Error: {}
 [2025-10-23 17:34:30] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\dist\ssrtemplates\server\data\admdb.sqlite
 [2025-10-23 17:34:30] INFO: login limiter max set to 3
+[2025-10-23 17:38:08] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\dist\ssrtemplates\server\data\admdb.sqlite
+[2025-10-23 17:38:08] INFO: login limiter max set to 3

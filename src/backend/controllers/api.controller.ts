@@ -4,7 +4,9 @@ import { ResponseHelper } from '../utils/ResponseHelper';
 import { logError, logInfo } from '../utils/logger';
 import { ApiResponse } from '../utils/apiResponse';
 import { ApiService } from '../services/api.service';
+import { SimHubService } from '../services/simhub.service';
 const apiService = new ApiService();
+
 export function echo(req: Request, res: Response, next: NextFunction) {
   try {
     const payload = { code: 1, message: "Echo test workeds from controller" }
