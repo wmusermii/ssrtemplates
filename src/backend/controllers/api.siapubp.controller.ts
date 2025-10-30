@@ -26,7 +26,7 @@ export async function getSiapUbpFormModel(req: Request, res: Response, next: Nex
     console.log("####################################### getSiapUbpFormModel");
     const userInfo: any = req.userInfo;
     const paramResult = await simhubService.getSiapUbpFormModel();
-    if (paramResult.code === 20000 && paramResult.data.length > 0) {
+    if (paramResult.code === 20000) {
       await ResponseHelper.send(res, paramResult); return;
     } else {
       await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));

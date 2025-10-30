@@ -39,6 +39,9 @@ export class Companylist implements OnInit {
   selectedData: any = {};
   rows = 50;
   globalFilter: string = '';
+  formData:any={
+  data: {},
+};
   showDetailForm: any = { show: false, action: "add" };
   onGlobalSearch() {
     console.log("Global filter : ", this.globalFilter);
@@ -150,9 +153,10 @@ export class Companylist implements OnInit {
       this.loading = false;
       if (data.code === 20000) {
         const dataRecordsFields: any = cloneDeep(data.data);
-
+        this.formData = {data:dataRecordsFields}
       } else {
         // this.aclMenublob = [];
+        this.formData={}
       }
     } catch (err) {
       console.log("Response Error Catch /v2/siapubp/get_fieldmodel", err);
@@ -203,7 +207,7 @@ export class Companylist implements OnInit {
   _delData(payload: any) {
     console.log("del data ");
   }
-  /* THIS FOR AUTO FORM */
+  /****************************************************** THIS FOR AUTO FORM */
   // Dapatkan semua key dari object
   objectKeys(obj: any): string[] {
     return Object.keys(obj);
@@ -231,8 +235,22 @@ export class Companylist implements OnInit {
     return val && typeof val === 'object' && !Array.isArray(val);
   }
 
+  submitForm() {
+      console.log('Payload dikirim:', this.formData);
+      this.showDetailForm.show = false;
+    }
+    addBillKey() {
+      this.formData.data.billKeys.push({
+        key: '',
+        mandatory: false,
+        labelEn: '',
+        labelIdn: ''
+      });
+    }
 
-
+    removeBillKey(index: number) {
+      this.formData.data.billKeys.splice(index, 1);
+    }
 
 
 }
