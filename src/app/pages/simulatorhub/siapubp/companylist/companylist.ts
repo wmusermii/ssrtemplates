@@ -207,6 +207,9 @@ export class Companylist implements OnInit {
   _delData(payload: any) {
     console.log("del data ");
   }
+  _updData(payload: any) {
+    console.log("update data : ", payload);
+  }
   /****************************************************** THIS FOR AUTO FORM */
   // Dapatkan semua key dari object
   objectKeys(obj: any): string[] {
@@ -239,6 +242,15 @@ export class Companylist implements OnInit {
       console.log('Payload dikirim:', this.formData);
       this.showDetailForm.show = false;
     }
+
+    toTitle(str: string) {
+      return str
+        .replace(/([A-Z])/g, ' $1')   // kasih spasi sebelum huruf besar
+        .replace(/^./, c => c.toUpperCase()) // kapital huruf pertama
+        .trim();
+    }
+
+
     addBillKey() {
       this.formData.data.billKeys.push({
         key: '',
