@@ -70,19 +70,19 @@ export const routes: Routes = [
         path: 'siapubp/companylist',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/simulatorhub/siapubp/companylist/companylist").then(m => m.Companylist),
-        data: { title: 'Role Management - Admin Template' }
+        data: { title: 'Simulator - Company List' }
       },
       {
         path: 'siapubp/configurations/parameterlist',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/simulatorhub/siapubp/parameterlist/parameterlist").then(m => m.Parameterlist),
-        data: { title: 'Role Management - Admin Template' }
+        data: { title: 'Simulator - Parameter List' }
       },
       {
         path: 'siapubp/configurations/properties',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/simulatorhub/siapubp/properties/properties").then(m => m.Properties),
-        data: { title: 'Role Management - Admin Template' }
+        data: { title: 'Simulator - Properties' }
       },
       {
         path: 'privacy/profile',
