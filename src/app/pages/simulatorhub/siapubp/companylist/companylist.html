@@ -39,7 +39,7 @@
         <td>{{rowData.companyCode}}</td>
         <td>{{rowData.companyName}}</td>
         <td class="w-32 text-center">
-           @if(aclMenublob.includes('up')) {
+          @if(aclMenublob.includes('up')) {
           <p-button pTooltip="Update data" tooltipPosition="top" icon="pi pi-pencil" [rounded]="true" [text]="true"
             (onClick)="_updData(rowData)" severity="secondary" />
           }
@@ -100,8 +100,8 @@
           </div>
         </ng-container>
       </div>
-      <!-- MODE ADD -->
-      <div *ngIf="showDetailForm.action === 'add'">
+      <!-- MODE ADD / EDIT -->
+      <div *ngIf="showDetailForm.action === 'add' || showDetailForm.action === 'edit'">
         <form (ngSubmit)="submitForm()" class="space-y-2 max-h-[70vh] overflow-y-auto pr-2">
           <ng-container *ngFor="let key of objectKeys(formData.data)">
             <div class="flex flex-col sm:flex-row border border-gray-100 border-solid overflow-hidden">
@@ -168,24 +168,37 @@
 
                 <!-- CASE 2: Object -->
                 <ng-template #notArrayField>
-                  <ng-container *ngIf="isObject(formData.data[key]); else primitiveField">
-                    <!-- ✅ Case: Object but EMPTY -> JSON textarea -->
-                    <ng-container *ngIf="objectKeys(formData.data[key]).length === 0; else objectHasFields">
-                      <textarea [(ngModel)]="formData.data[key]" name="{{ key }}"
-                        class="w-full h-28 border border-gray-300 rounded-sm p-2 text-sm font-mono"
-                        placeholder="Enter JSON for {{ key }} (optional)"></textarea>
-                    </ng-container>
-
-                    <!-- ✅ Case: Object has fields -> existing logic -->
-                    <ng-template #objectHasFields>
-                      <div *ngFor="let innerKey of objectKeys(formData.data[key])"
-                        class="border border-gray-200 border-solid rounded-sm p-2 mb-2 bg-gray-50">
-                        <input pInputText [(ngModel)]="formData.data[key][innerKey]" name="{{ key }}_{{ innerKey }}"
-                          class="w-full border border-gray-200 rounded-sm p-2 text-sm"
-                          placeholder="{{ formatLabel(innerKey) }}" />
-                      </div>
-                    </ng-template>
+                  <!-- ✅ KHUSUS additionalData -> selalu textarea JSON -->
+                  <ng-container *ngIf="key === 'additionalData'; else normalObjectLogic">
+                    <textarea [(ngModel)]="additionalDataText" name="{{ key }}"
+                      class="w-full h-28 border border-gray-300 rounded-sm p-2 text-sm font-mono"
+                      placeholder="Enter JSON for {{ key }} (optional)">
+    </textarea>
                   </ng-container>
+
+                  <!-- ✅ Default logic for other objects -->
+                  <ng-template #normalObjectLogic>
+                    <ng-container *ngIf="isObject(formData.data[key]); else primitiveField">
+
+                      <!-- Object kosong -> tampilin textarea JSON -->
+                      <ng-container *ngIf="objectKeys(formData.data[key]).length === 0; else objectHasFields">
+                        <textarea [(ngModel)]="formData.data[key]" name="{{ key }}"
+                          class="w-full h-28 border border-gray-300 rounded-sm p-2 text-sm font-mono"
+                          placeholder="Enter JSON for {{ key }} (optional)">
+        </textarea>
+                      </ng-container>
+
+                      <!-- Object punya fields -> field generator -->
+                      <ng-template #objectHasFields>
+                        <div *ngFor="let innerKey of objectKeys(formData.data[key])"
+                          class="border border-gray-200 border-solid rounded-sm p-2 mb-2 bg-gray-50">
+                          <input pInputText [(ngModel)]="formData.data[key][innerKey]" name="{{ key }}_{{ innerKey }}"
+                            class="w-full border border-gray-200 rounded-sm p-2 text-sm"
+                            placeholder="{{ formatLabel(innerKey) }}" />
+                        </div>
+                      </ng-template>
+                    </ng-container>
+                  </ng-template>
 
                   <!-- CASE 3: Primitive -->
                   <ng-template #primitiveField>
@@ -193,18 +206,50 @@
                       class="w-full border border-gray-200 rounded-sm p-2 text-sm" />
                   </ng-template>
                 </ng-template>
+
               </div>
             </div>
           </ng-container>
 
           <div class="flex justify-end mt-3">
-            <p-button label="Save" icon="pi pi-check" type="submit" severity="success" />
+            <!-- <p-button label="Save" icon="pi pi-check" type="submit" severity="success" /> -->
+            <p-button
+              [label]="showDetailForm.action === 'edit' ? 'Update' : 'Save'"
+              icon="pi pi-check"
+              type="submit"
+              severity="secondary"
+            />
           </div>
         </form>
       </div>
     </div>
   </div>
+   <div *ngIf="showDetailDelete" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl space-y-5">
+      <!-- Icon + Judul -->
+      <div class="flex items-start gap-4">
+        <div class="text-red-600 text-[60px]">
+          <i class="pi pi-exclamation-triangle" style="font-size: 60px; color: #dc2626;"></i>
 
+        </div>
+        <div>
+          <h2 class="text-lg font-semibold text-gray-800">Konfirmasi Penghapusan Data</h2>
+          <p class="text-gray-600 mt-1 leading-relaxed">
+            Anda akan menghapus data ini secara permanen. Tindakan ini tidak dapat dibatalkan.
+            Pastikan Anda yakin sebelum melanjutkan.
+          </p>
+        </div>
+      </div>
+      <!-- Tombol -->
+      <div class="flex justify-end gap-4 pt-4">
+        <button pButton type="button" severity="secondary" label="Batal" class="px-6" (click)="onCancelDelete()">
+        </button>
+
+        <button pButton type="button" severity="danger" label="Hapus" class="px-6" (click)="onOkDelete()">
+        </button>
+      </div>
+    </div>
+  </div>
   <div *ngIf="loading"
     class="absolute inset-0 flex items-center justify-center rounded-md z-50 bg-[rgba(255,255,255,0.5)]">
     <div role="status">

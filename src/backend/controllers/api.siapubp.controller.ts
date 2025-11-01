@@ -43,8 +43,6 @@ export async function getSiapUbpCompanies(req: Request, res: Response, next: Nex
     console.log("####################################### getCompanies");
     const userInfo: any = req.userInfo;
     const paramResult = await simhubService.getSiapUbpCompanies();
-
-
     if (paramResult.code === 20000) {
       await ResponseHelper.send(res, paramResult); return;
     } else {
@@ -64,6 +62,58 @@ export async function getSiapUbpCompanieBy(req: Request, res: Response, next: Ne
     const paramResult = await simhubService.getSiapUbpTableFields();
     if (paramResult.code === 20000 && paramResult.data.length > 0) {
       await ResponseHelper.send(res, paramResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    // next(error);
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+
+export async function postSiapUbpCompany(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### postSiapUbpCompany");
+    const userInfo: any = req.userInfo;
+    const postResult = await simhubService.postSiapUbpCompany(req.body);
+    if (postResult.code === 20000) {
+      await ResponseHelper.send(res, postResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    // next(error);
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function updSiapUbpCompany(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### updSiapUbpCompany");
+    const userInfo: any = req.userInfo;
+    const postResult = await simhubService.postSiapUbpCompany(req.body);
+    if (postResult.code === 20000) {
+      await ResponseHelper.send(res, postResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    // next(error);
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function delSiapUbpCompany(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### delSiapUbpCompany");
+    const userInfo: any = req.userInfo;
+    const postResult = await simhubService.delSiapUbpCompany(req.body);
+    if (postResult.code === 20000) {
+      await ResponseHelper.send(res, postResult); return;
     } else {
       await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
       return;
