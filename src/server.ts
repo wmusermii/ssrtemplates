@@ -8,6 +8,7 @@ import backendRouter from './backend/routes/api.routes'
 import express from 'express';
 import { join, resolve } from 'node:path';
 import cookieParser from 'cookie-parser';
+import { logInfo } from './backend/utils/logger';
 const browserDistFolder = join(import.meta.dirname, '../browser');
 const serverDistFolder = join(import.meta.dirname); // Folder dist/server
 
@@ -77,7 +78,8 @@ app.use((req, res, next) => {
     if (error) {
       throw error;
     }
-    console.log(`Node Express server listening on http://localhost:${port}`);
+    // console.log(`Node Express server listening on http://localhost:${port}`);
+    logInfo(`Node Express server listening on http://localhost:${port}`)
   });
 // }
 
