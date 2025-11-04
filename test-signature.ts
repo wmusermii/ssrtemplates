@@ -5,4 +5,5 @@ const baseString = '2011942/api/v2/auth/access_token/get1753636515119070787';
 
 const hmac = crypto.createHmac('sha256', clientSecret).update(baseString, 'utf8').digest('hex');
 
-console.log('SIGN TS:', hmac);
+// console.log('SIGN TS:', hmac);
+
