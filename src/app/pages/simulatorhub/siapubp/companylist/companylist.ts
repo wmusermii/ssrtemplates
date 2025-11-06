@@ -248,7 +248,10 @@ export class Companylist implements OnInit {
       console.log("Response dari API/v2/siapubp/upd_company", data);
       // this.loading = false;
       if (data.code === 20000) {
+        this.showDetailForm = { show: false, action: "upd" };
+         await this._getRowTables();
       } else {
+        this.showDetailForm = { show: false, action: "upd" };
       }
     } catch (err) {
       console.log("Response Error Catch /v2/siapubp/upd_company", err);
