@@ -40,11 +40,13 @@ export class Companylist implements OnInit {
   rows = 50;
   globalFilter: string = '';
   additionalDataText: string = '';
-  formData:any={
+  // ✅ Untuk additionalData
+  additionalDataList: { key: any; value: any }[] = [];
+  formData: any = {
     data: {},
   };
   showDetailForm: any = { show: false, action: "add" };
-  showDetailDelete: boolean=false;
+  showDetailDelete: boolean = false;
   onGlobalSearch() {
     console.log("Global filter : ", this.globalFilter);
     const term = this.globalFilter.trim().toLowerCase();
@@ -157,10 +159,10 @@ export class Companylist implements OnInit {
         const dataRecordsFields: any = cloneDeep(data.data);
         // console.log("*** data dari model : ",dataRecordsFields);
 
-        this.formData = {data:dataRecordsFields}
+        this.formData = { data: dataRecordsFields }
       } else {
         // this.aclMenublob = [];
-        this.formData={}
+        this.formData = {}
       }
     } catch (err) {
       console.log("Response Error Catch /v2/siapubp/get_fieldmodel", err);
@@ -199,7 +201,7 @@ export class Companylist implements OnInit {
     }
   }
 
-  async _postDataTables(payload:any): Promise<void> {
+  async _postDataTables(payload: any): Promise<void> {
     // const payload: any = { routeUrl: this.currentUrl };
     this.loading = true;
     try {
@@ -217,7 +219,10 @@ export class Companylist implements OnInit {
       console.log("Response dari API/v2/siapubp/add_company", data);
       // this.loading = false;
       if (data.code === 20000) {
+        this.showDetailForm = { show: false, action: "add" };
+         await this._getRowTables();
       } else {
+        this.showDetailForm = { show: false, action: "add" };
       }
     } catch (err) {
       console.log("Response Error Catch /v2/siapubp/add_company", err);
@@ -225,7 +230,7 @@ export class Companylist implements OnInit {
     }
   }
 
-  async _updDataTables(payload:any): Promise<void> {
+  async _updDataTables(payload: any): Promise<void> {
     // const payload: any = { routeUrl: this.currentUrl };
     this.loading = true;
     try {
@@ -251,7 +256,7 @@ export class Companylist implements OnInit {
     }
   }
 
-  async _delDataTables(payload:any): Promise<void> {
+  async _delDataTables(payload: any): Promise<void> {
     // const payload: any = { routeUrl: this.currentUrl };
     this.loading = true;
     try {
@@ -282,30 +287,52 @@ export class Companylist implements OnInit {
     }
   }
 
-  async onOkDelete(){
+  async onOkDelete() {
     const payload = {
-      companyCode:this.selectedData.companyCode,
-      partnerReferenceNo:"34343243"
+      companyCode: this.selectedData.companyCode,
+      partnerReferenceNo: "34343243"
     }
     console.log('Payload dikirim:', payload);
-      await this._delDataTables(payload);
-       await this._getRowTables();
-    this.showDetailDelete=false
+    await this._delDataTables(payload);
+    await this._getRowTables();
+    this.showDetailDelete = false
   }
-  async onCancelDelete(){
-    this.showDetailDelete=false
+  async onCancelDelete() {
+    this.showDetailDelete = false
   }
 
 
   _addData() {
-    console.log("Add data ");
-    if (typeof this.formData.data.additionalData === 'object') {
-      this.additionalDataText = JSON.stringify(this.formData.data.additionalData, null, 2);
+    console.log("Add data");
+
+    // Pastikan additionalData ada dan bertipe object
+    if (this.formData?.data?.additionalData) {
+      const data = this.formData.data.additionalData;
+
+      // Kalau memang object → buat list dari key-value
+      if (typeof data === 'object' && !Array.isArray(data)) {
+        this.additionalDataList = Object.entries(data).map(([key, value]) => ({
+          key,
+          value
+        }));
+
+        // Juga buat representasi JSON string (jika butuh)
+        this.additionalDataText = JSON.stringify(data, null, 2);
+      } else {
+        // Kalau bukan object (string kosong misalnya)
+        this.additionalDataList = [];
+        this.additionalDataText = this.formData.data.additionalData || '';
+      }
     } else {
-      this.additionalDataText = this.formData.data.additionalData || '';
+      // Default jika belum ada sama sekali
+      this.additionalDataList = [];
+      this.additionalDataText = '';
     }
-    this.showDetailForm = { show: true, action: "add" };
+
+    // Tampilkan form input data
+    this.showDetailForm = { show: true, action: 'add' };
   }
+
   onRowSelect(event: any) {
     console.log('Selected Menu:', event.data);
     const dataObj = event.data
@@ -323,18 +350,23 @@ export class Companylist implements OnInit {
     this.showDetailDelete = true;
   }
   _updData(payload: any) {
-     this.showDetailForm = {
+  this.showDetailForm = {
     show: true,
     action: 'edit'
   };
-    console.log("update data : ", payload);
-    this.selectedData = payload;
-    // deep clone biar aman, tidak mengubah selectedData reference
-    this.formData.data = JSON.parse(JSON.stringify(payload));
-    // khusus additionalData textarea
-    this.additionalDataText = JSON.stringify(payload.additionalData || {}, null, 2);
+  console.log("update data : ", payload);
 
-  }
+  this.selectedData = payload;
+
+  // deep clone biar aman, tidak mengubah selectedData reference
+  this.formData.data = JSON.parse(JSON.stringify(payload));
+
+  // handle additionalData (convert object → array untuk edit)
+  const additional = payload?.additionalData || {};
+  this.additionalDataList = Object.entries(additional).map(([key, value]) => ({ key, value: String(value) }));
+  console.log("ISI ADDITIONAL DATA ",this.additionalDataList);
+}
+
   /****************************************************** THIS FOR AUTO FORM */
   // Dapatkan semua key dari object
   objectKeys(obj: any): string[] {
@@ -364,49 +396,82 @@ export class Companylist implements OnInit {
   }
 
   async submitForm() {
-      this.loading = true;
-      this.formData.data.additionalData = this.additionalDataText? JSON.parse(this.additionalDataText): {};
-      const payload = {
-        partnerReferenceNo: "34343243", // tambahkan field di sini
-        ...this.formData                // lalu spread seluruh form
-      };
-      console.log('Payload dikirim:', payload);
+    this.loading = true;
 
-      if (this.showDetailForm.action === 'edit') {
-        // result = await this.apiService.updateCompany(payload); // PUT
-        await this._postDataTables(payload);
-      } else {
-        // result = await this.apiService.createCompany(payload); // POST
-        await this._postDataTables(payload);
-      }
+    // Konversi array key-value jadi object sebelum dikirim
+    if (Array.isArray(this.additionalDataList) && this.additionalDataList.length > 0) {
+      // Gabungkan semua pasangan key-value menjadi 1 object
+      this.formData.data.additionalData = this.additionalDataList.reduce((acc, item) => {
+        if (item.key?.trim()) {
+          acc[item.key.trim()] = item.value?.trim() ?? '';
+        }
+        return acc;
+      }, {} as Record<string, string>);
+    } else {
+      this.formData.data.additionalData = {};
+    }
 
+    const payload = {
+      partnerReferenceNo: "34343243",
+      ...this.formData
+    };
 
-       await this._getRowTables();
-      // partnerReferenceNo:"34343243"
-      this.showDetailForm.show = false;
+    console.log('Payload dikirim:', payload);
+
+    if (this.showDetailForm.action === 'edit') {
+      // await this.apiService.updateCompany(payload);
+      await this._updDataTables(payload);
+    } else {
+      // await this.apiService.createCompany(payload);
+      await this._postDataTables(payload);
+    }
+
+    this.loading = false;
+    // this.showDetailForm.show = false;
+  }
+  trackByIndex(index:number, _item:any):number{
+    return index
   }
 
-    toTitle(str: string) {
-      return str
-        .replace(/([A-Z])/g, ' $1')   // kasih spasi sebelum huruf besar
-        .replace(/^./, c => c.toUpperCase()) // kapital huruf pertama
-        .trim();
+  toTitle(str: string) {
+    return str
+      .replace(/([A-Z])/g, ' $1')   // kasih spasi sebelum huruf besar
+      .replace(/^./, c => c.toUpperCase()) // kapital huruf pertama
+      .trim();
+  }
+
+
+  addBillKey() {
+    this.formData.data.billKeys.push({
+      key: '',
+      mandatory: false,
+      labelEn: '',
+      labelIdn: ''
+    });
+  }
+
+  removeBillKey(index: number) {
+    this.formData.data.billKeys.splice(index, 1);
+  }
+  // ✅ Untuk sourceOfFunds
+  addSourceOfFund() {
+    if (!Array.isArray(this.formData.data.sourceOfFunds)) {
+      this.formData.data.sourceOfFunds = [];
     }
+    this.formData.data.sourceOfFunds.push('');
+  }
 
+  removeSourceOfFund(i: number) {
+    this.formData.data.sourceOfFunds.splice(i, 1);
+  }
 
-    addBillKey() {
-      this.formData.data.billKeys.push({
-        key: '',
-        mandatory: false,
-        labelEn: '',
-        labelIdn: ''
-      });
-    }
+  addAdditionalData() {
+    this.additionalDataList.push({ key: '', value: '' });
+  }
 
-    removeBillKey(index: number) {
-      this.formData.data.billKeys.splice(index, 1);
-    }
-
+  removeAdditionalData(index: number) {
+    this.additionalDataList.splice(index, 1);
+  }
 
 }
 interface Column {

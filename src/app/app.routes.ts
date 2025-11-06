@@ -85,6 +85,12 @@ export const routes: Routes = [
         data: { title: 'Simulator - Properties' }
       },
       {
+        path: 'foblex/flowcanvas',
+        canActivate: [authGuard],
+        loadComponent: () => import("./pages/foblex/flowcanvas/flowcanvas").then(m => m.Flowcanvas),
+        data: { title: 'Simulator - foblex' }
+      },
+      {
         path: 'privacy/profile',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/myprofile/myprofile").then(m => m.Myprofile),

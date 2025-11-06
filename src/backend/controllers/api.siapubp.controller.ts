@@ -94,7 +94,7 @@ export async function updSiapUbpCompany(req: Request, res: Response, next: NextF
   try {
     console.log("####################################### updSiapUbpCompany");
     const userInfo: any = req.userInfo;
-    const postResult = await simhubService.postSiapUbpCompany(req.body);
+    const postResult = await simhubService.updSiapUbpCompany(req.body);
     if (postResult.code === 20000) {
       await ResponseHelper.send(res, postResult); return;
     } else {
