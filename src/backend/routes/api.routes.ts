@@ -7,7 +7,7 @@ import { CookieMiddleware } from '../middlewares/cookiemiddleware';
 import rateLimit from 'express-rate-limit';
 import { ParamRepository } from '../repositories/param.repository';
 import { logInfo, logWarn } from '../utils/logger';
-import { createFlowableTask, getFlowableParamByGrp, getFlowableParamByGrpKey } from '../controllers/app.controller';
+import { actionFlowableTask, claimFlowableTask, createFlowableTask, getFlowableParamByGrp, getFlowableParamByGrpKey, getFlowableTask, getFormModelFlowable } from '../controllers/app.controller';
 const router = Router();
 router.get('/echo', echo);
 //************************************* LIMIT RATE LOGIN *************
@@ -59,8 +59,11 @@ router.post('/admin/del_user', asyncHandler(CookieMiddleware),asyncHandler(delUs
  ************************************************************/
  router.post('/app/getflowableparambygrpkey', asyncHandler(CookieMiddleware),asyncHandler(getFlowableParamByGrpKey));
  router.post('/app/getflowableparambygrp', asyncHandler(CookieMiddleware),asyncHandler(getFlowableParamByGrp));
-  router.post('/app/createflowableTask', asyncHandler(CookieMiddleware),asyncHandler(createFlowableTask));
-
+ router.post('/app/createflowableTask', asyncHandler(CookieMiddleware),asyncHandler(createFlowableTask));
+ router.post('/app/getflowableTask', asyncHandler(CookieMiddleware),asyncHandler(getFlowableTask));
+ router.post('/app/claimflowableTask', asyncHandler(CookieMiddleware),asyncHandler(claimFlowableTask));
+ router.post('/app/formflowableTask', asyncHandler(CookieMiddleware),asyncHandler(getFormModelFlowable));
+ router.post('/app/actionflowableTask', asyncHandler(CookieMiddleware),asyncHandler(actionFlowableTask));
 //************************************************************* UTIL FUNCTION **********************************
 async function createLoginLimiter() {
   const defaultMax = 3;

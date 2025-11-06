@@ -639,6 +639,7 @@ async transformTreeToMenuModel(nodes: any[], isRoot = true): Promise<any[]> {
   // Tambahkan Privacy & Security hanya sekali di level root
   if (isRoot) {
     transformed.push({
+      icon:"pi pi-guard",
       label: "Privacy & Security",
       items: [
         {
