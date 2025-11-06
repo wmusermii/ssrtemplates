@@ -1,0 +1,14 @@
+.canvas-area {
+  min-height: 500px;
+  background-size: 20px 20px;
+  background-image: linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+    linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+}
+
+.absolute {
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.absolute:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
