@@ -1,42 +1,130 @@
 <main class="pt-2 max-w-screen-xl mx-auto px-2 mb-6">
+
   <!-- Breadcrumb -->
   <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
-    <p-breadcrumb [model]="breaditems" [home]="home" />
+    <p-breadcrumb [model]="breaditems" [home]="home"></p-breadcrumb>
   </div>
 
-  <!-- Flow Canvas -->
-  <div class="flex h-[75vh] bg-gray-100 rounded shadow overflow-hidden">
+  <!-- Palet + Canvas -->
+  <div class="flex w-full gap-3">
+
     <!-- Palet kiri -->
-    <div class="w-64 bg-white border-r p-4">
-      <h3 class="font-semibold mb-3 text-gray-700">Node Palette</h3>
-      <div
-        *ngFor="let node of palette"
-        class="p-2 mb-2 bg-blue-100 border border-blue-300 rounded cursor-move hover:bg-blue-200 text-center select-none"
-        draggable="true"
-        (dragstart)="onDragStart($event, node)"
-      >
-        {{ node.label }}
+    <aside class="w-1/6 bg-gray-100 p-4 rounded shadow space-y-4 flex flex-col items-center">
+      <div *ngFor="let node of palette" class="flex flex-col items-center">
+        <!-- Preview node mini -->
+        <div class="flex items-center justify-center cursor-move shadow mb-1" draggable="true"
+          (dragstart)="onDragStart($event, node.type)" [ngClass]="getPaletteNodeClass(node.type)">
+          <!-- Icon untuk decision -->
+          <span *ngIf="node.type === 'decision'" class="-rotate-45 text-white font-bold text-sm">X</span>
+        </div>
+        <!-- Caption di bawah -->
+        <span class="text-sm text-center">{{ node.label }}</span>
       </div>
-    </div>
+    </aside>
+    <!-- Canvas -->
+    <section class="flex-1 flex flex-col">
+        <!-- Toolbar tombol di atas canvas -->
+        <div class="flex gap-2 mb-2">
+          <button pButton type="button" icon="pi pi-check" label="Validate" class="p-button-sm p-button-success" (click)="validateFlow()"></button>
+          <button pButton type="button" icon="pi pi-save" label="Save" class="p-button-sm p-button-primary" (click)="saveFlow()"></button>
+          <button pButton type="button" icon="pi pi-upload" label="Export" class="p-button-sm p-button-info" (click)="exportFlow()"></button>
+        </div>
 
-    <!-- Kanvas kanan -->
-    <div
-      class="flex-1 relative bg-gray-50 overflow-hidden canvas-area"
-      (drop)="onDrop($event)"
-      (dragover)="onDragOver($event)"
-    >
-      <!-- Node hasil drop -->
-      <div
-        *ngFor="let n of nodes"
-        class="absolute p-3 bg-green-200 border border-green-400 rounded shadow-md cursor-move select-none"
-        [style.left.px]="n.x"
-        [style.top.px]="n.y"
-        (mousedown)="startMove($event, n)"
-        pTooltip="{{ n.type }}"
-        tooltipPosition="top"
-      >
-        {{ n.label }}
+      <div class="relative flex-1 bg-white border border-gray-300 rounded shadow p-2 min-h-[500px]"
+        (drop)="onDrop($event)" (dragover)="onDragOver($event)" (mousemove)="onMouseMove($event)" style="
+          background-image: linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+                            linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);
+          background-size: 20px 20px;">
+        <div *ngFor="let node of nodes"
+          class="absolute flex items-center justify-center cursor-pointer select-none shadow" [style.left.px]="node.x"
+          [style.top.px]="node.y" [ngClass]="getNodeClass(node)" (mousedown)="startNodeDrag($event, node)"
+          (mouseup)="endNodeDrag()" (click)="selectNode(node)">
+          <span *ngIf="node.type === 'businessTask'" class="text-sm font-medium">{{ node.label }}</span>
+          <span *ngIf="node.type === 'restClient'" class="text-sm font-medium">{{ node.label }}</span>
+          <span *ngIf="node.type === 'decision'" class="-rotate-45 text-white font-bold text-lg">?</span>
+          <span *ngIf="node.type === 'startEvent'" class="text-white font-bold text-lg">S</span>
+          <span *ngIf="node.type === 'endEvent'" class="text-white font-bold text-lg">X</span>
+        </div>
       </div>
-    </div>
+    </section>
+
   </div>
+
+  <!-- Log / Properti Node -->
+  <section class="w-full mt-3 bg-gray-50 p-4 rounded shadow h-56 overflow-y-auto">
+    <div class="grid grid-cols-2 gap-4">
+
+      <!-- Common fields -->
+      <div class="flex items-center min-w-0">
+        <label class="w-32 font-semibold text-sm text-gray-700 truncate">Node ID:</label>
+        <span class="text-gray-800 text-sm truncate">{{ selectedNode?.id }}</span>
+      </div>
+
+      <div class="flex items-center min-w-0">
+        <label class="w-32 font-semibold text-sm text-gray-700 truncate">Node Type:</label>
+        <span class="text-gray-800 text-sm truncate">{{ selectedNode?.type }}</span>
+      </div>
+
+      <div class="flex items-center min-w-0">
+        <label class="w-32 font-semibold text-sm text-gray-700 truncate">Label Node:</label>
+        <input *ngIf="selectedNode" type="text" [(ngModel)]="selectedNode!.label"
+          class="border border-gray-300 rounded px-2 py-1 text-sm flex-1 min-w-0" />
+      </div>
+
+      <!-- Business Task specific -->
+      <div class="flex items-center min-w-0" *ngIf="selectedNode?.type === 'businessTask'">
+        <label class="w-32 font-semibold text-sm text-gray-700 truncate">Group Reference:</label>
+        <input type="text" [(ngModel)]="selectedNode!.groupRef"
+          class="border border-gray-300 rounded px-2 py-1 text-sm flex-1 min-w-0" />
+      </div>
+
+      <div class="flex items-center min-w-0" *ngIf="selectedNode?.type === 'businessTask'">
+        <label class="w-32 font-semibold text-sm text-gray-700 truncate">User Reference:</label>
+        <input type="text" [(ngModel)]="selectedNode!.userRef"
+          class="border border-gray-300 rounded px-2 py-1 text-sm flex-1 min-w-0" />
+      </div>
+
+      <!-- Rest Client specific -->
+      <div class="flex items-center min-w-0" *ngIf="selectedNode?.type === 'restClient'">
+        <label class="w-32 font-semibold text-sm text-gray-700 truncate">Fetch URL:</label>
+        <input type="text" [(ngModel)]="selectedNode!.fetchUrl"
+          class="border border-gray-300 rounded px-2 py-1 text-sm flex-1 min-w-0" />
+      </div>
+
+      <div class="flex items-center min-w-0" *ngIf="selectedNode?.type === 'restClient'">
+        <label class="w-32 font-semibold text-sm text-gray-700 truncate">Method:</label>
+        <select [(ngModel)]="selectedNode!.method"
+          class="border border-gray-300 rounded px-2 py-1 text-sm flex-1 min-w-0">
+          <option value="GET">GET</option>
+          <option value="POST">POST</option>
+          <option value="PUT">PUT</option>
+          <option value="DELETE">DELETE</option>
+        </select>
+      </div>
+
+      <div class="flex items-center min-w-0" *ngIf="selectedNode?.type === 'restClient'">
+        <label class="w-32 font-semibold text-sm text-gray-700 truncate">Params:</label>
+        <input type="text" [(ngModel)]="selectedNode!.params"
+          class="border border-gray-300 rounded px-2 py-1 text-sm flex-1 min-w-0" />
+      </div>
+
+      <div class="flex items-center min-w-0" *ngIf="selectedNode?.type === 'restClient'">
+        <label class="w-32 font-semibold text-sm text-gray-700 truncate">Body:</label>
+        <input type="text" [(ngModel)]="selectedNode!.body"
+          class="border border-gray-300 rounded px-2 py-1 text-sm flex-1 min-w-0" />
+      </div>
+
+      <!-- Tombol Delete -->
+      <div class="flex items-center justify-end col-span-2 mt-2" *ngIf="selectedNode">
+        <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" (click)="deleteNode()">
+          Delete Node
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+
+
+
 </main>

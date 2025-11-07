@@ -1,65 +1,56 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, HostListener } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { InputTextModule } from 'primeng/inputtext';
-import { MessageModule } from 'primeng/message';
-import { SelectModule } from 'primeng/select';
-import { TableModule } from 'primeng/table';
-import { TextareaModule } from 'primeng/textarea';
-import { TooltipModule } from 'primeng/tooltip';
 import { LocalstorageService } from '../../../guard/ssr/localstorage/localstorage.service';
 
 @Component({
   selector: 'app-flowcanvas',
-  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, SelectModule],
+  imports: [
+    CommonModule,
+    BreadcrumbModule,
+    ButtonModule,
+    FormsModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './flowcanvas.html',
-  styleUrl: './flowcanvas.css'
+  styleUrls: ['./flowcanvas.css']
 })
 export class Flowcanvas implements OnInit {
-
-   currentUrl: string = '';
-  aclMenublob: any[] = [];
+  breaditems: MenuItem[] = [];
   home: MenuItem | undefined;
-  breaditems: MenuItem[] | undefined;
-  //##########################################################
-  token: string | null | undefined = undefined;
-  userInfo: any | undefined;
-  //##########################################################
-  loading: boolean = false;
 
-  //===================== FLOW BUILDER =====================//
-  palette = [
-    { type: 'start', label: 'Start Node' },
-    { type: 'action', label: 'Action Node' },
-    { type: 'decision', label: 'Decision Node' },
+  palette: { type: NodeType; label: string }[] = [
+    { type: 'startEvent', label: 'Start Event' },
+    { type: 'businessTask', label: 'Business Task' },
+    { type: 'decision', label: 'Decision' },
+    { type: 'endEvent', label: 'End Event' },
+    { type: 'restClient', label: 'Rest Client' }
   ];
 
-  nodes: NodeItem[] = [];
-  draggedNodeType: string | null = null;
-  private movingNode: NodeItem | null = null;
-  private offsetX = 0;
-  private offsetY = 0;
 
+  nodes: CanvasNode[] = [];
+  draggingNode: CanvasNode | null = null;
+  offsetX = 0;
+  offsetY = 0;
+  selectedNode: CanvasNode | null = null;
+  selectedNodeProperties: { key: string; value: any }[] = [];
 
+  constructor(private router: Router, private ssrStorage: LocalstorageService,
+    @Inject(PLATFORM_ID) private platformId: object) { }
 
-
-  constructor(private router: Router, private ssrStorage: LocalstorageService) { }
   ngOnInit(): void {
-   this.currentUrl = this.router.url;
-    this.token = this.ssrStorage.getItem('token');
-    this.userInfo = this.ssrStorage.getItem("C_INFO");
     this.breaditems = [{ label: 'Flowdiagram' }, { label: 'Foblex Sample' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
   }
-  onDragStart(event: DragEvent, node: any) {
-    this.draggedNodeType = node.type;
-    event.dataTransfer?.setData('text/plain', node.type);
+
+  onDragStart(event: DragEvent, type: NodeType) {
+    if (!event.dataTransfer) return;
+    event.dataTransfer.setData('nodeType', type);
+    event.dataTransfer.effectAllowed = 'copy';
   }
 
   onDragOver(event: DragEvent) {
@@ -67,55 +58,136 @@ export class Flowcanvas implements OnInit {
   }
 
   onDrop(event: DragEvent) {
-  event.preventDefault();
-  const canvas = document.querySelector('.canvas-area') as HTMLElement;
-  const rect = canvas.getBoundingClientRect();
+    event.preventDefault();
+    const type = event.dataTransfer?.getData('nodeType') as NodeType;
+    if (!type || !['startEvent', 'businessTask', 'decision', 'endEvent','restClient'].includes(type)) {
+      console.warn('Invalid type dropped:', type);
+      return;
+    }
 
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
+    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
 
-  // pastikan nilai type selalu string
-  const type = (event.dataTransfer?.getData('text/plain') || this.draggedNodeType || 'generic') as string;
-  const label = this.palette.find((p) => p.type === type)?.label ?? 'Node';
+    // Snap ke grid 20px
+    x = Math.round(x / 20) * 20;
+    y = Math.round(y / 20) * 20;
 
-  this.nodes.push({
-    id: Date.now(),
-    label,
-    type,
-    x,
-    y,
-  });
+    this.nodes.push({
+      id: Date.now(),
+      type,
+      label: type === 'businessTask' ? 'Business Task' : type === 'restClient' ? 'Rest Client' : '',
+      x,
+      y
+    });
+  }
 
-  this.draggedNodeType = null;
-}
-
-
-  startMove(event: MouseEvent, node: NodeItem) {
-    this.movingNode = node;
+  startNodeDrag(event: MouseEvent, node: CanvasNode) {
+    this.draggingNode = node;
     this.offsetX = event.offsetX;
     this.offsetY = event.offsetY;
   }
 
-  @HostListener('document:mouseup')
-  stopMove() {
-    this.movingNode = null;
+  onMouseMove(event: MouseEvent) {
+    if (!this.draggingNode) return;
+    const canvas = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    let x = event.clientX - canvas.left - this.offsetX;
+    let y = event.clientY - canvas.top - this.offsetY;
+
+    // Snap ke grid
+    x = Math.round(x / 20) * 20;
+    y = Math.round(y / 20) * 20;
+
+    this.draggingNode.x = x;
+    this.draggingNode.y = y;
   }
 
-  @HostListener('document:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent) {
-    if (this.movingNode) {
-      const canvas = document.querySelector('.canvas-area') as HTMLElement;
-      const rect = canvas.getBoundingClientRect();
-      this.movingNode.x = event.clientX - rect.left - this.offsetX;
-      this.movingNode.y = event.clientY - rect.top - this.offsetY;
+  endNodeDrag() {
+    this.draggingNode = null;
+  }
+
+  selectNode(node: CanvasNode) {
+    this.selectedNode = node; // menyimpan reference node yang diklik
+  }
+
+  getNodeClass(node: CanvasNode): string {
+    switch (node.type) {
+      case 'startEvent':
+        return 'bg-blue-300 border-2 border-blue-700 rounded-full w-12 h-12';
+      case 'businessTask':
+        return 'bg-yellow-300 rounded w-32 h-12 px-2 py-1 text-center';
+      case 'decision':
+        return 'bg-red-300 rotate-45 w-12 h-12 flex items-center justify-center';
+      case 'endEvent':
+        return 'bg-red-500 border-2 border-red-700 rounded-full w-12 h-12';
+      case 'restClient':   // <-- baru
+        return 'bg-green-200 rounded w-28 h-12 px-2 py-1 text-center text-green-800 font-semibold';
+      default:
+        return '';
+    }
+  }
+
+  getPaletteNodeClass(type: NodeType): string {
+    switch (type) {
+      case 'startEvent':
+        return 'bg-blue-300 border-2 border-blue-700 rounded-full w-10 h-10';
+      case 'businessTask':
+        return 'bg-yellow-300 rounded w-20 h-8 px-1 py-1 text-center';
+      case 'decision':
+        return 'bg-red-300 rotate-45 w-10 h-10 flex items-center justify-center';
+      case 'endEvent':
+        return 'bg-red-500 border-2 border-red-700 rounded-full w-10 h-10';
+      case 'restClient':
+      return 'bg-green-200 rounded w-32 h-12 px-2 py-1 text-center flex items-center justify-center';
+      default:
+        return '';
+    }
+  }
+
+  deleteNode() {
+    if (!this.selectedNode) return;
+    // hapus dari nodes array
+    this.nodes = this.nodes.filter(node => node.id !== this.selectedNode!.id);
+    // reset selectedNode
+    this.selectedNode = null;
+  }
+
+  validateFlow() {
+  console.log('Validate flow:', this.nodes);
+  // TODO: logika validasi flow diagram
+}
+
+saveFlow() {
+  console.log('Save flow:', this.nodes);
+  // TODO: simpan ke backend / localstorage
+}
+
+exportFlow() {
+  console.log('Export flow:', this.nodes);
+  // TODO: export JSON / PNG / PDF
+}
+
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Delete' && this.selectedNode) {
+      this.deleteNode();
     }
   }
 
 }
-interface NodeItem {
+
+type NodeType = 'startEvent' | 'businessTask' | 'decision' | 'endEvent' | 'restClient';
+interface CanvasNode {
   id: number;
-  label: string;
-  type: string; // tetap string
+  type: NodeType;
+  label?: string;
   x: number;
   y: number;
+  groupRef?: string; // untuk businessTask
+  userRef?: string;  // untuk businessTask
+  fetchUrl?: string;  // untuk restClient
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  params?: string;
+  body?: string;
 }
