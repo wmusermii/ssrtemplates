@@ -79,7 +79,7 @@ export class SimHubService {
     if (!paramResult) return ApiResponse.successNoData(paramResult, "Unable to get data!");
     //################## Berhasil Isi #######################
     try {
-      const res = await this.fetchWithNoAuthMethod(paramResult.paramvalue + "/entity/company", {}, "PUT", dataPayload);
+      const res = await this.fetchWithNoAuthMethod(paramResult.paramvalue + "/entity/company", {}, "POST", dataPayload);
       if (res) {
         console.log("************** Resp update data companies ", res);
         const response = res;
