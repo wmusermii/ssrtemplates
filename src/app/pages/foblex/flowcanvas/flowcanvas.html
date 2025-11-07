@@ -4,10 +4,8 @@
   <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
     <p-breadcrumb [model]="breaditems" [home]="home"></p-breadcrumb>
   </div>
-
   <!-- Palet + Canvas -->
   <div class="flex w-full gap-3">
-
     <!-- Palet kiri -->
     <aside class="w-1/6 bg-gray-100 p-4 rounded shadow space-y-4 flex flex-col items-center">
       <div *ngFor="let node of palette" class="flex flex-col items-center">
@@ -23,28 +21,71 @@
     </aside>
     <!-- Canvas -->
     <section class="flex-1 flex flex-col">
-        <!-- Toolbar tombol di atas canvas -->
-        <div class="flex gap-2 mb-2">
-          <button pButton type="button" icon="pi pi-check" label="Validate" class="p-button-sm p-button-success" (click)="validateFlow()"></button>
-          <button pButton type="button" icon="pi pi-save" label="Save" class="p-button-sm p-button-primary" (click)="saveFlow()"></button>
-          <button pButton type="button" icon="pi pi-upload" label="Export" class="p-button-sm p-button-info" (click)="exportFlow()"></button>
-        </div>
 
+      <!-- Toolbar tombol di atas canvas -->
+      <div class="flex gap-2 mb-2">
+        <button pButton type="button" icon="pi pi-check" label="Validate" class="p-button-sm p-button-success"
+          (click)="validateFlow()">
+        </button>
+
+        <button pButton type="button" icon="pi pi-save" label="Save" class="p-button-sm p-button-primary"
+          (click)="saveFlow()">
+        </button>
+
+        <button pButton type="button" icon="pi pi-upload" label="Export" class="p-button-sm p-button-info"
+          (click)="exportFlow()">
+        </button>
+      </div>
+
+      <!-- Canvas dengan grid -->
       <div class="relative flex-1 bg-white border border-gray-300 rounded shadow p-2 min-h-[500px]"
-        (drop)="onDrop($event)" (dragover)="onDragOver($event)" (mousemove)="onMouseMove($event)" style="
-          background-image: linear-gradient(to right, #e5e7eb 1px, transparent 1px),
-                            linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);
-          background-size: 20px 20px;">
+        (drop)="onDrop($event)" (dragover)="onDragOver($event)" (mousemove)="onCanvasMouseMove($event)"
+        (mouseup)="onCanvasMouseUp($event)" style="
+      background-image: linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+                        linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);
+      background-size: 20px 20px;
+    ">
+
+        <!-- SVG koneksi -->
+        <!-- SVG koneksi antar node -->
+        <svg class="absolute w-full h-full pointer-events-none">
+          <defs>
+            <!-- Panah opsional -->
+            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="black"></polygon>
+            </marker>
+          </defs>
+
+          <!-- Garis koneksi -->
+          <line *ngFor="let c of connections" [attr.x1]="c.fromX" [attr.y1]="c.fromY" [attr.x2]="c.toX"
+            [attr.y2]="c.toY" stroke="black" stroke-width="2" marker-end="url(#arrowhead)" />
+        </svg>
+
+
+        <!-- Node di canvas -->
         <div *ngFor="let node of nodes"
           class="absolute flex items-center justify-center cursor-pointer select-none shadow" [style.left.px]="node.x"
-          [style.top.px]="node.y" [ngClass]="getNodeClass(node)" (mousedown)="startNodeDrag($event, node)"
-          (mouseup)="endNodeDrag()" (click)="selectNode(node)">
-          <span *ngIf="node.type === 'businessTask'" class="text-sm font-medium">{{ node.label }}</span>
-          <span *ngIf="node.type === 'restClient'" class="text-sm font-medium">{{ node.label }}</span>
-          <span *ngIf="node.type === 'decision'" class="-rotate-45 text-white font-bold text-lg">?</span>
-          <span *ngIf="node.type === 'startEvent'" class="text-white font-bold text-lg">S</span>
-          <span *ngIf="node.type === 'endEvent'" class="text-white font-bold text-lg">X</span>
+          [style.top.px]="node.y" [ngClass]="getNodeClass(node)" (mousedown)="startNodeOnMouseDown($event, node)"
+          (mouseup)="onNodeMouseUp($event, node)" (click)="selectNode(node)">
+
+          <!-- Label node -->
+          <span *ngIf="node.type === 'businessTask'" class="text-sm font-medium pointer-events-none">
+            {{ node.label }}
+          </span>
+          <span *ngIf="node.type === 'restClient'" class="text-sm font-medium pointer-events-none">
+            {{ node.label }}
+          </span>
+          <span *ngIf="node.type === 'decision'" class="-rotate-45 text-white font-bold text-lg pointer-events-none">
+            ?
+          </span>
+          <span *ngIf="node.type === 'startEvent'" class="text-white font-bold text-lg pointer-events-none">
+            S
+          </span>
+          <span *ngIf="node.type === 'endEvent'" class="text-white font-bold text-lg pointer-events-none">
+            X
+          </span>
         </div>
+
       </div>
     </section>
 
