@@ -1,33 +1,49 @@
 <main class="pt-2 max-w-screen-xl mx-auto px-2 mb-6">
-
   <!-- Breadcrumb -->
   <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
-    <p-breadcrumb [model]="breaditems" [home]="home"></p-breadcrumb>
-  </div>
-  <div class="h-[80vh] bg-gray-100 rounded shadow relative overflow-hidden">
-    <f-flow fDraggable>
-      <f-canvas>
-        <div
-          fNode
-          fDragHandle
-          [fNodePosition]="{ x: 100, y: 100 }"
-        >
-          Start
-        </div>
-        <div
-          fNode
-          fDragHandle
-          [fNodePosition]="{ x: 300, y: 100 }"
-        >
-          End
-        </div>
-        <f-connection
-          fOutputId="output1"
-          fInputId="input1"
-        ></f-connection>
-      </f-canvas>
-    </f-flow>
+    <p-breadcrumb [model]="breaditems" [home]="home" />
   </div>
 
+  <div class="flex h-[70vh] gap-4">
+    <!-- Palet kiri -->
+    <div class="w-1/6 bg-gray-100 p-4 space-y-3 rounded shadow">
+      <div
+        class="cursor-move bg-blue-400 text-center rounded py-3 text-white text-sm font-semibold"
+        draggable="true"
+        (dragstart)="onDragStart($event, 'Start', '#60a5fa')"
+      >🔵 Start</div>
 
+      <div
+        class="cursor-move bg-yellow-400 text-center rounded py-3 text-white text-sm font-semibold"
+        draggable="true"
+        (dragstart)="onDragStart($event, 'Process', '#facc15')"
+      >🟡 Process</div>
+
+      <div
+        class="cursor-move bg-red-400 text-center rounded py-3 text-white text-sm font-semibold"
+        draggable="true"
+        (dragstart)="onDragStart($event, 'End', '#f87171')"
+      >🔴 End</div>
+    </div>
+
+    <!-- Canvas kanan -->
+    <div
+      id="canvas"
+      class="flex-1 bg-gray-50 border rounded relative overflow-hidden"
+      (dragover)="onDragOver($event)"
+      (drop)="onDrop($event)"
+    >
+      <f-flow #fflow>
+        <f-canvas #fcanvas></f-canvas>
+      </f-flow>
+    </div>
+  </div>
+
+  <!-- Log aktivitas -->
+  <section class="mt-6 bg-white border rounded shadow p-4 max-h-60 overflow-y-auto">
+    <h3 class="text-lg font-semibold mb-2">🧾 Log Aktivitas</h3>
+    <ul class="text-sm text-gray-700 space-y-1">
+      <li *ngFor="let log of logs">{{ log }}</li>
+    </ul>
+  </section>
 </main>
