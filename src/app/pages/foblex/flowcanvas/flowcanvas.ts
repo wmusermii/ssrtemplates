@@ -9,6 +9,8 @@ import {
   signal,
   viewChild,
   OnDestroy,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'primeng/tooltip';
@@ -35,7 +37,6 @@ import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { TextareaModule } from 'primeng/textarea';
 import { DialogModule } from 'primeng/dialog';
-import { ReversePipe } from "../../../layouts/directive/utils/reversePipe";
 @Component({
   selector: 'app-flowcanvas',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,16 +49,15 @@ import { ReversePipe } from "../../../layouts/directive/utils/reversePipe";
     ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, DialogModule, SelectModule,
     FFlowModule,
     FExternalItemDirective,
-    FExternalItemPlaceholderDirective,
-    FExternalItemPreviewDirective,
-    FCheckboxComponent,
-    ReversePipe
-],
+  ],
   templateUrl: './flowcanvas.html',
   styleUrls: ['./flowcanvas.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Flowcanvas implements OnInit, AfterViewInit, OnDestroy {
+  // @ViewChild('canvasRef', { static: true }) canvasRef!: ElementRef;
+
+  canvas!: FCanvasComponent;
   home: MenuItem | undefined;
   breaditems: MenuItem[] | undefined;
   logs: string[] = [];
@@ -67,7 +67,14 @@ export class Flowcanvas implements OnInit, AfterViewInit, OnDestroy {
   editDialogVisible = false;
   editNodeTarget: NodeData | null = null;
   editNodeText = '';
-  selectedNodeObject:any ={};
+  selectedNodeObject: any = {};
+  // --- Mode koneksi aktif/tidak ---
+  isConnectionMode = false;
+  // --- Node awal yang diklik saat akan membuat koneksi ---
+  connectionStartNode: any = null;
+  // --- Daftar koneksi antar node di canvas ---
+  // connections: { id: number; from: string; to: string }[] = [];
+  connections: { outputId: string; inputId: string }[] = [];
   constructor(private router: Router, private ssrStorage: LocalstorageService, private cdr: ChangeDetectorRef) {
     // Tambahan: pastikan signal nodes langsung array
     if (!Array.isArray(this.nodes())) {
@@ -111,6 +118,13 @@ export class Flowcanvas implements OnInit, AfterViewInit, OnDestroy {
       this.nodes.set([]);
       this.addLog('Tidak ada data node tersimpan, memulai baru.');
     }
+
+    const connectionFlow = localStorage.getItem('foblex_connections');
+    if (connectionFlow) {
+      this.connections = JSON.parse(connectionFlow);
+      console.log('♻️ Koneksi dipulihkan:', this.connections);
+    }
+
 
     setTimeout(() => {
       this.isReady = true;
@@ -158,77 +172,103 @@ export class Flowcanvas implements OnInit, AfterViewInit, OnDestroy {
 
 
   protected onCreateNode(event: FCreateNodeEvent): void {
-  try {
-    console.log('fCreateNode event:', event);
+    try {
+      console.log('fCreateNode event:', event);
 
-    if (!this.flowReady) return;
+      if (!this.flowReady) return;
 
-    const rawData = (event as any)?.data ?? '';
-    const nodeType = typeof rawData === 'string' ? rawData : 'Task';
-    let nodeText = '';
+      const rawData = (event as any)?.data ?? '';
+      const nodeType = typeof rawData === 'string' ? rawData : 'Task';
+      let nodeText = '';
 
-    if (typeof rawData === 'string' && rawData.trim() !== '') nodeText = rawData;
-    else if (rawData && typeof rawData === 'object')
-      nodeText = rawData.label || rawData.text || rawData.type || 'Untitled Node';
-    else nodeText = 'Node ' + ((this.nodes()?.length || 0) + 1);
+      if (typeof rawData === 'string' && rawData.trim() !== '') nodeText = rawData;
+      else if (rawData && typeof rawData === 'object')
+        nodeText = rawData.label || rawData.text || rawData.type || 'Untitled Node';
+      else nodeText = 'Node ' + ((this.nodes()?.length || 0) + 1);
 
-    const rect = (event as any)?.rect || { x: 0, y: 0 };
+      const rect = (event as any)?.rect || { x: 0, y: 0 };
 
-    // Buat node state dengan ID internal sementara
-    const newNode: NodeData = {
-      id: generateGuid(),        // ID internal
-      text: nodeText,
-      type: nodeType,
-      position: { x: rect.x, y: rect.y },
-      foblexId: null,            // nanti akan diset dengan ID Foblex asli
-    };
+      // Buat node state dengan ID internal sementara
+      const newNode: NodeData = {
+        id: generateGuid(),        // ID internal
+        text: nodeText,
+        type: nodeType,
+        position: { x: rect.x, y: rect.y },
+        foblexId: null,            // nanti akan diset dengan ID Foblex asli
+      };
 
-    const current = Array.isArray(this.nodes()) ? this.nodes() : [];
-    const updated = [...current, newNode];
-    this.nodes.set(updated);
-    this.ssrStorage.setItem('foblex_nodes', JSON.stringify(updated));
+      const current = Array.isArray(this.nodes()) ? this.nodes() : [];
+      const updated = [...current, newNode];
+      this.nodes.set(updated);
+      this.ssrStorage.setItem('foblex_nodes', JSON.stringify(updated));
 
-    this.addLog(`🆕 Node "${newNode.text}" dibuat pada (${rect.x}, ${rect.y}).`);
+      this.addLog(`🆕 Node "${newNode.text}" dibuat pada (${rect.x}, ${rect.y}).`);
 
-    // 🔄 Tunggu DOM node muncul
-    const observer = new MutationObserver(mutations => {
-      for (const mutation of mutations) {
-        mutation.addedNodes.forEach((el: any) => {
-          if (el.classList?.contains('f-node') && el.textContent?.includes(nodeText)) {
-            // Sinkronkan ID Foblex
-            const synced = this.nodes().map(n =>
-              n.id === newNode.id ? { ...n, foblexId: el.id } : n
-            );
-            this.nodes.set(synced);
-            this.ssrStorage.setItem('foblex_nodes', JSON.stringify(synced));
-            this.addLog(`🔗 Node "${nodeText}" disinkronkan ke ID Foblex ${el.id}.`);
-            observer.disconnect(); // hentikan observer setelah ketemu
-          }
-        });
-      }
-    });
+      // 🔄 Tunggu DOM node muncul
+      const observer = new MutationObserver(mutations => {
+        for (const mutation of mutations) {
+          mutation.addedNodes.forEach((el: any) => {
+            if (el.classList?.contains('f-node') && el.textContent?.includes(nodeText)) {
+              // Sinkronkan ID Foblex
+              const synced = this.nodes().map(n =>
+                n.id === newNode.id ? { ...n, foblexId: el.id } : n
+              );
+              this.nodes.set(synced);
+              this.ssrStorage.setItem('foblex_nodes', JSON.stringify(synced));
+              this.addLog(`🔗 Node "${nodeText}" disinkronkan ke ID Foblex ${el.id}.`);
+              observer.disconnect(); // hentikan observer setelah ketemu
+            }
+          });
+        }
+      });
 
-    observer.observe(document.querySelector('.f-canvas')!, { childList: true, subtree: true });
-  } catch (err) {
-    console.error('❌ Gagal membuat node baru:', err);
-    this.addLog('Terjadi kesalahan saat membuat node baru.');
+      observer.observe(document.querySelector('.f-canvas')!, { childList: true, subtree: true });
+    } catch (err) {
+      console.error('❌ Gagal membuat node baru:', err);
+      this.addLog('Terjadi kesalahan saat membuat node baru.');
+    }
   }
-}
 
-private onKeyDown(event: KeyboardEvent): void {
-  if (event.key === 'Delete' && this.selectedNodeObject) {
-    this.deleteNode(this.selectedNodeObject);
+  private onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Delete' && this.selectedNodeObject) {
+      this.deleteNode(this.selectedNodeObject);
+    }
   }
-}
-protected deleteNode(payload: any): void {
+  // protected deleteNode(payload: any): void {
+  //   console.log("Data awal ", this.nodes());
+  //   console.log("yang di delete : ", payload);
+  //   const nodesArray = this.nodes();
+  //   if (!nodesArray) return;
+  //   const updatedNodes = this.nodes().filter(n => n.id !== payload.id);
+  //   this.nodes.set(updatedNodes);
+  //   this.ssrStorage.setItem('foblex_nodes', JSON.stringify(this.nodes()));
+  //   this.addLog(`❌ Node "${payload.id}" dihapus dari canvas.`);
+  //   this.selectedNodeObject = null;
+  // }
+  protected deleteNode(payload: any): void {
   console.log("Data awal ", this.nodes());
   console.log("yang di delete : ", payload);
+
   const nodesArray = this.nodes();
   if (!nodesArray) return;
-  const updatedNodes = this.nodes().filter(n => n.id !== payload.id);
+
+  // Hapus node dari nodes
+  const updatedNodes = nodesArray.filter(n => n.id !== payload.id);
   this.nodes.set(updatedNodes);
+
+  // Hapus semua koneksi yang terkait dengan node ini
+  const nodeFoblexId = payload.id; // ambil foblexId
+  const updatedConnections = this.connections.filter(
+    c => !c.outputId.endsWith(nodeFoblexId) && !c.inputId.endsWith(nodeFoblexId)
+  );
+  const removedConnections = this.connections.length - updatedConnections.length;
+  this.connections = updatedConnections;
+
+  // Simpan ke storage
   this.ssrStorage.setItem('foblex_nodes', JSON.stringify(this.nodes()));
-  this.addLog(`❌ Node "${payload.id}" dihapus dari canvas.`);
+  this.ssrStorage.setItem('foblex_connections', JSON.stringify(this.connections));
+
+  this.addLog(`❌ Node "${payload.id}" dan ${removedConnections} koneksi terkait dihapus dari canvas.`);
   this.selectedNodeObject = null;
 }
 
@@ -261,18 +301,56 @@ protected deleteNode(payload: any): void {
     }
   }
   protected openEditDialog(node: NodeData): void {
+    console.log("Node type ", node);
     this.editNodeTarget = node;
     this.editNodeText = node.text;
     this.editDialogVisible = true;
   }
-  protected nodeClicked(node: NodeData, event:any):void{
+  protected nodeClicked(node: NodeData, event: any): void {
+    // event.stopPropagation();
+
+    // Simpan node yang diklik (fungsi lama tetap jalan)
     console.log("Data clicked ", node);
     console.log("event clicked ", event);
+    console.log("connection mode ", this.isConnectionMode);
     this.selectedNodeObject = node;
+
+
   }
+
   protected cancelEdit(): void {
     this.editDialogVisible = false;
     this.editNodeTarget = null;
+  }
+  onCreateConnection(event: any) {
+    console.log('🔗 Event Connection:', event);
+
+    // Validasi struktur event
+    if (!event?.fOutputId || !event?.fInputId) {
+      console.warn('⚠️ Koneksi tidak valid:', event);
+      return;
+    }
+
+    const newConn = {
+      outputId: event.fOutputId,
+      inputId: event.fInputId,
+      dropPosition: event.fDropPosition || null,
+    };
+
+    // Cegah duplikat koneksi (output→input yang sama)
+    const exists = this.connections.some(
+      (c) => c.outputId === newConn.outputId && c.inputId === newConn.inputId
+    );
+
+    if (!exists) {
+      this.connections.push(newConn);
+      console.log('✅ Koneksi baru dibuat:', newConn);
+      this.saveConnections();
+      this.cdr.detectChanges();
+    } else {
+      console.log('⚠️ Koneksi sudah ada:', newConn);
+      this.cdr.detectChanges();
+    }
   }
 
   protected saveNodeEdit(): void {
@@ -293,67 +371,80 @@ protected deleteNode(payload: any): void {
     this.editDialogVisible = false;
     this.editNodeTarget = null;
   }
+  // Simpan ke localStorage
+  protected saveConnections() {
+    localStorage.setItem('foblex_connections', JSON.stringify(this.connections));
+  }
   protected saveFlowToDatabase(): void {
     const currentNodes = this.nodes();
     if (!Array.isArray(currentNodes) || currentNodes.length === 0) {
       this.addLog('⚠️ Tidak ada node yang dapat disimpan.');
       return;
     }
-    // Simulasi kirim ke database (nanti bisa diganti panggilan API)
-    console.log('💾 Menyimpan ke database...', currentNodes);
-    // Contoh: simpan juga ke localstorage
-    this.ssrStorage.setItem('foblex_nodes_backup', JSON.stringify(currentNodes));
-    this.addLog(`💾 ${currentNodes.length} node berhasil disimpan ke database.`);
+
+    const flow = {
+      nodes: currentNodes,
+      connections: this.connections // tambahkan connections
+    };
+
+    // Simulasi kirim ke database / API
+    console.log('💾 Menyimpan flow ke database...', flow);
+
+    // Simpan ke localStorage sementara
+    this.ssrStorage.setItem('foblex_flow_backup', JSON.stringify(flow));
+    this.addLog(`💾 ${currentNodes.length} node & ${this.connections.length} koneksi berhasil disimpan.`);
   }
+
   protected onMoveNode(event: any) {
-  if (!event || !Array.isArray(event.fNodes)) return;
+    if (!event || !Array.isArray(event.fNodes)) return;
     console.log("urutan data ", this.nodes());
     console.log("data event ", event.fNodes);
     const moved = event.fNodes[0]; // karena selalu 1 item
-  // Ambil index dari ID, misal "f-node-0" → 0
+    // Ambil index dari ID, misal "f-node-0" → 0
     const match = moved.id.match(/^f-node-(\d+)$/);
     console.log("Match : ", match);
     if (!match) return;
     const index = parseInt(match[1], 10);
     // Update posisi node sesuai index
     console.log("Index : ", index);
-      const updated = this.nodes().map((node, i) =>
-        i === index ? { ...node, position: { x: moved.position.x, y: moved.position.y } } : node
-      );
-      console.log("hasil Update ", updated);
+    const updated = this.nodes().map((node, i) =>
+      i === index ? { ...node, position: { x: moved.position.x, y: moved.position.y } } : node
+    );
+    console.log("hasil Update ", updated);
 
-      this.nodes.set(updated);
-      this.ssrStorage.setItem('foblex_nodes', JSON.stringify(updated));
-      this.addLog(`📍 Node index ${index} dipindahkan ke (${moved.position.x}, ${moved.position.y})`);
+    this.nodes.set(updated);
+    this.ssrStorage.setItem('foblex_nodes', JSON.stringify(updated));
+    this.addLog(`📍 Node index ${index} dipindahkan ke (${moved.position.x}, ${moved.position.y})`);
 
 
 
 
   }
 
-  protected onDragEnded(event:any){
+  protected onDragEnded(event: any) {
     console.log("Drag ended ", event);
   }
-
-  // protected onNodeMoved(detail: any): void {
-  //   const movedId = detail.id;
-  //   const rect = detail.rect;
-  //   if (!movedId || !rect) return;
-
-  //   const updated = this.nodes().map(node =>
-  //     node.id === movedId
-  //       ? { ...node, position: { x: rect.x, y: rect.y } }
-  //       : node
-  //   );
-
-  //   this.nodes.set(updated);
-  //   this.ssrStorage.setItem('foblex_nodes', JSON.stringify(updated));
-  //   this.addLog(`📍 Node "${movedId}" dipindahkan ke (${rect.x}, ${rect.y}).`);
-  // }
-
   stopFlowEvents(event: Event): void {
     event.stopPropagation();
   }
+  toggleConnectionMode() {
+    this.isConnectionMode = !this.isConnectionMode;
+    // jika ingin memastikan binding langsung aktif
+    this.cdr.detectChanges();
+
+    console.log(`🔁 Connection mode: ${this.isConnectionMode ? 'ON' : 'OFF'}`);
+    // const canvasEl = this.canvasRef.nativeElement as HTMLElement;
+
+    // if (this.isConnectionMode) {
+    //   // Nonaktifkan drag
+    //   canvasEl.removeAttribute('fDragHandle');
+    // } else {
+    //   // Aktifkan kembali drag
+    //   canvasEl.setAttribute('fDragHandle', '');
+    // }
+  }
+
+
 }
 
 // =============== INTERFACE ===============

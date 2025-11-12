@@ -8,28 +8,56 @@
   <div class="flex h-[60vh] gap-2">
     <!-- Canvas kanan -->
     @if (isReady) {
-    <f-flow fDraggable class="flex-1" (fLoaded)="onLoaded()" (fCreateNode)="onCreateNode($event)"
-      (fMoveNodes)="onMoveNode($event)">
-      <f-canvas fZoom>
+    <f-flow fDraggable class="flex-1"
+      (fLoaded)="onLoaded()"
+      (fCreateNode)="onCreateNode($event)"
+      (fMoveNodes)="onMoveNode($event)"
+      (fCreateConnection)="onCreateConnection($event)"
+      >
+      <f-canvas>
+        <!-- Foblex: aktifkan fitur drag-to-connect -->
+        <f-connection-for-create *ngIf="isConnectionMode"></f-connection-for-create>
+        <!-- Render semua koneksi -->
+        @for (conn of connections; track conn.outputId + '->' + conn.inputId) {
+          <f-connection
+            [fOutputId]="conn.outputId"
+            [fInputId]="conn.inputId"
+            [fReassignDisabled]="true">
+          </f-connection>
+        }
+        <!-- Render semua node -->
         @for (node of nodes(); track node.id) {
-        <div fNode [attr.id]="'f-node-' + node.id" [fNodePosition]="node.position" fDragHandle
-          (click)="nodeClicked(node, $event)" (dblclick)="openEditDialog(node)"
-          class="cursor-pointer !text-white font-bold !rounded-md whitespace-nowrap px-2 py-0.5" [ngStyle]="{
-        'display': 'inline-block',
-        'width': 'auto',
-        'min-width': '0',
-        'max-width': 'none',
-        'background-color':
-          node.type === 'Start' ? '#3b82f6' :
-          node.type === 'Business Task' ? '#6b7280' :
-          node.type === 'End' ? '#ef4444' : '#999'
-      }">
-          {{ node.text }}
+        <div fNode [attr.id]="'f-node-' + node.id" [fNodePosition]="node.position" (click)="nodeClicked(node, $event)"
+          (dblclick)="openEditDialog(node)"
+          class="f-node cursor-pointer !text-white font-bold !rounded-md whitespace-nowrap px-2 py-1 flex items-center gap-2"
+          [ngStyle]="{
+            'background-color':
+              node.type === 'Start' ? '#3b82f6' :
+              node.type === 'Business Task' ? '#6b7280' :
+              node.type === 'End' ? '#ef4444' : '#999'
+          }">
+          <!-- Kiri: Input port untuk Business Task & End -->
+          @if (node.type === 'Business Task' || node.type === 'End') {
+          <div fNodeInput [fInputId]="'in' + node.id" fInputConnectableSide="left" class="input-port"></div>
+          }
+
+          <!-- Ikon drag -->
+          <span fDragHandle class="f-icon f-drag-handle-icon">
+            <div class="text-lg text-white opacity-70 leading-none select-none">⋮⋮</div>
+          </span>
+
+          <!-- Label tengah -->
+          <span class="flex-1 text-center" style="padding-right: 10px;">{{ node.text }}</span>
+
+          <!-- Kanan: Output port untuk Start & Business Task -->
+          @if (node.type === 'Start' || node.type === 'Business Task') {
+          <div fNodeOutput [fOutputId]="'out' + node.id" fOutputConnectableSide="right" class="output-port"></div>
+          }
         </div>
+
+
         }
       </f-canvas>
-
-
       <!-- Dialog edit node -->
       <p-dialog [(visible)]="editDialogVisible" [modal]="true" header="Edit Node" [style]="{ width: '400px' }"
         (click)="stopFlowEvents($event)" (wheel)="stopFlowEvents($event)">
@@ -60,8 +88,14 @@
         <div class="external-item" fExternalItem [fData]="'End'" [fPreviewMatchSize]="isMatchSize()">
           🔴 End
         </div>
-
+        <button pButton [label]="isConnectionMode ? 'Nodes' : 'Connections'"
+          [icon]="isConnectionMode ? 'pi pi-ban' : 'pi pi-share-alt'" class="p-button-sm w-full"
+          [class.p-button-outlined]="isConnectionMode" (click)="toggleConnectionMode()">
+        </button>
         <div class="py-3 border-t border-gray-200 mt-2"></div>
+
+        <!-- Tombol Connection Mode -->
+
 
         <!-- Tombol Save -->
         <button pButton label="Save Node" icon="pi pi-save" class="p-button-sm w-full"

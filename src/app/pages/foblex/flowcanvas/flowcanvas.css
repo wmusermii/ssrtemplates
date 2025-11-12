@@ -1,18 +1,3 @@
-.canvas-area {
-  min-height: 500px;
-  background-size: 20px 20px;
-  background-image: linear-gradient(to right, #f0f0f0 1px, transparent 1px),
-    linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
-}
-
-.absolute {
-  transition: box-shadow 0.2s ease-in-out;
-}
-
-.absolute:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
 /************************* For Foblex *********************************/
 
 /* ====== Warna dasar elemen ====== */
@@ -58,71 +43,10 @@
 }
 
 /* ====== Koneksi antar node ====== */
-.f-connection .f-connection-drag-handle {
-  fill: transparent;
-}
 
-.f-connection .f-connection-selection {
-  fill: none;
-}
-
-.f-connection .f-connection-path {
-  fill: none;
-  stroke: var(--connection-color);
-  stroke-width: 2;
-}
-
-.f-connection .f-connection-text,
-.f-connection .f-connection-center {
-  fill: var(--connection-color);
-  color: var(--connection-color);
-}
-
-.f-connection.f-snap-connection .f-connection-path {
-  stroke: var(--snap-connection-color);
-}
-
-.f-connection.f-selected .f-connection-path {
-  stroke: var(--minimap-node-selected-color);
-}
-
-/* ====== Marker koneksi (panah ujung) ====== */
-.connection-marker circle,
-.connection-marker rect,
-.connection-marker path {
-  fill: var(--connection-color);
-}
-
-.f-connection.f-selected .connection-marker circle,
-.f-connection.f-selected .connection-marker rect,
-.f-connection.f-selected .connection-marker path {
-  fill: var(--minimap-node-selected-color);
-}
-
-/* ====== Mini-map ====== */
-.f-minimap {
-  background-color: var(--minimap-background-color);
-  bottom: 16px;
-  right: 16px;
-  width: 120px;
-  height: 120px;
-  position: absolute;
-}
-
-.f-minimap .f-minimap-node {
-  fill: var(--minimap-node-color);
-}
-
-.f-minimap .f-minimap-node.f-selected {
-  fill: var(--minimap-node-selected-color);
-}
-
-.f-minimap .f-minimap-view {
-  fill: var(--minimap-view-color);
-}
 
 /* ====== Node utama ====== */
-.f-node {
+/* .f-node {
   width: 120px;
   padding: 24px;
   color: var(--node-color);
@@ -131,7 +55,7 @@
   border-radius: var(--node-border-radius);
   border: 0.2px solid var(--node-border-color);
   cursor: move;
-}
+} */
 
 .f-node:active {
   box-shadow: var(--node-shadow);
@@ -286,3 +210,64 @@
   background-color: var(--node-background-color);
   border: 1px dashed var(--node-border-color);
 }
+
+
+
+.f-node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.f-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+}
+
+.f-drag-handle-icon {
+  cursor: grab;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.f-drag-handle-icon:hover {
+  opacity: 1;
+}
+
+.input-port,
+.output-port {
+  width: 10px;
+  height: 10px;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: crosshair;
+  transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+.input-port:hover,
+.output-port:hover {
+  transform: translateY(-50%) scale(1.3);
+  background-color: #ffd700;
+  border-color: #aaa;
+}
+
+.input-port {
+  left: -7px;
+}
+
+.output-port {
+  right: -7px;
+}
+
+

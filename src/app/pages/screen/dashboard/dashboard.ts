@@ -11,7 +11,7 @@ import { ChipModule } from 'primeng/chip';
 
 import { LocalstorageService } from '../../../guard/ssr/localstorage/localstorage.service';
 import { Router } from '@angular/router';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { TableModule } from 'primeng/table';
 
 @Component({
