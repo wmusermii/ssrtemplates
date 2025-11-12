@@ -61,7 +61,7 @@ export class Sidebar implements OnInit, OnDestroy {
         this.listMenu = JSON.parse(datamenuString);
         await this.replaceLogoutWithCommand(this.listMenu);
         await this.expandAllPanelMenu(this.listMenu);
-        console.log("HASIL MENU AKHIR ", this.listMenu);
+        // console.log("HASIL MENU AKHIR ", this.listMenu);
       }
       this.loading=false;
     } catch (error) {

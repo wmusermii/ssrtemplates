@@ -1,49 +1,93 @@
-<main class="pt-2 max-w-screen-xl mx-auto px-2 mb-6">
+<main class="pt-2 max-w-screen-xl mx-auto px-2 mb-2">
   <!-- Breadcrumb -->
-  <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
+  <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-2">
     <p-breadcrumb [model]="breaditems" [home]="home" />
   </div>
 
-  <div class="flex h-[70vh] gap-4">
-    <!-- Palet kiri -->
-    <div class="w-1/6 bg-gray-100 p-4 space-y-3 rounded shadow">
-      <div
-        class="cursor-move bg-blue-400 text-center rounded py-3 text-white text-sm font-semibold"
-        draggable="true"
-        (dragstart)="onDragStart($event, 'Start', '#60a5fa')"
-      >🔵 Start</div>
-
-      <div
-        class="cursor-move bg-yellow-400 text-center rounded py-3 text-white text-sm font-semibold"
-        draggable="true"
-        (dragstart)="onDragStart($event, 'Process', '#facc15')"
-      >🟡 Process</div>
-
-      <div
-        class="cursor-move bg-red-400 text-center rounded py-3 text-white text-sm font-semibold"
-        draggable="true"
-        (dragstart)="onDragStart($event, 'End', '#f87171')"
-      >🔴 End</div>
-    </div>
-
+  <!-- Konten utama -->
+  <div class="flex h-[60vh] gap-2">
     <!-- Canvas kanan -->
-    <div
-      id="canvas"
-      class="flex-1 bg-gray-50 border rounded relative overflow-hidden"
-      (dragover)="onDragOver($event)"
-      (drop)="onDrop($event)"
-    >
-      <f-flow #fflow>
-        <f-canvas #fcanvas></f-canvas>
-      </f-flow>
+    @if (isReady) {
+    <f-flow fDraggable class="flex-1" (fLoaded)="onLoaded()" (fCreateNode)="onCreateNode($event)"
+      (fMoveNodes)="onMoveNode($event)">
+      <f-canvas fZoom>
+        @for (node of nodes(); track node.id) {
+        <div fNode [attr.id]="'f-node-' + node.id" [fNodePosition]="node.position" fDragHandle
+          (click)="nodeClicked(node, $event)" (dblclick)="openEditDialog(node)"
+          class="cursor-pointer !text-white font-bold !rounded-md whitespace-nowrap px-2 py-0.5" [ngStyle]="{
+        'display': 'inline-block',
+        'width': 'auto',
+        'min-width': '0',
+        'max-width': 'none',
+        'background-color':
+          node.type === 'Start' ? '#3b82f6' :
+          node.type === 'Business Task' ? '#6b7280' :
+          node.type === 'End' ? '#ef4444' : '#999'
+      }">
+          {{ node.text }}
+        </div>
+        }
+      </f-canvas>
+
+
+      <!-- Dialog edit node -->
+      <p-dialog [(visible)]="editDialogVisible" [modal]="true" header="Edit Node" [style]="{ width: '400px' }"
+        (click)="stopFlowEvents($event)" (wheel)="stopFlowEvents($event)">
+        <div class="p-fluid space-y-4">
+          <div class="flex flex-col gap-1">
+            <label for="nodeLabel" class="text-sm font-medium text-gray-700">Label Node</label>
+            <input id="nodeLabel" type="text" pInputText class="w-full" placeholder="Masukkan nama node..."
+              [(ngModel)]="editNodeText" (click)="stopFlowEvents($event)" (wheel)="stopFlowEvents($event)" />
+          </div>
+        </div>
+
+        <ng-template pTemplate="footer">
+          <div class="flex justify-end gap-2">
+            <button pButton label="Cancel" class="p-button-text" (click)="cancelEdit()"></button>
+            <button pButton label="Save" icon="pi pi-check" (click)="saveNodeEdit()"
+              [disabled]="!editNodeText.trim()"></button>
+          </div>
+        </ng-template>
+      </p-dialog>
+      <!-- Palet kiri -->
+      <div class="external-panel">
+        <div class="external-item" fExternalItem [fData]="'Start'" [fPreviewMatchSize]="isMatchSize()">
+          🔵 Start
+        </div>
+        <div class="external-item" fExternalItem [fData]="'Business Task'" [fPreviewMatchSize]="isMatchSize()">
+          ⚙️ Business Task
+        </div>
+        <div class="external-item" fExternalItem [fData]="'End'" [fPreviewMatchSize]="isMatchSize()">
+          🔴 End
+        </div>
+
+        <div class="py-3 border-t border-gray-200 mt-2"></div>
+
+        <!-- Tombol Save -->
+        <button pButton label="Save Node" icon="pi pi-save" class="p-button-sm w-full"
+          (click)="saveFlowToDatabase()"></button>
+      </div>
+
+    </f-flow>
+    } @else {
+    <div class="flex items-center justify-center w-full text-gray-500">
+      🔄 Memuat canvas...
     </div>
+    }
   </div>
 
   <!-- Log aktivitas -->
-  <section class="mt-6 bg-white border rounded shadow p-4 max-h-60 overflow-y-auto">
-    <h3 class="text-lg font-semibold mb-2">🧾 Log Aktivitas</h3>
-    <ul class="text-sm text-gray-700 space-y-1">
-      <li *ngFor="let log of logs">{{ log }}</li>
-    </ul>
+  <section class="bg-white border rounded shadow !h-40 flex flex-col p-0">
+    <h3 class="text-lg font-semibold flex-shrink-0 mb-1 px-2">🧾 Log Aktivitas</h3>
+    <div class="flex-1 overflow-y-auto flex min-h-0 max-h-full px-2">
+      <ul #logContainer class="text-sm text-gray-700 space-y-1 flex flex-col-reverse">
+        <li *ngFor="let log of logs">{{ log }}</li>
+      </ul>
+    </div>
   </section>
+
+
+
+
+
 </main>

@@ -12,20 +12,277 @@
 .absolute:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
-:host {
-  display: block;
-  height: 100%;
+
+/************************* For Foblex *********************************/
+
+/* ====== Warna dasar elemen ====== */
+.f-flow {
+  --background-element-color: rgba(0, 0, 0, 0.1);
+  --selection-area-color: rgba(100, 108, 255, 0.14);
+  --disabled-color: #e2e2e2;
+  --node-background-color: #ffffff;
+  --node-background-color-inverse: #000000;
+  --node-border-radius: 2px;
+  --node-border-color: rgba(60, 60, 67, 0.36);
+  --node-selected-border-color: #3451b2;
+  --node-color: rgba(60, 60, 67, 0.78);
+  --node-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --connection-color: rgba(60, 60, 67, 0.78);
+  --snap-connection-color: rgba(60, 60, 67, 0.38);
+  --connection-gradient-1: #b8272c;
+  --connection-gradient-2: #30a46c;
+  --outlet-color: #3451b2;
+  --input-output-color: rgba(60, 60, 67, 0.78);
+  --minimap-background-color: #ffffff;
+  --minimap-node-color: rgba(60, 60, 67);
+  --minimap-node-selected-color: #3451b2;
+  --minimap-view-color: rgba(100, 108, 255, 0.14);
+  --form-field-text-color: var(--node-color);
+  --form-field-background: var(--minimap-view-color);
+  --form-field-panel-shadow: var(--node-shadow);
+  --form-field-panel-background: var(--node-background-color);
+  --form-field-active-color: var(--minimap-node-selected-color);
+   position: relative;
+  display: flex;
+  height: 450px;
+  border-radius: 6px;
+  background-color: #fafafa;
+  border: 1px solid #e5e7eb;
+}
+.f-node {
+  padding: 12px!important;
+}
+.f-flow {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
 }
 
-f-flow {
+/* ====== Koneksi antar node ====== */
+.f-connection .f-connection-drag-handle {
+  fill: transparent;
+}
+
+.f-connection .f-connection-selection {
+  fill: none;
+}
+
+.f-connection .f-connection-path {
+  fill: none;
+  stroke: var(--connection-color);
+  stroke-width: 2;
+}
+
+.f-connection .f-connection-text,
+.f-connection .f-connection-center {
+  fill: var(--connection-color);
+  color: var(--connection-color);
+}
+
+.f-connection.f-snap-connection .f-connection-path {
+  stroke: var(--snap-connection-color);
+}
+
+.f-connection.f-selected .f-connection-path {
+  stroke: var(--minimap-node-selected-color);
+}
+
+/* ====== Marker koneksi (panah ujung) ====== */
+.connection-marker circle,
+.connection-marker rect,
+.connection-marker path {
+  fill: var(--connection-color);
+}
+
+.f-connection.f-selected .connection-marker circle,
+.f-connection.f-selected .connection-marker rect,
+.f-connection.f-selected .connection-marker path {
+  fill: var(--minimap-node-selected-color);
+}
+
+/* ====== Mini-map ====== */
+.f-minimap {
+  background-color: var(--minimap-background-color);
+  bottom: 16px;
+  right: 16px;
+  width: 120px;
+  height: 120px;
+  position: absolute;
+}
+
+.f-minimap .f-minimap-node {
+  fill: var(--minimap-node-color);
+}
+
+.f-minimap .f-minimap-node.f-selected {
+  fill: var(--minimap-node-selected-color);
+}
+
+.f-minimap .f-minimap-view {
+  fill: var(--minimap-view-color);
+}
+
+/* ====== Node utama ====== */
+.f-node {
+  width: 120px;
+  padding: 24px;
+  color: var(--node-color);
+  text-align: center;
+  background: var(--node-background-color);
+  border-radius: var(--node-border-radius);
+  border: 0.2px solid var(--node-border-color);
+  cursor: move;
+}
+
+.f-node:active {
+  box-shadow: var(--node-shadow);
+}
+
+.f-node .node-content {
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
-::ng-deep .f-node {
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    transform: scale(1.05);
-  }
+/* ====== Connector (input/output) ====== */
+.f-node-input:not(.f-node),
+.f-node-output:not(.f-node) {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 0.2px solid var(--node-border-color);
+  background-color: var(--node-background-color);
 }
 
+.f-node-input:not(.f-node).f-node-output-not-connectable,
+.f-node-input:not(.f-node).f-node-input-not-connectable,
+.f-node-output:not(.f-node).f-node-output-not-connectable,
+.f-node-output:not(.f-node).f-node-input-not-connectable {
+  background-color: var(--disabled-color);
+}
+
+/* ====== Posisi connector ====== */
+.f-node-input.left,
+.f-node-output.left {
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.f-node-input.right,
+.f-node-output.right {
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.f-node-input.top,
+.f-node-output.top {
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.f-node-input.top-left,
+.f-node-output.top-left {
+  top: -8px;
+  left: -8px;
+}
+
+.f-node-input.top-right,
+.f-node-output.top-right {
+  top: -8px;
+  right: -8px;
+}
+
+.f-node-input.bottom,
+.f-node-output.bottom {
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.f-node-input.bottom-left,
+.f-node-output.bottom-left {
+  bottom: -8px;
+  left: -8px;
+}
+
+.f-node-input.bottom-right,
+.f-node-output.bottom-right {
+  bottom: -8px;
+  right: -8px;
+}
+
+/* ====== Toolbar contoh ====== */
+.examples-toolbar {
+  width: fit-content;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
+
+.examples-toolbar button {
+  font-weight: 500;
+  border: none;
+  border-radius: 2px;
+  padding: 4px 8px;
+  line-height: normal;
+}
+
+/* ====== Overlay ====== */
+.overlay {
+  overflow: auto;
+  width: 260px;
+  height: calc(100% - 20px);
+  position: absolute;
+  padding: 10px;
+  right: 10px;
+  top: 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  background-color: var(--node-background-color);
+  box-shadow: var(--node-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+.external-panel {
+  background-color: var(--node-background-color);
+  width: 170px;
+  border-radius: 4px;
+  padding: 4px;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.external-item, .external-item-placeholder, .external-item-preview {
+  padding: 4px;
+  min-height: 24px;
+  background-color: var(--node-background-color);
+  border: 1px solid var(--node-border-color);
+  border-radius: 4px;
+  overflow: hidden;
+  text-align: center;
+  user-select: none;
+}
+
+.external-item-placeholder {
+  background-color: var(--disabled-color);
+}
+
+.external-item-preview {
+  background-color: var(--node-background-color);
+  border: 1px dashed var(--node-border-color);
+}
