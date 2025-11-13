@@ -145,16 +145,6 @@ export class Bisnislist implements OnInit {
   }
   onRowSelect(event: any) {
     console.log('Selected User:', event.data);
-//     {
-//     "id": 1,
-//     "title": "Service 1",
-//     "description": "Ngapain aja di sini",
-//     "blopmodel": null,
-//     "created_at": "2025-11-13 12:52:27",
-//     "created_by": "721238443",
-//     "updated_at": null,
-//     "updated_by": null
-// }
     const dataObj = event.data
     this.idDataOld = dataObj.id
       this.dataForm.patchValue({
@@ -174,11 +164,23 @@ export class Bisnislist implements OnInit {
     this.showDetailForm = { show: true, action: "add" };
   }
   _delData(event:any){
-
+      console.log('Selected User:', event);
+    const dataObj = event
+    this.selectedData= dataObj;
+    this.idDataOld = dataObj.id
+      this.dataForm.patchValue({
+      "id": this.idDataOld,
+      "title": dataObj.title,
+      "description": dataObj.description
+      })
+    this.showDetailDelete = true;
   }
 
   _graphData(){
-
+    console.log("GRAPH");
+    // setTimeout(() => {
+        this.router.navigate(['/bifast/bisnislist/graph']);
+      // }, 50);
   }
    _jsonData(){
 
@@ -214,6 +216,15 @@ export class Bisnislist implements OnInit {
   }
   onCancel() {
     this.showDetailForm = { show: false, action: "add" };
+  }
+  async onOkDelete() {
+    this.loading=true;
+    console.log("data to delete ",this.selectedData);
+    await this._saveDeleteData(this.selectedData);
+    this.showDetailDelete=false;
+  }
+  onCancelDelete(){
+      this.showDetailDelete=false;
   }
    _saveAddData(payload: any) {
     fetch('/v2/siapbifast/add_bisnislist', {
