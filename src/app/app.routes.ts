@@ -91,6 +91,12 @@ export const routes: Routes = [
         data: { title: 'Simulator - foblex' }
       },
       {
+        path: 'bifast/bisnislist',
+        canActivate: [authGuard],
+        loadComponent: () => import("./pages/simulatorhub/bifast/bisnislist/bisnislist").then(m => m.Bisnislist),
+        data: { title: 'Simulator - foblex' }
+      },
+      {
         path: 'privacy/profile',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/myprofile/myprofile").then(m => m.Myprofile),

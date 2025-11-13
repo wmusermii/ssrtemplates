@@ -59,6 +59,12 @@ router.get('/siapubp/get_companies', asyncHandler(CookieMiddleware),asyncHandler
 router.post('/siapubp/add_company', asyncHandler(CookieMiddleware),asyncHandler(postSiapUbpCompany));
 router.post('/siapubp/upd_company', asyncHandler(CookieMiddleware),asyncHandler(updSiapUbpCompany));
 router.post('/siapubp/del_company', asyncHandler(CookieMiddleware),asyncHandler(delSiapUbpCompany));
+
+/***********************FOR Flowdiagram******************************/
+
+
+/***************************************************************** **/
+
 //************************************* EMAIL *************
 // router.post('/warehouse/send_email', asyncHandler(sendingEmailTo));// Untuk cek apaka package yang di ambil sudah diambil user lain
 //************************************* Printing *************
