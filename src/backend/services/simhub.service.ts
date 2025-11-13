@@ -2,9 +2,11 @@ import { log } from "node:console";
 import { ParamRepository } from "../repositories/param.repository";
 import { ApiResponse } from "../utils/apiResponse";
 import { logInfo } from "../utils/logger";
+import { BussinesFlowRepository } from "../repositories/siapbifast/bussinesflow.repository";
 
 export class SimHubService {
   private paramRepo = new ParamRepository();
+  private bussinesFlowRepo = new BussinesFlowRepository();
   async getParamByKey(payload: any): Promise<any> {
     // paramgroup, paramkey
     const paramResult = await this.paramRepo.findParamByKey(payload);
@@ -53,7 +55,6 @@ export class SimHubService {
     }
     return ApiResponse.successNoData(paramResult, "Records found");
   }
-
   async postSiapUbpCompany(dataPayload: any): Promise<any> {
     const payload = { paramgroup: "SIAPUBP", paramkey: "apiurl" }
     const paramResult = await this.paramRepo.findParamByKey(payload);
@@ -131,6 +132,50 @@ export class SimHubService {
     }
     return ApiResponse.successNoData(paramResult, "Records found");
   }
+//################################################# FOR BI FAST ###################################################
+
+  async getSiapBiFastBussinesList(): Promise<any> {
+   // paramgroup, paramkey
+    const bfesult = await this.bussinesFlowRepo.findAllBussinesList();
+    if (!bfesult) return ApiResponse.successNoData(bfesult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(bfesult, "Records found");
+  }
+  async getSiapBiFastBussinesById(dataPayload: any): Promise<any> {
+   // paramgroup, paramkey
+    const bfesult = await this.bussinesFlowRepo.findBussinesListById(dataPayload);
+    if (!bfesult) return ApiResponse.successNoData(bfesult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(bfesult, "Records found");
+  }
+async postSiapBiFastBussinesList(userinfo: any,dataPayload: any): Promise<any> {
+    dataPayload = {...dataPayload, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
+    const bfesult = await this.bussinesFlowRepo.addBussinesList(dataPayload);
+    if (!bfesult) return ApiResponse.successNoData(bfesult, "Unable to add data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(bfesult, "Record added");
+  }
+  async updSiapBiFastBussinesList(userinfo: any,dataPayload: any): Promise<any> {
+    dataPayload = {...dataPayload, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
+    const bfesult = await this.bussinesFlowRepo.updBussinesList(dataPayload);
+    if (!bfesult) return ApiResponse.successNoData(bfesult, "Unable to add data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(bfesult, "Record added");
+  }
+  async delSiapBiFastBussinesList(userinfo: any,dataPayload: any): Promise<any> {
+    dataPayload = {...dataPayload, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
+    const bfesult = await this.bussinesFlowRepo.updBussinesList(dataPayload);
+    if (!bfesult) return ApiResponse.successNoData(bfesult, "Unable to add data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(bfesult, "Record added");
+  }
+
+
+
+
+
+
+
 
   private async fetchWithNoAuthMethod(
     path: string,

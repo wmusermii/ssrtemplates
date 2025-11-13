@@ -8,6 +8,7 @@ import rateLimit from 'express-rate-limit';
 import { ParamRepository } from '../repositories/param.repository';
 import { logInfo, logWarn } from '../utils/logger';
 import { delSiapUbpCompany, getSiapUbpCompanies, getSiapUbpFormModel, getSiapUbpTableFields, postSiapUbpCompany, updSiapUbpCompany } from '../controllers/api.siapubp.controller';
+import { delSiapBiFastBisnisList, getSiapBiFastBisnisById, getSiapBiFastBisnisList, postSiapBiFastBisnisList, updSiapBiFastBisnisList } from '../controllers/api.siapbifast.controller';
 const router = Router();
 router.get('/echo', echo);
 //************************************* LIMIT RATE LOGIN *************
@@ -64,7 +65,14 @@ router.post('/siapubp/del_company', asyncHandler(CookieMiddleware),asyncHandler(
 
 
 /***************************************************************** **/
+/***********************FOR BIFAST******************************/
+router.get('/siapbifast/get_bisnislist', asyncHandler(CookieMiddleware),asyncHandler(getSiapBiFastBisnisList));
+router.post('/siapbifast/get_bisnislistby', asyncHandler(CookieMiddleware),asyncHandler(getSiapBiFastBisnisById));
+router.post('/siapbifast/add_bisnislist', asyncHandler(CookieMiddleware),asyncHandler(postSiapBiFastBisnisList));
+router.post('/siapbifast/upd_bisnislist', asyncHandler(CookieMiddleware),asyncHandler(updSiapBiFastBisnisList));
+router.post('/siapbifast/del_bisnislist', asyncHandler(CookieMiddleware),asyncHandler(delSiapBiFastBisnisList));
 
+/*****************************************************************/
 //************************************* EMAIL *************
 // router.post('/warehouse/send_email', asyncHandler(sendingEmailTo));// Untuk cek apaka package yang di ambil sudah diambil user lain
 //************************************* Printing *************
