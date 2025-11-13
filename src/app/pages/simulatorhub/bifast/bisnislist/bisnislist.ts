@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
@@ -15,10 +15,11 @@ import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
 import { LocalstorageService } from '../../../../guard/ssr/localstorage/localstorage.service';
 import { cloneDeep } from 'lodash-es';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
   selector: 'app-bisnislist',
-  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, SelectModule],
+  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, SelectModule,DividerModule],
   templateUrl: './bisnislist.html',
   styleUrl: './bisnislist.css'
 })
@@ -32,13 +33,24 @@ export class Bisnislist implements OnInit {
   token: string | null | undefined = undefined;
   userInfo: any | undefined;
   //##########################################################
+  idDataOld: string = "";
   loading: boolean = false;
   cols!: Column[];
+  totalDatas: number = 0;
   datas!: any[];
   alldatas!: any[];
+  showDetailForm: any = { show: false, action: "add" };
+  showDetailDelete: boolean = false;
+  showErrorPage: any = { show: false, message: "undefined" };
+  errorMessage: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" };
   selectedData: any = {};
   rows = 50;
   globalFilter: string = '';
+  dataForm = new FormGroup({
+    id: new FormControl(''),
+    title: new FormControl('', [Validators.required]),
+    description: new FormControl('')
+  });
   constructor(private router: Router, private ssrStorage: LocalstorageService) { }
   async ngOnInit(): Promise<void> {
     this.currentUrl = this.router.url;
@@ -56,8 +68,11 @@ export class Bisnislist implements OnInit {
     if (this.aclMenublob.includes("rd")) {
        await this._refreshListData();
     }
-    this.breaditems = [{ label: 'Siap-UBP' }, { label: 'Company List' }];
+    this.breaditems = [{ label: 'Siap-BIFAST' }, { label: 'Flow Bussines List' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
+  }
+  get f() {
+    return this.dataForm.controls;
   }
   async _refreshACLMenu(): Promise<void> {
     const payload: any = { routeUrl: this.currentUrl };
@@ -99,7 +114,7 @@ export class Bisnislist implements OnInit {
         }
       })
         .then(res => {
-          // console.log("Response dari API  /v2/admin/get_users", res);
+          console.log("Response dari API  /v2/siapbifast/get_bisnislist", res);
           if (!res.ok) throw new Error('get get_users Gagal');
           // if (!res.ok){
           //   this.showErrorPage = {show:true, message:res}
@@ -107,30 +122,195 @@ export class Bisnislist implements OnInit {
           return res.json();
         })
         .then(data => {
-          // console.log("Response dari API /v2/admin/get_users", data);
-          // this.loading = false;
+          console.log("Response dari API /v2/siapbifast/get_bisnislist", data);
+          this.loading = false;
           // this.users = []; this.allUser = [];
-          // if (data.code === 20000) {
-          //   const dataRecordsTemp = cloneDeep(data.data);
-          //   this.users = dataRecordsTemp;
-          //   this.allUser = this.users;
-          //   this.totalUsers = this.allUser.length;
-          //   this.loading = false;
-          // } else {
-          //   this.users = [];
-          //   this.totalUsers = this.users.length;
-          //   this.loading = false;
-          //   // this.showErrorPage = { show: true, message: data.message }
-          // }
+          if (data.code === 20000) {
+            const dataRecordsTemp = cloneDeep(data.data);
+            this.datas = dataRecordsTemp;
+            this.alldatas = this.datas;
+            this.totalDatas = this.alldatas.length;
+            this.loading = false;
+          } else {
+            this.datas = [];
+            this.alldatas = [];
+            this.loading = false;
+            this.totalDatas = 0;
+          // //   // this.showErrorPage = { show: true, message: data.message }
+          }
         })
         .catch(err => {
-          console.log("Response Error Catch /v2/admin/get_users", err);
+          console.log("Response Error Catch /v2/siapbifast/get_bisnislist", err);
         });
+  }
+  onRowSelect(event: any) {
+    console.log('Selected User:', event.data);
+//     {
+//     "id": 1,
+//     "title": "Service 1",
+//     "description": "Ngapain aja di sini",
+//     "blopmodel": null,
+//     "created_at": "2025-11-13 12:52:27",
+//     "created_by": "721238443",
+//     "updated_at": null,
+//     "updated_by": null
+// }
+    const dataObj = event.data
+    this.idDataOld = dataObj.id
+      this.dataForm.patchValue({
+      "id": this.idDataOld,
+      "title": dataObj.title,
+      "description": dataObj.description
+      })
+    this.showDetailForm = { show: true, action: "edit" };
+  }
+  _addData(){
+      this.dataForm.patchValue({
+      "id": null,
+      "title": null,
+      "description": null
     }
+    )
+    this.showDetailForm = { show: true, action: "add" };
+  }
+  _delData(event:any){
 
+  }
 
+  _graphData(){
 
+  }
+   _jsonData(){
 
+  }
+  onSubmit() {
+    if (this.dataForm.invalid) {
+      return; // Form invalid, jangan lanjut
+    }
+    this.loading = true;
+    let objPayload = this.dataForm.value;
+    console.log("Payload form ", objPayload);
+    if (this.showDetailForm.action == "add") {
+        this._saveAddData(objPayload);
+    } else {
+      console.log("Id Data Old : ", this.idDataOld);
+      this._saveEditData(objPayload, this.idDataOld)
+    }
+  }
+  _changeError() {
+    // this.errorMessage={error:false, severity:"info", message:"", icon:"pi pi-send"};
+  }
+  onGlobalSearch() {
+    console.log("Global filter : ", this.globalFilter);
+    const term = this.globalFilter.trim().toLowerCase();
+    if (term === '') {
+      this.datas = [...this.alldatas];
+    } else {
+      this.datas = this.alldatas.filter(item =>
+        [item.title, item.description]
+          .some(field => field?.toLowerCase().includes(term))
+      );
+    }
+  }
+  onCancel() {
+    this.showDetailForm = { show: false, action: "add" };
+  }
+   _saveAddData(payload: any) {
+    fetch('/v2/siapbifast/add_bisnislist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-client': 'angular-ssr'
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        console.log("Response dari API  /v2/siapbifast/add_bisnislist", res);
+        if (!res.ok) throw new Error('Error add data');
+        return res.json();
+      })
+      .then(async data => {
+       console.log("Response dari API  /v2/siapbifast/add_bisnislist", data);
+        this.loading = false;
+        if (data.code === 20000) {
+          this.showDetailForm = { show: false, action: "add" };
+          await this._refreshListData();
+        } else {
+          this.errorMessage = { error: true, severity: "error", message: `${data.message}`, icon: "pi pi-times" }
+        }
+      })
+      .catch(err => {
+        console.log("Response Error ", err);
+        // alert('Login gagal: ' + err.message);
+        this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
+      });
+  }
+  _saveEditData(payload: any, idUser: string) {
+    // payload = { ...payload, ...{ id: idUser } };
+    // delete payload.password;
+    console.log("Payload Edit ", payload);
+    fetch('/v2/siapbifast/upd_bisnislist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-client': 'angular-ssr'
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        // console.log("Response dari API ", res);
+        // logInfo
+        if (!res.ok) throw new Error('Error update data');
+        return res.json();
+      })
+      .then(data => {
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // // console.log("Response dari API DATA ", data);
+        this.loading = false;
+        if (data.code === 20000) {
+          this.showDetailForm = { show: false, action: "add" };
+          this._refreshListData();
+        } else {
+          this.errorMessage = { error: true, severity: "error", message: `${data.message}`, icon: "pi pi-times" }
+        }
+      })
+      .catch(err => {
+        console.log("Response Error ", err);
+        // alert('Login gagal: ' + err.message);
+        this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
+      });
+  }
+  async _saveDeleteData(payload: any) {
+    fetch('/v2/siapbifast/del_bisnislist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-client': 'angular-ssr'
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        // console.log("Response dari API ", res);
+        // logInfo
+        if (!res.ok) throw new Error('Error add data');
+        return res.json();
+      })
+      .then(async data => {
+        // // console.log("Response dari API DATA ", JSON.parse(data));
+        // // console.log("Response dari API DATA ", data);
+        // this.loading=false;
+        if (data.code === 20000) {
+          await this._refreshListData();
+        } else {
+          this.errorMessage = { error: true, severity: "error", message: `${data.message}`, icon: "pi pi-times" }
+        }
+      })
+      .catch(err => {
+        console.log("Response Error ", err);
+        // alert('Login gagal: ' + err.message);
+        this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
+      });
+  }
 }
 interface Column {
   field?: string | null;

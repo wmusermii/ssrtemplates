@@ -10,7 +10,7 @@ export class BussinesFlowRepository {
       'mm.created_by',
       'mm.updated_at',
       'mm.updated_by'
-    ]).from('t_flowdiagrams as mm').orderBy("mm.created_at", "desc");
+    ]).from('t_flowdiagrams as mm').orderBy("mm.created_at", "asc");
     return result;
   }
   async findBussinesListById(id:string) {

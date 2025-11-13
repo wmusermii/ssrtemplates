@@ -137,6 +137,7 @@ export class SimHubService {
   async getSiapBiFastBussinesList(): Promise<any> {
    // paramgroup, paramkey
     const bfesult = await this.bussinesFlowRepo.findAllBussinesList();
+    // console.log("Hasil findAll Bussines List ",bfesult);
     if (!bfesult) return ApiResponse.successNoData(bfesult, "Unable to get data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(bfesult, "Records found");
