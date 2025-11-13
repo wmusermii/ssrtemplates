@@ -17,12 +17,12 @@
           <!-- Wrapper tombol di kanan -->
           <div class="flex gap-2">
 
-            <!-- <p-button [disabled]="datas.length < 1" icon="pi pi-sitemap" (onClick)="_graphData()" label="Graph"
+            <p-button [disabled]="totalDatas < 1" icon="pi pi-sitemap" (onClick)="_graphData()" label="Graph"
               severity="help" class="text-gray-800">
             </p-button>
-            <p-button [disabled]="datas.length < 1" icon="pi pi-code" (onClick)="_jsonData()" label="JSON"
+            <p-button [disabled]="totalDatas < 1" icon="pi pi-code" (onClick)="_jsonData()" label="JSON"
               severity="info">
-            </p-button> -->
+            </p-button>
             <p-button *ngIf="aclMenublob?.includes('cr')" icon="pi pi-add" (onClick)="_addData()" label="Add Service"
               variant="outlined">
             </p-button>

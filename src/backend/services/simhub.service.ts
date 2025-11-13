@@ -157,7 +157,7 @@ async postSiapBiFastBussinesList(userinfo: any,dataPayload: any): Promise<any> {
     return ApiResponse.success(bfesult, "Record added");
   }
   async updSiapBiFastBussinesList(userinfo: any,dataPayload: any): Promise<any> {
-    dataPayload = {...dataPayload, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
+    dataPayload = {...dataPayload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
     const bfesult = await this.bussinesFlowRepo.updBussinesList(dataPayload);
     if (!bfesult) return ApiResponse.successNoData(bfesult, "Unable to add data!");
     //################## Berhasil Isi #######################
@@ -165,7 +165,7 @@ async postSiapBiFastBussinesList(userinfo: any,dataPayload: any): Promise<any> {
   }
   async delSiapBiFastBussinesList(userinfo: any,dataPayload: any): Promise<any> {
     dataPayload = {...dataPayload, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
-    const bfesult = await this.bussinesFlowRepo.updBussinesList(dataPayload);
+    const bfesult = await this.bussinesFlowRepo.delBussinesList(dataPayload);
     if (!bfesult) return ApiResponse.successNoData(bfesult, "Unable to add data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(bfesult, "Record added");
