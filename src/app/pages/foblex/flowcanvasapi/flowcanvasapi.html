@@ -14,24 +14,33 @@
         <!-- Render semua koneksi -->
         @for (conn of connections; track conn.outputId + '->' + conn.inputId) {
         <f-connection
-          [fOutputId]="conn.outputId"
-          [fInputId]="conn.inputId"
-          [fReassignDisabled]="true"
-          fType="segment"
-          >
+        [fOutputId]="conn.outputId"
+        [fInputId]="conn.inputId" [fReassignDisabled]="true"
+        fType="segment"
+
+        >
         </f-connection>
         }
         <!-- Render semua node -->
         @for (node of nodes(); track node.id) {
         <div fNode [attr.id]="'f-node-' + node.id" [fNodePosition]="node.position" (click)="nodeClicked(node, $event)"
           (dblclick)="openEditDialog(node)"
-          class="f-node cursor-pointer !text-white font-bold !rounded-md whitespace-nowrap px-2 py-1 flex items-center gap-2"
-          [ngStyle]="{
-            'background-color':
-              node.type === 'Start' ? '#3b82f6' :
-              node.type === 'Business Task' ? '#6b7280' :
-              node.type === 'End' ? '#ef4444' : '#999'
-          }">
+          class="f-node cursor-pointer font-bold !rounded-md whitespace-nowrap px-2 py-1 flex items-center gap-2" [ngStyle]="{
+          'background-color':
+            node.type === 'Start' ? '#ffffff' :
+            node.type === 'Business Task' ? '#d1d5db' :
+            node.type === 'End' ? '#000000' :
+            '#999',
+          'color':
+            node.type === 'Start' ? '#000000' :
+            node.type === 'Business Task' ? '#000000' :
+            node.type === 'End' ? '#ffffff' :
+            '#ffffff',
+          'border':
+            node.type === 'Start' ? '1px solid #000' :
+            node.type === 'End' ? '1px solid #000' :
+            '1px solid #6b7280'
+        }">
           <!-- Kiri: Input port untuk Business Task & End -->
           @if (node.type === 'Business Task' || node.type === 'End') {
           <div fNodeInput [fInputId]="'in' + node.id" fInputConnectableSide="left" class="input-port"></div>
@@ -39,7 +48,12 @@
 
           <!-- Ikon drag -->
           <span fDragHandle class="f-icon f-drag-handle-icon">
-            <div class="text-lg text-white opacity-70 leading-none select-none">⋮⋮</div>
+            <div
+  class="text-lg opacity-70 leading-none select-none"
+  [ngStyle]="{'color':node.type === 'End' ? '#ffffff' : '#000000'}"
+>
+  ⋮⋮
+</div>
           </span>
 
           <!-- Label tengah -->
