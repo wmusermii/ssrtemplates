@@ -243,8 +243,8 @@
 
 .input-port,
 .output-port {
-  width: 10px;
-  height: 10px;
+  width: 0px;
+  height: 0px;
   background-color: #fff;
   border: 2px solid #ccc;
   border-radius: 50%;
@@ -254,6 +254,10 @@
   cursor: crosshair;
   transition: transform 0.1s ease, background-color 0.2s ease;
 }
+/* .input-port {
+  left: -7px;
+} */
+
 
 .input-port:hover,
 .output-port:hover {
@@ -262,12 +266,10 @@
   border-color: #aaa;
 }
 
-.input-port {
-  left: -7px;
-}
 
-.output-port {
+
+/* .output-port {
   right: -7px;
-}
+} */
 
 

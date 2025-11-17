@@ -6,21 +6,6 @@
     "auditLog": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\.fad4e85db3982e52c70fb90e58ccd8d46fb6e026-audit.json",
     "files": [
         {
-            "date": 1761818565627,
-            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-10-30.log",
-            "hash": "d907300036c1b6901392745645631aa96aa53b0193c41173592b2ea737c430c0"
-        },
-        {
-            "date": 1761893762289,
-            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-10-31.log",
-            "hash": "55e9cecd2c0ca7b9e80a5c959de632878724b0dbb6603b1b6bc2252d00ade068"
-        },
-        {
-            "date": 1761961257495,
-            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-11-01.log",
-            "hash": "44a44ecf16022331592b8f6d43c24611121ae0dc98b10cb07d188412d6ba3e3a"
-        },
-        {
             "date": 1762411471295,
             "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-11-06.log",
             "hash": "0a0dcd216ad09643b95f96154464bd23577610502ebf4986a4e146dda546a98d"
@@ -49,6 +34,21 @@
             "date": 1763001314025,
             "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-11-13.log",
             "hash": "bd23f3e651dab14ccd6bbb6d955ab77c4ead6bdce4c4407071b6bace72692ca7"
+        },
+        {
+            "date": 1763086808185,
+            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-11-14.log",
+            "hash": "01f7c53e13fec2c7b72fceee19c5b11e0b47ce36c9ffb4eb8b83c778bd981bdc"
+        },
+        {
+            "date": 1763298906380,
+            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-11-16.log",
+            "hash": "c145a9624f1bd711e6d4b6c44fa61f27abcd5a51b7c66fd56b96e9996a968cb5"
+        },
+        {
+            "date": 1763357415704,
+            "name": "D:\\Work\\Mii\\TEMPLATES\\ssrtemplates\\logs\\app-2025-11-17.log",
+            "hash": "9667ff0d8ed9430f7a0ea89a775675c233417d8de5ac642585a480773234fae4"
         }
     ],
     "hashType": "sha256"

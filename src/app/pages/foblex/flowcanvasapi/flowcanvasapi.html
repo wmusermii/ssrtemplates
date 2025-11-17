@@ -7,20 +7,19 @@
   <div class="flex h-[60vh] gap-2">
     <!-- Canvas kanan -->
     @if (isReady) {
-    <f-flow fDraggable class="flex-1"
-      (fLoaded)="onLoaded()"
-      (fMoveNodes)="onMoveNode($event)"
-      >
+    <f-flow fDraggable class="flex-1" (fLoaded)="onLoaded()" (fMoveNodes)="onMoveNode($event)">
       <f-canvas>
         <!-- Foblex: aktifkan fitur drag-to-connect -->
         <!-- <f-connection-for-create *ngIf="isConnectionMode"></f-connection-for-create> -->
         <!-- Render semua koneksi -->
         @for (conn of connections; track conn.outputId + '->' + conn.inputId) {
-          <f-connection
-            [fOutputId]="conn.outputId"
-            [fInputId]="conn.inputId"
-            [fReassignDisabled]="true">
-          </f-connection>
+        <f-connection
+          [fOutputId]="conn.outputId"
+          [fInputId]="conn.inputId"
+          [fReassignDisabled]="true"
+          fType="segment"
+          >
+        </f-connection>
         }
         <!-- Render semua node -->
         @for (node of nodes(); track node.id) {
@@ -56,35 +55,39 @@
         }
       </f-canvas>
       <!-- Dialog edit node -->
-      <p-dialog [(visible)]="editDialogVisible" [modal]="true" header="Edit Node" [style]="{ width: '400px' }"
-        (click)="stopFlowEvents($event)" (wheel)="stopFlowEvents($event)">
+      <p-dialog [(visible)]="editDialogVisible" [modal]="true" header="Node Detail" [style]="{ width: '450px' }">
+
         <div class="p-fluid space-y-4">
-          <div class="flex flex-col gap-1">
-            <label for="nodeLabel" class="text-sm font-medium text-gray-700">Label Node</label>
-            <input id="nodeLabel" type="text" pInputText class="w-full" placeholder="Masukkan nama node..."
-              [(ngModel)]="editNodeText" (click)="stopFlowEvents($event)" (wheel)="stopFlowEvents($event)" />
+
+          <!-- Label -->
+          <div>
+            <div class="mt-1 text-base font-semibold text-gray-900">
+              {{ editNodeText }}
+            </div>
           </div>
+          <!-- Description -->
+          <div>
+            <div class="mt-1 text-base border rounded bg-gray-50" [innerHTML]="editNodeDescription">
+            </div>
+          </div>
+
         </div>
 
         <ng-template pTemplate="footer">
-          <div class="flex justify-end gap-2">
-            <button pButton label="Cancel" class="p-button-text" (click)="cancelEdit()"></button>
-            <button pButton label="Save" icon="pi pi-check" (click)="saveNodeEdit()"
-              [disabled]="!editNodeText.trim()"></button>
+          <div class="flex justify-end">
+            <button pButton label="OK" icon="pi pi-check" (click)="editDialogVisible = false"></button>
           </div>
         </ng-template>
+
       </p-dialog>
+
       <!-- Palet kiri -->
       <div class="external-panel">
 
-        <button pButton label="back"
-          icon="pi pi-back" class="p-button-sm w-full" (click)="toggleBack()">
+        <button pButton label="back" icon="pi pi-back" class="p-button-sm w-full" (click)="toggleBack()" text="true">
         </button>
-        <div class="py-3 border-t border-gray-200 mt-2"></div>
-
+        <div class="border-t !border-solid border-gray-200 mt-2"></div>
         <!-- Tombol Connection Mode -->
-
-
         <!-- Tombol Save -->
         <button pButton label="Save Node" icon="pi pi-save" class="p-button-sm w-full"
           (click)="saveFlowToDatabase()"></button>

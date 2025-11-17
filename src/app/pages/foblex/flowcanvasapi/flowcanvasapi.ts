@@ -43,6 +43,7 @@ export class Flowcanvasapi implements OnInit, AfterViewInit, OnDestroy {
   editDialogVisible = false;
   editNodeTarget: NodeData | null = null;
   editNodeText = '';
+  editNodeDescription: string = '';
   selectedNodeObject: any = {};
   // --- Mode koneksi aktif/tidak ---
   isConnectionMode = false;
@@ -178,6 +179,7 @@ export class Flowcanvasapi implements OnInit, AfterViewInit, OnDestroy {
         id: foblexId,
         text: svc.title || `Service ${nodeIndex}`,
         type: 'Business Task',
+        description:svc.description,
         position: { x, y },
         foblexId
       });
@@ -188,7 +190,8 @@ export class Flowcanvasapi implements OnInit, AfterViewInit, OnDestroy {
     const endIndex = nodes.length;
 
     const totalWidth = (perRow - 1) * xStep;
-    const centerX = startX + offsetX + totalWidth / 2;
+    // const centerX = startX + offsetX + totalWidth / 2;
+     const centerX = startX
     const endY = randomFloat(startY + totalRows * yStep + 60, 3);
 
     nodes.push({
@@ -256,6 +259,7 @@ export class Flowcanvasapi implements OnInit, AfterViewInit, OnDestroy {
     console.log("Node type ", node);
     this.editNodeTarget = node;
     this.editNodeText = node.text;
+    this.editNodeDescription = node.description ?? '';  // tambahkan ini
     this.editDialogVisible = true;
   }
   protected nodeClicked(node: NodeData, event: any): void {
@@ -353,6 +357,7 @@ interface NodeData {
   id: string;
   text: string;
   type?: string;
+  description?: string;
   position: { x: number; y: number };
   foblexId?: string | null;
 }
