@@ -19,6 +19,7 @@ import { LocalstorageService } from '../../../guard/ssr/localstorage/localstorag
 import { cloneDeep } from 'lodash-es';
 import { BrowserService } from '@foblex/platform';
 import { PointExtensions } from '@foblex/2d';
+import * as htmlToImage from 'html-to-image';
 @Component({
   selector: 'app-flowcanvasapi',
   imports: [CommonModule,
@@ -200,8 +201,42 @@ export class Flowcanvasapi implements OnInit, AfterViewInit, OnDestroy {
 
 
 printCanvas() {
-  console.log("Di print");
+  const flowElement = document.querySelector('f-flow') as HTMLElement;
+
+  if (!flowElement) {
+    console.error("f-flow not found");
+    return;
+  }
+
+  htmlToImage.toPng(flowElement, {
+    cacheBust: true,
+    pixelRatio: 2
+  })
+  .then((dataUrl) => {
+
+    const printWindow = window.open('', '_blank');
+    printWindow!.document.write(`
+      <html>
+        <head>
+          <title>Print</title>
+          <style>
+            body { margin: 0; text-align: center; padding-top: 40px; }
+            img { max-width: 95%; }
+          </style>
+        </head>
+        <body>
+          <img src="${dataUrl}" />
+        </body>
+      </html>
+    `);
+
+    printWindow!.document.close();
+    printWindow!.print();
+  });
 }
+
+
+
 
 
 
