@@ -17,7 +17,8 @@ import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
 import { LocalstorageService } from '../../../guard/ssr/localstorage/localstorage.service';
 import { cloneDeep } from 'lodash-es';
-
+import { BrowserService } from '@foblex/platform';
+import { PointExtensions } from '@foblex/2d';
 @Component({
   selector: 'app-flowcanvasapi',
   imports: [CommonModule,
@@ -134,78 +135,73 @@ export class Flowcanvasapi implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  async convertServicesToNodes(services: any[]): Promise<any> {
-    const nodes: any[] = [];
+ async convertServicesToNodes(services: any[]): Promise<any> {
+  const nodes: any[] = [];
 
-    // 🎯 Layout dasar
-    const startX = 328.96875;
-    const startY = 58.15;
-    const xStep = 210; // jarak horizontal antar kolom
-    const yStep = 90; // jarak vertikal antar baris
-    const perRow = 4; // maksimal 4 node per baris
-    const offsetX = 180; // jarak Start → Task pertama (baris pertama saja)
+  // Layout dasar
+  const startX = 20;
+  const startY = 40;
+  const xStep = 160;  // Jarak horizontal antar node
+  const yStep = 100;  // Jarak vertikal antar baris
+  const perRow = 4;   // Maksimal 4 node per baris
 
-    const randomFloat = (base: number, range: number) => {
-      const r = base + (Math.random() * range - range / 2);
-      return parseFloat(r.toPrecision(15));
-    };
+  // 1️⃣ Node Start
+  nodes.push({
+    id: 'f-node-0',
+    text: 'Start',
+    type: 'Start',
+    position: { x: startX, y: startY },
+    foblexId: 'f-node-0'
+  });
 
-    // 1️⃣ Node Start
-    nodes.push({
-      id: 'f-node-0',
-      text: 'Start',
-      type: 'Start',
-      position: {
-        x: randomFloat(startX, 2),
-        y: randomFloat(startY, 2)
-      },
-      foblexId: 'f-node-0'
-    });
+  // 2️⃣ Business Tasks (tanpa random)
+  services.forEach((svc, index) => {
+    const nodeIndex = index + 1;
 
-    // 2️⃣ Node Services (Business Tasks)
-    services.forEach((svc, index) => {
-      const nodeIndex = index + 1;
-      const row = Math.floor(index / perRow); // hitung baris
-      const col = index % perRow; // kolom ke berapa
+    const row = Math.floor(index / perRow); // baris ke berapa
+    const col = index % perRow;             // kolom ke berapa
 
-      // 👉 Baris pertama gunakan offset, baris berikutnya sejajar Start
-      const baseX = row === 0 ? startX + offsetX : startX;
-      const x = randomFloat(baseX + col * xStep, 3);
-      const y = randomFloat(startY + row * yStep, 2);
+    const x = startX + (col + 1) * xStep;   // (+1) agar Start paling kiri
+    const y = startY + row * yStep;         // tetap konsisten
 
-      const foblexId = `f-node-${nodeIndex}`;
-
-      nodes.push({
-        id: foblexId,
-        text: svc.title || `Service ${nodeIndex}`,
-        type: 'Business Task',
-        description:svc.description,
-        position: { x, y },
-        foblexId
-      });
-    });
-
-    // 3️⃣ Node End di bawah baris terakhir (center)
-    const totalRows = Math.ceil(services.length / perRow);
-    const endIndex = nodes.length;
-
-    const totalWidth = (perRow - 1) * xStep;
-    // const centerX = startX + offsetX + totalWidth / 2;
-     const centerX = startX
-    const endY = randomFloat(startY + totalRows * yStep + 60, 3);
+    const foblexId = `f-node-${nodeIndex}`;
 
     nodes.push({
-      id: `f-node-${endIndex}`,
-      text: 'End',
-      type: 'End',
-      position: { x: randomFloat(centerX, 2), y: endY },
-      foblexId: `f-node-${endIndex}`
+      id: foblexId,
+      text: svc.title || `Service ${nodeIndex}`,
+      type: 'Business Task',
+      description: svc.description,
+      position: { x, y },
+      foblexId
     });
+  });
 
-    return { nodes };
-  }
+  // 3️⃣ Node End — di kanan node terakhir secara pasti
+  const lastTaskIndex = services.length - 1;
+  const lastRow = Math.floor(lastTaskIndex / perRow);
+  const lastCol = lastTaskIndex % perRow;
+
+  const endX = startX + (lastCol + 2) * xStep; // posisi paling kanan
+  const endY = startY + lastRow * yStep;
+
+  const endIndex = nodes.length;
+
+  nodes.push({
+    id: `f-node-${endIndex}`,
+    text: 'End',
+    type: 'End',
+    position: { x: endX, y: endY },
+    foblexId: `f-node-${endIndex}`
+  });
+
+  return { nodes };
+}
 
 
+
+printCanvas() {
+  console.log("Di print");
+}
 
 
 
@@ -224,14 +220,14 @@ export class Flowcanvasapi implements OnInit, AfterViewInit, OnDestroy {
       this.nodes.set([]);
       this.ssrStorage.removeItem('foblex_nodes');
     }
-
+    this.fCanvas()?.fitToScreen(PointExtensions.initialize(100, 100), false);
     // Reset posisi canvas
-    this.fCanvas()?.resetScaleAndCenter(false);
+    // this.fCanvas()?.resetScaleAndCenter(false);
     // 🔥 Aktifkan drag baru setelah Foblex benar-benar siap
-    setTimeout(() => {
-      this.flowReady = true;
-      // this.addLog('Canvas siap digunakan dan nodes tervalidasi.');
-    }, 100);
+    // setTimeout(() => {
+    //   this.flowReady = true;
+    //   // this.addLog('Canvas siap digunakan dan nodes tervalidasi.');
+    // }, 100);
     console.log('🧩 Foblex Flow fully loaded, enabling drag now...');
   }
   protected onMoveNode(event: any) {
