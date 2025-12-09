@@ -13,3 +13,18 @@
 [2025-12-09 21:13:11] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\dist\ssrtemplates\server\data\admdb.sqlite
 [2025-12-09 21:13:11] INFO: login limiter max set to 3
 [2025-12-09 21:13:11] INFO: Node Express server listening on http://localhost:4000
+[2025-12-09 21:17:37] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\dist\ssrtemplates\server\data\admdb.sqlite
+[2025-12-09 21:17:37] INFO: login limiter max set to 3
+[2025-12-09 21:17:37] INFO: Node Express server listening on http://localhost:4000
+[2025-12-09 21:22:25] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\255eec41-0419-4244-9cf1-332362c0c500\data\admdb.sqlite
+[2025-12-09 21:22:25] WARN: Could not read param for rate limit, using default. Error: {}
+[2025-12-09 21:22:25] INFO: Node Express server listening on http://localhost:4000
+[2025-12-09 21:22:27] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\9f87adf9-8543-4649-a107-1547cafb083e\data\admdb.sqlite
+[2025-12-09 21:22:27] WARN: Could not read param for rate limit, using default. Error: {}
+[2025-12-09 21:22:27] INFO: Node Express server listening on http://localhost:4000
+[2025-12-09 21:22:27] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\73ff04a8-3f85-48f9-bd83-d705471e3243\data\admdb.sqlite
+[2025-12-09 21:22:27] WARN: Could not read param for rate limit, using default. Error: {}
+[2025-12-09 21:22:27] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\e1a58879-0fc6-440c-8826-a0b7aedc5799\data\admdb.sqlite
+[2025-12-09 21:22:27] WARN: Could not read param for rate limit, using default. Error: {}
+[2025-12-09 21:22:27] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\b3ce446e-b782-4d99-9d15-38dec31d258c\data\admdb.sqlite
+[2025-12-09 21:22:27] WARN: Could not read param for rate limit, using default. Error: {}
