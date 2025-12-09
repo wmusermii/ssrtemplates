@@ -28,3 +28,18 @@
 [2025-12-09 21:22:27] WARN: Could not read param for rate limit, using default. Error: {}
 [2025-12-09 21:22:27] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\b3ce446e-b782-4d99-9d15-38dec31d258c\data\admdb.sqlite
 [2025-12-09 21:22:27] WARN: Could not read param for rate limit, using default. Error: {}
+[2025-12-09 21:23:03] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\dist\ssrtemplates\server\data\admdb.sqlite
+[2025-12-09 21:23:03] INFO: login limiter max set to 3
+[2025-12-09 21:23:03] INFO: Node Express server listening on http://localhost:4000
+[2025-12-09 21:32:37] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\a06a781d-64d2-4359-9b0c-0baef7f85e38\data\admdb.sqlite
+[2025-12-09 21:32:37] WARN: Could not read param for rate limit, using default. Error: {}
+[2025-12-09 21:32:37] INFO: Node Express server listening on http://localhost:4000
+[2025-12-09 21:32:39] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\53f58047-d954-493f-962a-1c3808873dcb\data\admdb.sqlite
+[2025-12-09 21:32:39] WARN: Could not read param for rate limit, using default. Error: {}
+[2025-12-09 21:32:39] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\7fcf449f-844d-4f95-a906-fcf8375dd971\data\admdb.sqlite
+[2025-12-09 21:32:39] WARN: Could not read param for rate limit, using default. Error: {}
+[2025-12-09 21:32:39] INFO: Node Express server listening on http://localhost:4000
+[2025-12-09 21:32:39] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\4002a32b-1331-4e6f-a3ac-cb490fc9a977\data\admdb.sqlite
+[2025-12-09 21:32:39] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\1e9c3ef8-e961-48b9-a73b-4c6463a3c31a\data\admdb.sqlite
+[2025-12-09 21:32:39] WARN: Could not read param for rate limit, using default. Error: {}
+[2025-12-09 21:32:39] WARN: Could not read param for rate limit, using default. Error: {}

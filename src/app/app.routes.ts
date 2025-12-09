@@ -84,12 +84,6 @@ export const routes: Routes = [
         data: { title: 'Simulator - Properties' }
       },
       {
-        path: 'foblex/flowcanvas',
-        canActivate: [authGuard],
-        loadComponent: () => import("./pages/foblex/flowcanvas/flowcanvas").then(m => m.Flowcanvas),
-        data: { title: 'Simulator - foblex' }
-      },
-      {
         path: 'bifast/bisnislist',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/simulatorhub/bifast/bisnislist/bisnislist").then(m => m.Bisnislist),
@@ -100,6 +94,21 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import("./pages/foblex/flowcanvasapi/flowcanvasapi").then(m => m.Flowcanvasapi),
         data: { title: 'Simulator - foblex' }
+      },{
+        path: 'cimb/komiconfiguration',
+        canActivate: [authGuard],
+        loadComponent: () => import("./pages/poc/cimb/komiconfiguration/komiconfiguration").then(m => m.Komiconfiguration),
+        data: { title: 'CIMB - Komi Config' }
+      },{
+        path: 'cimb/abcsconfiguration',
+        canActivate: [authGuard],
+        loadComponent: () => import("./pages/poc/cimb/abcsconfiguration/abcsconfiguration").then(m => m.Abcsconfiguration),
+        data: { title: 'CIMB - ABCS Config' }
+      },{
+        path: 'cimb/mbaseconfiguration',
+        canActivate: [authGuard],
+        loadComponent: () => import("./pages/poc/cimb/mbaseconfiguration/mbaseconfiguration").then(m => m.Mbaseconfiguration),
+        data: { title: 'CIMB - MBASE Config' }
       },
       {
         path: 'privacy/profile',
