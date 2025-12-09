@@ -1,9 +1,9 @@
 <!-- app.component.html -->
 <div class="flex h-screen bg-gray-100">
-  <div class="bg-white shadow-sm transition-all duration-300 hidden md:block" [class.w-72]="isSidebarOpen"
+  <div class="bg-red-600 shadow-sm transition-all duration-300 hidden md:block" [class.w-72]="isSidebarOpen"
     [class.w-20]="!isSidebarOpen">
     <div class="flex items-center justify-between p-4 border-b">
-      <img *ngIf="isSidebarOpen" src="./logowms.png" alt="Flowable Integration" class="w-32 h-auto mb-2 lg:mb-2" />
+      <img *ngIf="isSidebarOpen" src="./logocimb.png" alt="Flowable Integration" class="w-52 h-auto mb-2 lg:mb-2" />
     </div>
     <app-sidebar (userChange)="onUserChange($event)"></app-sidebar>
   </div>

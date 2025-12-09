@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FFlowModule, FCanvasComponent } from '@foblex/flow';
+import { FCanvasComponent, FFlowModule } from '@foblex/flow';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
@@ -26,8 +26,7 @@ import * as htmlToImage from 'html-to-image';
     TooltipModule,
     FormsModule,
     ReactiveFormsModule,
-    ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, DialogModule, SelectModule,
-    FFlowModule],
+    ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, DialogModule, SelectModule, FFlowModule],
   templateUrl: './flowcanvasapi.html',
   styleUrl: './flowcanvasapi.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

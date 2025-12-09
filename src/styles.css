@@ -6,19 +6,18 @@ html, body {
   @apply m-0 p-0 h-full;
 }
 :root {
-  --p-primary-color: #2b4095 !important;           /* base */
-  --p-primary-color-text: #fff !important;         /* text on primary */
+  --p-primary-color: #da0c15 !important;
+  --p-primary-color-text: #fff !important;
 
-  /* Gradasi dari terang ke gelap */
-  --p-primary-100: #e8ecfa !important;
-  --p-primary-200: #cdd6f5 !important;
-  --p-primary-300: #aab7ee !important;
-  --p-primary-400: #7e8fe3 !important;
-  --p-primary-500: #5a6ed3 !important;
-  --p-primary-600: #4356bc !important;
-  --p-primary-700: #3444a7 !important;
-  --p-primary-800: #2d3a99 !important;
-  --p-primary-900: #2b4095 !important;
+  --p-primary-100: #fbb6b9 !important;
+  --p-primary-200: #f8868b !important;
+  --p-primary-300: #f5555c !important;
+  --p-primary-400: #f3252e !important;
+  --p-primary-500: #da0c15 !important;
+  --p-primary-600: #d90b14 !important;
+  --p-primary-700: #a90910 !important;
+  --p-primary-800: #78060b !important;
+  --p-primary-900: #480306 !important;
 
   /* Komponen tambahan */
   --p-panelmenu-gap: 0.1rem !important;
