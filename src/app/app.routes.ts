@@ -10,8 +10,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    loadComponent: () =>
-      import("./layouts/navigations/nonavi/nonavi").then(m => m.Nonavi),
+    loadComponent: () => import("./layouts/navigations/nonavi/nonavi").then(m => m.Nonavi),
     children: [
       {
         path: 'login',

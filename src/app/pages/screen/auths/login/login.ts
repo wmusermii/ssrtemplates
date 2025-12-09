@@ -54,6 +54,7 @@ export class Login implements OnInit {
         // // console.log("Response dari API DATA ", data);
         if(data.code === 20000) {
           this.loading=false;
+
           this.ssrStorage.setItem('C_INFO', data.data.userinfo);
           this.router.navigate(['/dashboard']);
         } else {

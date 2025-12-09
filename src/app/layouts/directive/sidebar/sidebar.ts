@@ -150,10 +150,12 @@ async expandAllPanelMenu(items: any[]):Promise<void> {
 
   openLogoutDialog() {
     console.log("LOGING OUT");
+    this.message = { title: "Logging Out", icon: "pi pi-exclamation-circle", message: "Are you sure to logged out from this session?" }
     this.showLogoutDialog = true;
   }
   openConfirmDialog() {
     console.log("LOGING OUT");
+
     this.showLogoutDialog = true;
   }
   closeDropdown() {
@@ -162,6 +164,7 @@ async expandAllPanelMenu(items: any[]):Promise<void> {
   }
   cancelLogout() {
     this.showLogoutDialog = false;
+    // this.message = { title: "Logging Out", icon: "pi pi-exclamation-circle", message: "Are you sure to logged out from this session?" }
   }
 
   async confirmLogout() {
