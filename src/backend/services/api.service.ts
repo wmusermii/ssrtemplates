@@ -362,6 +362,7 @@ async goMigratetDatabaseService(config: any):Promise<any> {
     return ApiResponse.success(groupResult, "Record added");
   }
   async updGroupService(userinfo: any, payload:any) {
+
     payload = {...payload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{updated_by:userinfo.iduser}}
     const groupResult = await this.groupRepo.updGroup(payload);
     if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to update data!");

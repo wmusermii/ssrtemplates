@@ -73,6 +73,7 @@ router.post('/siapbifast/upd_bisnislist', asyncHandler(CookieMiddleware),asyncHa
 router.post('/siapbifast/del_bisnislist', asyncHandler(CookieMiddleware),asyncHandler(delSiapBiFastBisnisList));
 
 /*****************************************************************/
+router.get('/cimb/get_bisnislist', asyncHandler(CookieMiddleware),asyncHandler(getSiapBiFastBisnisList));
 //************************************* EMAIL *************
 // router.post('/warehouse/send_email', asyncHandler(sendingEmailTo));// Untuk cek apaka package yang di ambil sudah diambil user lain
 //************************************* Printing *************
