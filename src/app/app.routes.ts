@@ -66,51 +66,6 @@ export const routes: Routes = [
         data: { title: 'Role Management - Admin Template' }
       },
       {
-        path: 'siapubp/companylist',
-        canActivate: [authGuard],
-        loadComponent: () => import("./pages/simulatorhub/siapubp/companylist/companylist").then(m => m.Companylist),
-        data: { title: 'Simulator - Company List' }
-      },
-      {
-        path: 'siapubp/configurations/parameterlist',
-        canActivate: [authGuard],
-        loadComponent: () => import("./pages/simulatorhub/siapubp/parameterlist/parameterlist").then(m => m.Parameterlist),
-        data: { title: 'Simulator - Parameter List' }
-      },
-      {
-        path: 'siapubp/configurations/properties',
-        canActivate: [authGuard],
-        loadComponent: () => import("./pages/simulatorhub/siapubp/properties/properties").then(m => m.Properties),
-        data: { title: 'Simulator - Properties' }
-      },
-      {
-        path: 'bifast/bisnislist',
-        canActivate: [authGuard],
-        loadComponent: () => import("./pages/simulatorhub/bifast/bisnislist/bisnislist").then(m => m.Bisnislist),
-        data: { title: 'Simulator - foblex' }
-      },
-      {
-        path: 'bifast/bisnislist/graph',
-        canActivate: [authGuard],
-        loadComponent: () => import("./pages/foblex/flowcanvasapi/flowcanvasapi").then(m => m.Flowcanvasapi),
-        data: { title: 'Simulator - foblex' }
-      },{
-        path: 'cimb/komiconfiguration',
-        canActivate: [authGuard],
-        loadComponent: () => import("./pages/poc/cimb/komiconfiguration/komiconfiguration").then(m => m.Komiconfiguration),
-        data: { title: 'CIMB - Komi Config' }
-      },{
-        path: 'cimb/abcsconfiguration',
-        canActivate: [authGuard],
-        loadComponent: () => import("./pages/poc/cimb/abcsconfiguration/abcsconfiguration").then(m => m.Abcsconfiguration),
-        data: { title: 'CIMB - ABCS Config' }
-      },{
-        path: 'cimb/mbaseconfiguration',
-        canActivate: [authGuard],
-        loadComponent: () => import("./pages/poc/cimb/mbaseconfiguration/mbaseconfiguration").then(m => m.Mbaseconfiguration),
-        data: { title: 'CIMB - MBASE Config' }
-      },
-      {
         path: 'privacy/profile',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/myprofile/myprofile").then(m => m.Myprofile),

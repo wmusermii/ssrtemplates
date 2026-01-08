@@ -22,7 +22,9 @@
       <div class="flex items-center justify-between p-2">
         <!-- Kiri: burger + title -->
         <div class="flex items-center gap-3">
-          <button (click)="toggleSidebar()">
+           <p-button pTooltip="Toogle Menu" tooltipPosition="top" icon="pi pi-bars" [rounded]="true" [text]="true"
+              (onClick)="toggleSidebar()" severity="info" size="large" />
+          <!-- <button (click)="toggleSidebar()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -37,7 +39,7 @@
                 d="M3.75 5.25h16.5m-16.5 6h16.5m-16.5 6h16.5"
               />
             </svg>
-          </button>
+          </button> -->
           <h1 class="text-xl font-semibold text-gray-800">
             {{ titleText }}
           </h1>
