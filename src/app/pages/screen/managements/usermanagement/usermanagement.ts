@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -58,7 +58,10 @@ export class Usermanagement implements OnInit {
     email: new FormControl(''),
     status: new FormControl(true),
   });
-  constructor(private router: Router, private ssrStorage: LocalstorageService) { }
+  isBrowser = false;
+  constructor(private router: Router, private ssrStorage: LocalstorageService,@Inject(PLATFORM_ID) private platformId: Object,private cdr: ChangeDetectorRef) {
+     this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   async ngOnInit(): Promise<void> {
     this.currentUrl = this.router.url;
@@ -139,15 +142,16 @@ export class Usermanagement implements OnInit {
             this.users = dataRecordsTemp;
             this.allUser = this.users;
             this.totalUsers = this.allUser.length;
-            this.loading = false;
+            this.loading = false;this.cdr.detectChanges();
           } else {
             this.users = [];
             this.totalUsers = this.users.length;
-            this.loading = false;
+            this.loading = false;this.cdr.detectChanges();
             // this.showErrorPage = { show: true, message: data.message }
           }
         })
         .catch(err => {
+          this.cdr.detectChanges();
           console.log("Response Error Catch /v2/admin/get_users", err);
         });
     }

@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { ChangeDetectorRef, Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
@@ -60,6 +60,7 @@ export class Groupmanagement implements OnInit {
   draggedMenu: any | undefined | null;
   //######################################################################
   aclMenublob: any[] = [];
+  isBrowser = false;
   groupForm = new FormGroup({
     idgroup: new FormControl('', [Validators.required]),
     groupname: new FormControl('', [Validators.required]),
@@ -71,7 +72,9 @@ export class Groupmanagement implements OnInit {
   _changeError() {
     // this.errorMessage={error:false, severity:"info", message:"", icon:"pi pi-send"};
   }
-  constructor(private router: Router, private ssrStorage: LocalstorageService) { }
+  constructor(private router: Router, private ssrStorage: LocalstorageService, @Inject(PLATFORM_ID) private platformId: Object,private cdr: ChangeDetectorRef) {
+    this.isBrowser = isPlatformBrowser(platformId);
+   }
   async ngOnInit(): Promise<void> {
     this.currentUrl = this.router.url;
     this.token = this.ssrStorage.getItem('token');
@@ -143,11 +146,11 @@ export class Groupmanagement implements OnInit {
           this.groups = dataRecordsTemp;
           this.allGroups = this.groups;
           this.totalGroups = this.allGroups.length;
-          this.loading = false;
+          this.loading = false;this.cdr.detectChanges();
         } else {
           this.groups = [];
           this.totalGroups = this.groups.length;
-          this.loading = false;
+          this.loading = false;this.cdr.detectChanges();
           // this.showErrorPage = { show: true, message: data.message }
         }
       })
@@ -174,9 +177,9 @@ export class Groupmanagement implements OnInit {
         if (data.code === 20000) {
           const dataRecordsTemp = cloneDeep(data.data);
           this.rolesData = dataRecordsTemp;
-          this.loading = false;
+          this.loading = false;this.cdr.detectChanges();
         } else {
-          this.rolesData = [];
+          this.rolesData = [];this.cdr.detectChanges();
         }
       })
       .catch(err => {
@@ -210,11 +213,11 @@ export class Groupmanagement implements OnInit {
           this.masterMenuTemp = dataRecordsTemp;
           // this.allMenus=this.menus;
           // this.totalMenus = this.allMenus.length;
-          this.loading = false;
+          this.loading = false;this.cdr.detectChanges();
         } else {
           // this.menus = [];
           // this.totalMenus = this.menus.length;
-          this.loading = false;
+          this.loading = false;this.cdr.detectChanges();
         }
       })
       .catch(err => {

@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { ChangeDetectorRef, Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
@@ -43,12 +43,15 @@ export class Rolemanagement implements OnInit {
   showErrorPage: any = { show: false, message: "undefined" };
   errorMessage: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" };
   aclMenublob: any[] = [];
+  isBrowser = false;
   roleForm = new FormGroup({
     idRole: new FormControl('', [Validators.required]),
     roleName: new FormControl('', [Validators.required]),
     roleDescription: new FormControl(''),
   });
-  constructor(private router: Router, private ssrStorage: LocalstorageService) { }
+  constructor(private router: Router, private ssrStorage: LocalstorageService, @Inject(PLATFORM_ID) private platformId: Object,private cdr: ChangeDetectorRef) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
   // Helper getter untuk akses kontrol form di template
   get f() {
     return this.roleForm.controls;
@@ -103,12 +106,12 @@ export class Rolemanagement implements OnInit {
           this.roles = dataRecordsTemp;
           this.allRoles = this.roles;
           this.totalRoles = this.allRoles.length;
-          this.loading = false;
+          this.loading = false;this.cdr.detectChanges();
         } else {
           this.roles = [];
           this.totalRoles = this.roles.length;
           this.loading = false;
-          this.showErrorPage = { show: true, message: data.message }
+          this.showErrorPage = { show: true, message: data.message };this.cdr.detectChanges();
         }
       })
       .catch(err => {

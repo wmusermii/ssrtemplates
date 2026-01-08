@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { ChangeDetectorRef, Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
@@ -47,6 +47,7 @@ export class Menumanagement implements OnInit {
   showDetailDelete:boolean = false;
   errorMessage:any = {error:false, severity:"error", message:"ini test", icon:"pi pi-exclamation-circle"};
   aclMenublob: any[] = [];
+  isBrowser = false;
   menuForm = new FormGroup({
       nameMenu: new FormControl('', [Validators.required]),
       pathMenu: new FormControl(''),
@@ -59,7 +60,9 @@ export class Menumanagement implements OnInit {
    _changeError(){
     // this.errorMessage={error:false, severity:"info", message:"", icon:"pi pi-send"};
   }
-  constructor(private router: Router, private ssrStorage: LocalstorageService) { }
+  constructor(private router: Router, private ssrStorage: LocalstorageService,@Inject(PLATFORM_ID) private platformId: Object,private cdr: ChangeDetectorRef) {
+     this.isBrowser = isPlatformBrowser(platformId);
+  }
   async ngOnInit(): Promise<void> {
     this.currentUrl = this.router.url;
     // console.log('Current URL:', this.currentUrl);
@@ -80,11 +83,12 @@ export class Menumanagement implements OnInit {
     console.log("MENU ACL ", this.aclMenublob);
     if (this.aclMenublob.includes("rd")) {
        await this._refreshIconData();
-       const dataRecords = await this._refreshListData();
+      //  const dataRecords = await this._refreshListData();
+      await this._refreshListData();
     }
 
   }
-  async _refreshListData():Promise<any>{
+  async _refreshListData():Promise<void>{
       this.loading=true;
           fetch('/v2/admin/get_menus', {
             method: 'GET',
@@ -107,11 +111,11 @@ export class Menumanagement implements OnInit {
                 this.menus = dataRecordsTemp;
                 this.allMenus=this.menus;
                 this.totalMenus = this.allMenus.length;
-                this.loading=false;
+                this.loading=false;this.cdr.detectChanges();
               } else {
                 this.menus = [];
                 this.totalMenus = this.menus.length;
-                this.loading=false;
+                this.loading=false;this.cdr.detectChanges();
               }
             })
             .catch(err => {
