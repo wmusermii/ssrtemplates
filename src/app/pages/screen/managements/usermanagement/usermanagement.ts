@@ -153,9 +153,7 @@ export class Usermanagement implements OnInit {
     }
   async _refreshACLMenu(): Promise<void> {
       const payload: any = { routeUrl: this.currentUrl };
-
       this.loading = true;
-
       try {
         const res = await fetch('/v2/auth/aclattrb', {
           method: 'POST',
@@ -166,21 +164,16 @@ export class Usermanagement implements OnInit {
           },
           body: JSON.stringify(payload)
         });
-
         // console.log("Response dari API /v2/auth/aclattrb", res);
-
         const data = await res.json();
         // console.log("Response dari API /v2/auth/aclattrb", data);
-
         this.loading = false;
-
         if (data.code === 20000) {
           const dataRecordsMenu: any = cloneDeep(data.data);
           this.aclMenublob = dataRecordsMenu.roles;
         } else {
           this.aclMenublob = [];
         }
-
       } catch (err) {
         console.log("Response Error Catch /v2/auth/aclattrb", err);
         this.aclMenublob = [];
