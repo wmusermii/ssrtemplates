@@ -54,13 +54,13 @@ export const routes: Routes = [
         data: { title: 'Menu Management - Admin Template' }
       },
       {
-        path: 'management/group',
+        path: 'management/roles',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/managements/groupmanagement/groupmanagement").then(m => m.Groupmanagement),
         data: { title: 'Group Management - Admin Template' }
       },
       {
-        path: 'management/role',
+        path: 'management/permissions',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/managements/rolemanagement/rolemanagement").then(m => m.Rolemanagement),
         data: { title: 'Role Management - Admin Template' }

@@ -2,24 +2,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-html, body {
+
+html,
+body {
   @apply m-0 p-0 h-full;
 }
+
 :root {
-  --p-primary-color: #da0c15 !important;
-  --p-primary-color-text: #fff !important;
-
-  --p-primary-100: #fbb6b9 !important;
-  --p-primary-200: #f8868b !important;
-  --p-primary-300: #f5555c !important;
-  --p-primary-400: #f3252e !important;
-  --p-primary-500: #da0c15 !important;
-  --p-primary-600: #d90b14 !important;
-  --p-primary-700: #a90910 !important;
-  --p-primary-800: #78060b !important;
-  --p-primary-900: #480306 !important;
-
-  /* Komponen tambahan */
+  --p-primary-color: #112e7e !important;
+  --p-primary-color-text: #ffffff !important;
+  --p-primary-100: #ccd6f5 !important;
+  --p-primary-200: #9aaeed !important;
+  --p-primary-300: #6985e5 !important;
+  --p-primary-400: #385ddd !important;
+  --p-primary-500: #112e7e !important;
+  /* base */
+  --p-primary-600: #0f296f !important;
+  --p-primary-700: #0c215a !important;
+  --p-primary-800: #091846 !important;
+  --p-primary-900: #050f30 !important;
+  /* Komponen tambahan PrimeNG*/
+  --p-button-icon-only-width: 1.45rem !important;
   --p-panelmenu-gap: 0.1rem !important;
   --p-form-field-border-radius: var(--p-border-radius-sm) !important;
   --p-menubar-border-color: transparent !important;
@@ -29,8 +32,6 @@ html, body {
   --p-panelmenu-panel-last-border-width: 0px !important;
   --p-panelmenu-submenu-indent: 0.5rem !important;
   --p-navigation-item-padding: 0.5rem 0.1rem !important;
-  --p-breadcrumb-padding: 0.1rem !important;
-  --p-datatable-body-cell-padding: 0.25rem 0.6rem !important;
   --p-tree-padding: 0.1rem !important;
 
   font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Inter,
@@ -40,68 +41,72 @@ html, body {
   color: #3f5067 !important;
 }
 
-.p-icon-wrapper {order: 1!important;margin-inline-start: auto!important; }
-.custom-chip .p-chip-label {
-  color: #a6a7a8; /* warna biru */
+.p-icon-wrapper {
+  order: 1 !important;
+  margin-inline-start: auto !important;
 }
+
+.custom-chip .p-chip-label {
+  color: #a6a7a8;
+  /* warna biru */
+}
+
 .custom-chip .p-chip-icon {
   color: #a6a7a8;
 }
+
 .p-datatable-sort-icon {
-  padding-left: 2px!important;
+  padding-left: 2px !important;
 }
 
 .p-panelmenu-header-content {
-  width: 100%!important;
+  width: 100% !important;
 }
 .p-panelmenu-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  padding-right: 0.5rem; /* beri ruang di kanan agar icon tidak mepet */
+  padding-right: 0.5rem;
+  /* beri ruang di kanan agar icon tidak mepet */
 }
-
 /* Target SVG icon (chevron) dan letakkan di akhir */
-.p-panelmenu-header-link > svg {
+.p-panelmenu-header-link>svg {
   order: 2;
-  margin-left: auto; /* dorong svg ke paling kanan */
+  margin-left: auto;
+  /* dorong svg ke paling kanan */
 }
-
 /* Label & icon menu letakkan di kiri */
-.p-panelmenu-header > span,
-.p-panelmenu-header > label {
+.p-panelmenu-header>span,
+.p-panelmenu-header>label {
   order: 1;
   margin-right: 0.5rem;
 }
-
 .p-panelmenu-item-content {
-  width: 97%!important;
+  width: 97% !important;
 }
 
-.p-panelmenu-item-link > svg {
-     order: 2;
-     margin-left: auto; /* dorong svg ke paling kanan */
+.p-panelmenu-item-link>svg {
+  order: 2;
+  margin-left: auto;
+  /* dorong svg ke paling kanan */
 }
-
-
 .p-tree {
   width: 100% !important;
 }
 .p-tree .p-treenode {
-  margin-bottom: 0.5rem; /* Tailwind gap-2 = 0.5rem */
+  margin-bottom: 0.5rem;
+  /* Tailwind gap-2 = 0.5rem */
 }
+
 /* .p-tree .p-treenode-content {
   @apply flex w-full;
 } */
 .p-tree-node-content .p-tree-node-label {
-    @apply w-full;
+  @apply w-full;
 }
-
-
 .label-required::after {
   content: " *";
   color: red;
   font-weight: bold;
 }
-

@@ -17,7 +17,6 @@ import { CustomPanelMenu } from '../custom-panel-menu/custom-panel-menu';
 })
 export class Sidebar implements OnInit, OnDestroy {
   loading: boolean = true;
-
   token: string | null | undefined = undefined;
   dropdownClicked = false;
   openDropdownId: string | null = null;

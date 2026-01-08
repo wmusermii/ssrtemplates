@@ -5,7 +5,7 @@ import Aura from '@primeuix/themes/aura';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration} from '@angular/platform-browser';
-
+import MyPreset from './layouts/primengpreset/mypreset'; // path sesuaikan
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -13,7 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: Aura,
+        preset: MyPreset,
         options: {
             darkModeSelector: false || 'none'
         }

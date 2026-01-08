@@ -1,72 +1,75 @@
-<main class="pt-2 max-w-screen-xl mx-auto px-2 mb-6">
-  <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
+<main class="pt-2 px-2 mb-6">
+  <div class="w-full flex bg-white py-2 px-5 items-center rounded shadow mb-3">
     <p-breadcrumb [model]="breaditems" [home]="home" />
   </div>
   <!-- <pre>{{treeData | json}}</pre> -->
   @if(!showMenusDetail.show) {
-  <p-table #table [columns]="cols" [value]="groups" class="w-full" stripedRows="true" showGridlines="true"
-    scrollable="true" [selectionMode]="aclMenublob.includes('up') ? 'single' : null" [(selection)]="selectedGroup"
-    (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="rows" [tableStyle]="{ 'min-width': '40rem' }"
-    [rowsPerPageOptions]="[50, 100]">
-    <ng-template #caption>
-      <div class="flex flex-col gap-2">
-        <!-- Baris atas: Title dan Add Button -->
-        <div class="flex items-center justify-between">
-          <span class="text-lg font-semibold">Group has {{totalGroups}} Records</span>
-          <!-- <p-button icon="pi pi-plus" (onClick)="_addProduct()" label="Add Product" rounded raised /> -->
-          <p-button *ngIf="aclMenublob?.includes('cr')" icon="pi pi-add" (onClick)="_addGroup()" label="Add Group"
-            variant="outlined" />
+  <div class="w-full rounded shadow">
+    <p-table #table [columns]="cols" [value]="groups" class="w-full" stripedRows="true" showGridlines="true"
+      scrollable="true" [selectionMode]="aclMenublob.includes('up') ? 'single' : null" [(selection)]="selectedGroup"
+      (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="rows" [tableStyle]="{ 'min-width': '40rem' }"
+      [rowsPerPageOptions]="[50, 100]">
+      <ng-template #caption>
+        <div class="flex flex-col gap-2">
+          <!-- Baris atas: Title dan Add Button -->
+          <div class="flex items-center justify-between">
+            <span class="text-lg font-semibold">Group has {{totalGroups}} Records</span>
+            <!-- <p-button icon="pi pi-plus" (onClick)="_addProduct()" label="Add Product" rounded raised /> -->
+            <p-button *ngIf="aclMenublob?.includes('cr')" icon="pi pi-add" (onClick)="_addGroup()" label="Add Group"
+              variant="outlined" />
+          </div>
+          <!-- Input Search -->
+          <p-inputgroup class="w-full">
+            <input pInputText #search placeholder="Keyword" class="w-full" [(ngModel)]="globalFilter"
+              (input)="onGlobalSearch()" />
+            <p-inputgroup-addon>
+              <p-button icon="pi pi-search" severity="secondary" variant="text" />
+            </p-inputgroup-addon>
+          </p-inputgroup>
         </div>
-        <!-- Input Search -->
-        <p-inputgroup class="w-full">
-          <input pInputText #search placeholder="Keyword" class="w-full" [(ngModel)]="globalFilter"
-            (input)="onGlobalSearch()" />
-          <p-inputgroup-addon>
-            <p-button icon="pi pi-search" severity="secondary" variant="text" />
-          </p-inputgroup-addon>
-        </p-inputgroup>
-      </div>
-    </ng-template>
-    <ng-template pTemplate="header" let-columns>
-      <tr>
-        <th class="w-16 text-center">No</th> <!-- Kolom nomor -->
-        <th [pSortableColumn]="col.field" *ngFor="let col of columns"
-          [ngStyle]="{ 'text-align': col.class === 'text-center' ? 'center' : (col.class === 'text-end' ? 'right' : 'left') }">
-          {{ col.header }}<p-sortIcon field="col.field" />
-        </th>
-        <th>Act</th>
-        <!-- <th style="text-align: center;">Action</th> -->
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-      <tr [pSelectableRow]="rowData">
-        <!-- Nomor baris -->
-        <td class="w-16">
-          <div class="flex justify-end">
-            {{ rowIndex + 1 + (table.first || 0) }}.
-          </div>
-        </td>
-        <td class="w-28 text-center">
-          <div class="flex justify-center">
-            {{ rowData.idgroup }}
-          </div>
-        </td>
-        <td>{{rowData.groupname}}</td>
-        <td>{{rowData.description}}</td>
-        <td class="w-38 text-center">
-          @if(aclMenublob.includes('sm')){
-          <p-button pTooltip="Menu Access Level" tooltipPosition="top" icon="pi pi-sitemap" [rounded]="true"
-            (onClick)="_menusAtGroup(rowData)" [text]="true" severity="secondary" />
-          }
-          @if(aclMenublob.includes('dl')){
-          <p-button pTooltip="Delete data" tooltipPosition="top" icon="pi pi-trash" [rounded]="true" [text]="true"
-            (onClick)="_delGroup(rowData)" severity="danger" />
-          }
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th class="w-16 text-center">No</th> <!-- Kolom nomor -->
+          <th [pSortableColumn]="col.field" *ngFor="let col of columns"
+            [ngStyle]="{ 'text-align': col.class === 'text-center' ? 'center' : (col.class === 'text-end' ? 'right' : 'left') }">
+            {{ col.header }}<p-sortIcon field="col.field" />
+          </th>
+          <th>Act</th>
+          <!-- <th style="text-align: center;">Action</th> -->
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData">
+          <!-- Nomor baris -->
+          <td class="w-16">
+            <div class="flex justify-end">
+              {{ rowIndex + 1 + (table.first || 0) }}.
+            </div>
+          </td>
+          <td class="w-28 text-center">
+            <div class="flex justify-center">
+              {{ rowData.idgroup }}
+            </div>
+          </td>
+          <td>{{rowData.groupname}}</td>
+          <td>{{rowData.description}}</td>
+          <td class="w-38 text-center">
+            @if(aclMenublob.includes('sm')){
+            <p-button pTooltip="Menu Access Level" tooltipPosition="top" icon="pi pi-sitemap" [rounded]="true"
+              (onClick)="_menusAtGroup(rowData)" [text]="true" severity="secondary" />
+            }
+            @if(aclMenublob.includes('dl')){
+            <p-button pTooltip="Delete data" tooltipPosition="top" icon="pi pi-trash" [rounded]="true" [text]="true"
+              (onClick)="_delGroup(rowData)" severity="danger" />
+            }
 
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
   }
   <div *ngIf="showDetailForm.show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
     <form [formGroup]="groupForm" (ngSubmit)="onSubmit()"

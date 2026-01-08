@@ -1,79 +1,82 @@
-<main class="pt-2 max-w-screen-xl mx-auto px-2 mb-6">
-  <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
+<main class="pt-2 px-2 mb-6">
+  <div class="w-full flex bg-white py-2 px-5 items-center rounded shadow mb-3">
     <p-breadcrumb [model]="breaditems" [home]="home" />
   </div>
-  <p-table #table [columns]="cols" [value]="users" class="w-full" stripedRows="true" showGridlines="true"
-    scrollable="true" [selectionMode]="aclMenublob.includes('up') ? 'single' : null" [(selection)]="selectedUser"
-    (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="rows" [tableStyle]="{ 'min-width': '80rem' }"
-    [rowsPerPageOptions]="[50, 100]">
-    <ng-template #caption>
-      <div class="flex flex-col gap-2">
-        <!-- Baris atas: Title dan Add Button -->
-        <div class="flex items-center justify-between">
-          <span class="text-lg font-semibold">User has {{totalUsers}} Records</span>
-          <p-button *ngIf="aclMenublob?.includes('cr')" icon="pi pi-add" (onClick)="_addUser()" label="Add User"
-            variant="outlined" />
+  <div class="w-full rounded shadow">
+    <p-table #table [columns]="cols" [value]="users" class="w-full" stripedRows="true" showGridlines="true"
+      scrollable="true" [selectionMode]="aclMenublob.includes('up') ? 'single' : null" [(selection)]="selectedUser"
+      (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="rows" [tableStyle]="{ 'min-width': '80rem' }"
+      [rowsPerPageOptions]="[50, 100]">
+      <ng-template #caption>
+        <div class="flex flex-col gap-2">
+          <!-- Baris atas: Title dan Add Button -->
+          <div class="flex items-center justify-between">
+            <span class="text-lg font-semibold">User has {{totalUsers}} Records</span>
+            <p-button *ngIf="aclMenublob?.includes('cr')" icon="pi pi-add" (onClick)="_addUser()" label="Add User"
+              variant="outlined" />
+          </div>
+          <!-- Input Search -->
+          <p-inputgroup class="w-full">
+            <input pInputText #search placeholder="Keyword" class="w-full" [(ngModel)]="globalFilter"
+              (input)="onGlobalSearch()" />
+            <p-inputgroup-addon>
+              <p-button icon="pi pi-search" severity="secondary" variant="text" />
+            </p-inputgroup-addon>
+          </p-inputgroup>
         </div>
-        <!-- Input Search -->
-        <p-inputgroup class="w-full">
-          <input pInputText #search placeholder="Keyword" class="w-full" [(ngModel)]="globalFilter"
-            (input)="onGlobalSearch()" />
-          <p-inputgroup-addon>
-            <p-button icon="pi pi-search" severity="secondary" variant="text" />
-          </p-inputgroup-addon>
-        </p-inputgroup>
-      </div>
-    </ng-template>
-    <ng-template pTemplate="header" let-columns>
-      <tr>
-        <th class="w-16 text-center">No</th>
-        <th [pSortableColumn]="col.field" *ngFor="let col of columns"
-          [ngStyle]="{ 'text-align': col.class === 'text-center' ? 'center' : (col.class === 'text-end' ? 'right' : 'left') }">
-          {{ col.header }}<p-sortIcon field="col.field" />
-        </th>
-        <th>Act</th>
-        <!-- <th style="text-align: center;">Action</th> -->
-      </tr>
-    </ng-template>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th class="w-16 text-center">No</th>
+          <th [pSortableColumn]="col.field" *ngFor="let col of columns"
+            [ngStyle]="{ 'text-align': col.class === 'text-center' ? 'center' : (col.class === 'text-end' ? 'right' : 'left') }">
+            {{ col.header }}<p-sortIcon field="col.field" />
+          </th>
+          <th>Act</th>
+          <!-- <th style="text-align: center;">Action</th> -->
+        </tr>
+      </ng-template>
 
-    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-      <tr [pSelectableRow]="rowData">
-        <!-- <td class="w-28 text-center">
+      <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData">
+          <!-- <td class="w-28 text-center">
           <div class="flex justify-center">
             {{ rowData.iduser }}
           </div>
         </td> -->
-        <td class="w-16">
-          <div class="flex justify-end">
-            {{ rowIndex + 1 + (table.first || 0) }}.
-          </div>
-        </td>
-        <td class="w-72 text-start">{{rowData.username}}</td>
-        <td class="w-72 text-start">{{rowData.fullname}}</td>
-        <td class="w-72 text-start">{{rowData.groupname}}</td>
-        <td>{{rowData.email}}</td>
-        <td class="w-44">
-          <div class="flex justify-center">
-            @if(rowData.status === 1) {
-            <!-- <span>Active</span> -->
-            <!-- <p-chip label="Active" tooltipPosition="User is active" /> -->
-            <p-tag severity="info" value="Active" tooltipPosition="User is active" tooltipPosition="top" />
-            } @else {
-            <!-- <span>Inactive</span> -->
-            <!-- <p-chip label="Inactive" tooltipPosition="User is not active" /> -->
-            <p-tag severity="warn" value="Inactive" tooltipPosition="User is not active" tooltipPosition="top" />
+          <td class="w-16">
+            <div class="flex justify-end">
+              {{ rowIndex + 1 + (table.first || 0) }}.
+            </div>
+          </td>
+          <td class="w-72 text-start">{{rowData.username}}</td>
+          <td class="w-72 text-start">{{rowData.fullname}}</td>
+          <td class="w-72 text-start">{{rowData.groupname}}</td>
+          <td>{{rowData.email}}</td>
+          <td class="w-44">
+            <div class="flex justify-center">
+              @if(rowData.status === 1) {
+              <!-- <span>Active</span> -->
+              <!-- <p-chip label="Active" tooltipPosition="User is active" /> -->
+              <p-tag severity="info" value="Active" tooltipPosition="User is active" tooltipPosition="top" />
+              } @else {
+              <!-- <span>Inactive</span> -->
+              <!-- <p-chip label="Inactive" tooltipPosition="User is not active" /> -->
+              <p-tag severity="warn" value="Inactive" tooltipPosition="User is not active" tooltipPosition="top" />
+              }
+            </div>
+          </td>
+          <td class="w-16 text-center">
+            @if(rowData.deleteable === 1 && aclMenublob.includes('dl')){
+            <p-button pTooltip="Delete data" tooltipPosition="top" icon="pi pi-trash" [rounded]="true" [text]="true"
+              (onClick)="_delUser(rowData)" severity="danger" />
             }
-          </div>
-        </td>
-        <td class="w-16 text-center">
-          @if(rowData.deleteable === 1 && aclMenublob.includes('dl')){
-          <p-button pTooltip="Delete data" tooltipPosition="top" icon="pi pi-trash" [rounded]="true" [text]="true"
-            (onClick)="_delUser(rowData)" severity="danger" />
-          }
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
   <div *ngIf="showDetailForm.show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()"
       class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl space-y-4">
@@ -106,23 +109,24 @@
       <div class="flex flex-col mb-2">
         <label for="idgroup" class="mb-2 font-medium label-required">Group ACL</label>
         <!-- <input type="text" class="w-full" pInputText formControlName="idgroup" id="idgroup" /> -->
-         <p-select formControlName="idgroupObj" [options]="groups" optionLabel="groupname" placeholder="-- Select Group --" class="w-full" />
+        <p-select formControlName="idgroupObj" [options]="groups" optionLabel="groupname"
+          placeholder="-- Select Group --" class="w-full" />
       </div>
       <div class="flex flex-col mb-2">
         <label for="status" class="mb-2 font-medium">
           User Status <i>(Optional)</i>
         </label>
-      <div class="flex items-center gap-2">
-        <p-toggleswitch formControlName="status" ></p-toggleswitch>
-        {{ userForm.get('status')?.value ? 'Enabled' : 'Disabled' }}
-      </div>
-      <div class="flex items-center gap-2"><p-divider /></div>
-      <div class="flex flex-col mb-2">
-        <label for="password" class="mb-2 font-medium label-required">Password</label>
-        <!-- <input type="text" class="w-full" pInputText formControlName="password" id="password" /> -->
-        <p-password formControlName="password" (change)="_changeError()" class="w-full" [feedback]="false"
-              styleClass="w-full" inputStyleClass="w-full" [toggleMask]="true"></p-password>
-      </div>
+        <div class="flex items-center gap-2">
+          <p-toggleswitch formControlName="status"></p-toggleswitch>
+          {{ userForm.get('status')?.value ? 'Enabled' : 'Disabled' }}
+        </div>
+        <div class="flex items-center gap-2"><p-divider /></div>
+        <div class="flex flex-col mb-2">
+          <label for="password" class="mb-2 font-medium label-required">Password</label>
+          <!-- <input type="text" class="w-full" pInputText formControlName="password" id="password" /> -->
+          <p-password formControlName="password" (change)="_changeError()" class="w-full" [feedback]="false"
+            styleClass="w-full" inputStyleClass="w-full" [toggleMask]="true"></p-password>
+        </div>
 
 
       </div>

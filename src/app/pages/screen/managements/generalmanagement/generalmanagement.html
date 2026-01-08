@@ -1,5 +1,5 @@
-<main class="pt-2 max-w-screen-xl mx-auto px-2 mb-6">
-  <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-3">
+<main class="pt-2 px-2 mb-6">
+  <div class="w-full flex bg-white py-3 px-5 items-center rounded shadow mb-1">
     <p-breadcrumb [model]="breaditems" [home]="home" />
   </div>
   <div class="card py-4">
@@ -10,9 +10,9 @@
         <p-tab value="2">Databases</p-tab>
       </p-tablist>
       <p-tabpanels>
-        <p-tabpanel value="0">
+        <p-tabpanel value="0" >
           <!-- <h2 class="text-lg font-semibold text-gray-800 mb-2">Application Information</h2> -->
-          <form [formGroup]="generalForm" (ngSubmit)="_generalOnSubmit()" class="space-y-4">
+          <form [formGroup]="generalForm" (ngSubmit)="_generalOnSubmit()" class="space-y-4 px-4">
             <div [hidden]="!errorMessageG.error" class="mb-2">
               <p-message [severity]="errorMessageG.severity" [text]="errorMessageG.message" [icon]="errorMessageG.icon"
                 styleClass="p-message p-component block">
@@ -96,8 +96,8 @@
             </div>
           </form>
         </p-tabpanel>
-        <p-tabpanel value="1">
-          <form [formGroup]="smtpForm" (ngSubmit)="_smtpOnSubmit()" class="space-y-4">
+        <p-tabpanel value="1" >
+          <form [formGroup]="smtpForm" (ngSubmit)="_smtpOnSubmit()" class="space-y-4 px-4">
             <div [hidden]="!errorMessageS.error" class="mb-2">
               <p-message [severity]="errorMessageS.severity" [text]="errorMessageS.message" [icon]="errorMessageS.icon"
                 styleClass="p-message p-component block">
@@ -136,11 +136,11 @@
             </div>
           </form>
         </p-tabpanel>
-        <p-tabpanel value="2">
+        <p-tabpanel value="2" >
           <p class="m-0">
             This tabs is only for database migration to other RDBMS except SQLite. If Test connection success means you could migrate data from Embeded to target database
           </p>
-          <form [formGroup]="databaseForm" (ngSubmit)="_databaseOnTestConnection()" class="space-y-4">
+          <form [formGroup]="databaseForm" (ngSubmit)="_databaseOnTestConnection()" class="space-y-4 px-4">
             <div [hidden]="!errorMessageD.error" class="mb-2 mt-4">
               <p-message [severity]="errorMessageD.severity" [text]="errorMessageD.message" [icon]="errorMessageD.icon"
                 styleClass="p-message p-component block">
