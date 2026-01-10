@@ -71,7 +71,7 @@ export class Rolemanagement implements OnInit {
       { field: 'roleName', header: 'Name' },
       { field: 'roleDescription', header: 'Description' }
     ];
-    this.breaditems = [{ label: 'Management' }, { label: 'Permissions' }];
+    this.breaditems = [{ label: 'Settings' }, { label: 'Permissions' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
     //##########################################################
     await this._refreshACLMenu();

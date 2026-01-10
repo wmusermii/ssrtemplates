@@ -90,7 +90,7 @@ export class Groupmanagement implements OnInit {
       { field: 'roleName', header: 'Name' },
       { field: 'roleDescription', header: 'Description' }
     ];
-    this.breaditems = [{ label: 'Management' }, { label: 'Roles' }];
+    this.breaditems = [{ label: 'Settings' }, { label: 'Roles' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
     await this._refreshACLMenu();
     console.log("MENU ACL ", this.aclMenublob);

@@ -77,7 +77,7 @@ export class Menumanagement implements OnInit {
         { field: 'created_at', header: 'Create At' },
         { field: 'updated_at', header: 'Update At' }
     ];
-    this.breaditems = [{ label: 'Management' }, { label: 'Menus' }];
+    this.breaditems = [{ label: 'Settings' }, { label: 'Menus' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
     await this._refreshACLMenu();
     console.log("MENU ACL ", this.aclMenublob);

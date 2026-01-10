@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const dbPath = path.join(__dirname, 'data', 'admdb.sqlite');
-logInfo("INI ALAMAT TABLENYA : ",dbPath)
+logInfo("*** Embeded database Original : ",dbPath)
 const db = knex({
   client: 'better-sqlite3',
   connection: {

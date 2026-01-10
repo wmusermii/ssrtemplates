@@ -4,7 +4,7 @@
       <li class="border-b border-gray-100 dark:border-gray-700">
         <!-- MENU HEADER -->
         <div
-          class="flex items-center justify-between cursor-pointer px-3 py-2 rounded-md hover:bg-blue-100 dark:hover:bg-blue-300 transition-colors"
+          class="flex items-center justify-between cursor-pointer px-1 py-2 rounded-md hover:bg-blue-100 dark:hover:bg-blue-300 transition-colors"
           (click)="onItemClick(item)"
         >
           <div class="flex items-center space-x-2">
@@ -32,7 +32,7 @@
         <!-- CHILDREN -->
         <div
           *ngIf="item.items && isExpanded(item)"
-          class="ml-4 border-l border-gray-200 dark:border-gray-700 pl-3 mt-1"
+          class="ml-2 border-l border-gray-200 dark:border-gray-700 pl-1 mt-1"
         >
           <app-custom-panel-menu [data]="item.items || []"></app-custom-panel-menu>
         </div>

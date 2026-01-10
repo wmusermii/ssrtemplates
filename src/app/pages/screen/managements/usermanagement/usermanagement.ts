@@ -76,7 +76,7 @@ export class Usermanagement implements OnInit {
       { field: 'email', header: 'Email' },
       { field: 'status', header: 'Status' }
     ];
-    this.breaditems = [{ label: 'Management' }, { label: 'Users' }];
+    this.breaditems = [{ label: 'Settings' }, { label: 'Users' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
     //##########################################################
     await this._refreshACLMenu();

@@ -554,3 +554,6 @@
 [2026-01-08 16:17:25] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\dist\ssrtemplates\server\data\admdb.sqlite
 [2026-01-08 16:17:25] INFO: login limiter max set to 3
 [2026-01-08 16:17:25] INFO: Node Express server listening on http://localhost:4000
+[2026-01-08 16:20:25] INFO: INI ALAMAT TABLENYA :  D:\Work\Mii\TEMPLATES\ssrtemplates\dist\ssrtemplates\server\data\admdb.sqlite
+[2026-01-08 16:20:25] INFO: login limiter max set to 3
+[2026-01-08 16:20:25] INFO: Node Express server listening on http://localhost:4000

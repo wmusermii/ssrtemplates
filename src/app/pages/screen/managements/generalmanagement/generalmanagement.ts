@@ -76,7 +76,7 @@ export class Generalmanagement implements OnInit {
   errorMessageD: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" }
   constructor(private router: Router, private ssrStorage: LocalstorageService) { }
   async ngOnInit(): Promise<void> {
-    this.breaditems = [{ label: 'Management' }, { label: 'General' }];
+    this.breaditems = [{ label: 'Settings' }, { label: 'Configuration' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
     await this._refreshGeneralData();
     await this._refreshPasswordData();
