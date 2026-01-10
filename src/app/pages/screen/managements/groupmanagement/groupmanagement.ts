@@ -86,8 +86,8 @@ export class Groupmanagement implements OnInit {
       { field: 'description', header: 'Description' }
     ];
     this.colsRole = [
-      { field: 'idRole', header: 'Role Id' },
-      { field: 'roleName', header: 'Name' },
+      { field: 'idRole', header: 'Perm.Id' },
+      { field: 'roleName', header: 'Permission' },
       { field: 'roleDescription', header: 'Description' }
     ];
     this.breaditems = [{ label: 'Settings' }, { label: 'Roles' }];

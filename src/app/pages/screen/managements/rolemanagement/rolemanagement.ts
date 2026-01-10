@@ -67,8 +67,8 @@ export class Rolemanagement implements OnInit {
     //##########################################################
     // // console.log("USER INFO ", this.userInfo);
     this.cols = [
-      { field: 'idRole', header: 'Id Role' },
-      { field: 'roleName', header: 'Name' },
+      { field: 'idRole', header: 'Pemission Id' },
+      { field: 'roleName', header: 'Permission' },
       { field: 'roleDescription', header: 'Description' }
     ];
     this.breaditems = [{ label: 'Settings' }, { label: 'Permissions' }];

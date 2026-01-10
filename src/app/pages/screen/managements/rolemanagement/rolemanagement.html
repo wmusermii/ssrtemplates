@@ -11,7 +11,7 @@
         <div class="flex flex-col gap-2">
           <!-- Baris atas: Title dan Add Button -->
           <div class="flex items-center justify-between">
-            <span class="text-lg font-semibold">Role has {{totalRoles}} Records</span>
+            <span class="text-lg font-semibold">Permission has {{totalRoles}} Records</span>
             <p-button *ngIf="aclMenublob?.includes('cr')" icon="pi pi-add" (onClick)="_addRole()" label="Add Role"
               variant="outlined" />
           </div>
@@ -74,16 +74,16 @@
       </div>
       <!-- Header / Title -->
       <div class="border-b pb-3 mb-2">
-        <h2 class="text-xl font-semibold text-gray-800 m-0 p-0">{{showDetailForm.action | titlecase}} Role Detail</h2>
+        <h2 class="text-xl font-semibold text-gray-800 m-0 p-0">{{showDetailForm.action | titlecase}} Permission</h2>
       </div>
       <!-- Role Id -->
       <div class="flex flex-col mb-2">
-        <label for="idRole" class="mb-2 font-medium label-required">Role Id</label>
+        <label for="idRole" class="mb-2 font-medium label-required">Permission Id</label>
         <input type="text" class="w-full" pInputText formControlName="idRole" id="idRole" (change)="_changeError()" />
       </div>
       <!-- Name -->
       <div class="flex flex-col mb-2">
-        <label for="roleName" class="mb-2 font-medium label-required">Name</label>
+        <label for="roleName" class="mb-2 font-medium label-required">Permission Name</label>
         <input type="text" class="w-full" pInputText formControlName="roleName" id="roleName"
           (change)="_changeError()" />
       </div>
