@@ -72,7 +72,7 @@ export class Usermanagement implements OnInit {
     this.cols = [
       { field: 'username', header: 'User' },
       { field: 'fullname', header: 'Fullname' },
-      { field: 'groupname', header: 'Group' },
+      { field: 'groupname', header: 'Permission' },
       { field: 'email', header: 'Email' },
       { field: 'status', header: 'Status' }
     ];

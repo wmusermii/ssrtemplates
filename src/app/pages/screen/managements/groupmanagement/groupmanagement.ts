@@ -81,8 +81,8 @@ export class Groupmanagement implements OnInit {
     this.userInfo = this.ssrStorage.getItem("C_INFO");
     // console.log("USER INFO ", this.userInfo);
     this.cols = [
-      { field: 'idgroup', header: 'Group Id' },
-      { field: 'groupname', header: 'Name' },
+      { field: 'idgroup', header: 'Role Id' },
+      { field: 'groupname', header: 'Role Name' },
       { field: 'description', header: 'Description' }
     ];
     this.colsRole = [
