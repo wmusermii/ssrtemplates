@@ -1,3 +1,18 @@
 [2026-01-13 08:28:02] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\dist\ssrtemplates\server\data\admdb.sqlite
 [2026-01-13 08:28:02] INFO: login limiter max set to 3
 [2026-01-13 08:28:02] INFO: Node Express server listening on http://localhost:4000
+[2026-01-13 09:35:48] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\d1293bfa-c914-4b63-8ff3-45e16322f86b\data\admdb.sqlite
+[2026-01-13 09:35:48] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-13 09:35:48] INFO: Node Express server listening on http://localhost:4000
+[2026-01-13 09:35:49] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\5ada3ea8-2a53-4cdd-bb60-f68baec85ace\data\admdb.sqlite
+[2026-01-13 09:35:49] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-13 09:35:49] INFO: Node Express server listening on http://localhost:4000
+[2026-01-13 09:35:49] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\94ef458a-a484-4f4e-b479-6ccdc51adc1b\data\admdb.sqlite
+[2026-01-13 09:35:49] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-13 09:35:49] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\7e6b3a0f-db63-4333-8d74-cc3fb866b620\data\admdb.sqlite
+[2026-01-13 09:35:49] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-13 09:35:49] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\cc69689b-11b7-47b1-a357-50b2ba859583\data\admdb.sqlite
+[2026-01-13 09:35:49] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-13 09:36:13] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\dist\ssrtemplates\server\data\admdb.sqlite
+[2026-01-13 09:36:13] INFO: login limiter max set to 3
+[2026-01-13 09:36:13] INFO: Node Express server listening on http://localhost:4000
