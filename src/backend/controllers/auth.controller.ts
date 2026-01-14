@@ -73,6 +73,10 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     }
     let tokenCookie = null;
     if(user.code === 20000) {
+            const cookieObj:any = await apiService.getParamsByKeyService({},{paramgroup:"GENERAL",paramkey:"cookietime"});
+            logInfo(">>>>>>>>>>>>>>>>>>>> cookieObj : ",cookieObj);
+            let cookieTimeStr:string = cookieObj.code === 20000?cookieObj.data.paramvalue:'15m';
+            logInfo(">>>>>>>>>>>>>>>>>>>> cookieTime : ",cookieTimeStr);
             const token = await EncryptDecryptJwt.generateToken(data);
             delete data.password;
             tokenCookie = await EncryptDecryptJwt.generateToken(data);
@@ -95,7 +99,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
                 secure: false,     // Hanya dikirim melalui HTTPS jika true
                 signed:true,
                 sameSite: 'strict', // Mencegah CSRF
-                maxAge: convertToMaxAge("15m")  // Cookie berlaku selama 15 menit
+                maxAge: convertToMaxAge(cookieTimeStr)  // Cookie berlaku selama 15 menit
               }
             }
           ]
