@@ -398,3 +398,37 @@
 [2026-01-21 12:44:53] WARN: Could not read param for rate limit, using default. Error: {}
 [2026-01-21 12:44:53] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\3119b827-083d-407e-97f9-946512558d10\data\admdb.sqlite
 [2026-01-21 12:44:53] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:24:48] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\dist\ssrtemplates\server\data\admdb.sqlite
+[2026-01-21 13:24:48] INFO: login limiter max set to 3
+[2026-01-21 13:24:48] INFO: Node Express server listening on http://localhost:4000
+[2026-01-21 13:25:14] INFO: >>>>>>>>>>>>>>>>>>>> cookieObj :  {"code":20000,"message":"Records found","data":{"id":13,"paramgroup":"GENERAL","paramkey":"cookietime","paramvalue":"60m"}}
+[2026-01-21 13:25:14] INFO: >>>>>>>>>>>>>>>>>>>> cookieTime :  60m
+[2026-01-21 13:25:49] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\756dcafd-6215-43d5-95ac-d795e05f6b45\data\admdb.sqlite
+[2026-01-21 13:25:49] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:25:49] INFO: Node Express server listening on http://localhost:4000
+[2026-01-21 13:25:52] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\27caeedc-7cb5-47b7-851a-fc8dd9be8036\data\admdb.sqlite
+[2026-01-21 13:25:52] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:25:52] INFO: Node Express server listening on http://localhost:4000
+[2026-01-21 13:25:52] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\cb1a93e7-7f62-4bff-98c6-b3f3c53dfb7c\data\admdb.sqlite
+[2026-01-21 13:25:52] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:25:52] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\3a1a0ae4-0892-4074-a288-60b558effb83\data\admdb.sqlite
+[2026-01-21 13:25:52] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:25:52] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\f98338a5-1569-4346-bd26-74678b6462b8\data\admdb.sqlite
+[2026-01-21 13:25:52] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:26:06] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\dist\ssrtemplates\server\data\admdb.sqlite
+[2026-01-21 13:26:06] INFO: login limiter max set to 3
+[2026-01-21 13:26:06] INFO: Node Express server listening on http://localhost:4000
+[2026-01-21 13:26:16] INFO: 📊 findParamExternal 
+[2026-01-21 13:26:16] INFO: 📊 Hasil get params  [{"paramgroup":"PASSATTRB","paramkey":"minLength","paramvalue":"8"},{"paramgroup":"PASSATTRB","paramkey":"requireUppercase","paramvalue":"true"},{"paramgroup":"PASSATTRB","paramkey":"requireNumber","paramvalue":"true"},{"paramgroup":"PASSATTRB","paramkey":"requireSpecialChar","paramvalue":"true"},{"paramgroup":"PASSATTRB","paramkey":"allowedSpecialChars","paramvalue":"!@#$%^&*()_+[]{}|;:,.?~-"}]
+[2026-01-21 13:26:41] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\2ad520cf-f104-4c3e-a0f7-9e0ab8b029c6\data\admdb.sqlite
+[2026-01-21 13:26:41] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:26:41] INFO: Node Express server listening on http://localhost:4000
+[2026-01-21 13:26:43] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\d0aa1abc-9ce5-4cc5-b17e-4cb12da0230d\data\admdb.sqlite
+[2026-01-21 13:26:43] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:26:43] INFO: Node Express server listening on http://localhost:4000
+[2026-01-21 13:26:43] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\855ff548-c469-4444-abb2-eb79005f73ac\data\admdb.sqlite
+[2026-01-21 13:26:43] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:26:43] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\806a55eb-5f49-4fc1-92b8-ce0e7a7951b1\data\admdb.sqlite
+[2026-01-21 13:26:43] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:26:43] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\1df540a7-d1fb-47c6-8325-e8754ad37e1f\data\admdb.sqlite
+[2026-01-21 13:26:43] WARN: Could not read param for rate limit, using default. Error: {}
