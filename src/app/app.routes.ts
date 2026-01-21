@@ -66,6 +66,12 @@ export const routes: Routes = [
         data: { title: 'Role Management - Admin Template' }
       },
       {
+        path: 'reports/auditrail',
+        canActivate: [authGuard],
+        loadComponent: () => import("./pages/screen/managements/reports/audittrail/audittrail").then(m => m.Audittrail),
+        data: { title: 'Role Management - Admin Template' }
+      },
+      {
         path: 'privacy/profile',
         canActivate: [authGuard],
         loadComponent: () => import("./pages/screen/myprofile/myprofile").then(m => m.Myprofile),

@@ -1,5 +1,21 @@
 import db from '../database/client';
+import { logInfo } from '../utils/logger';
 export class ParamRepository {
+
+  async findParamExternal() {
+    logInfo("📊 findParamExternal ")
+    const result = await db.select([
+      'mg.paramgroup',
+      'mg.paramkey',
+      'mg.paramvalue',
+    ]).from('m_param as mg')
+    .whereNotIn('mg.paramgroup', ['GENERAL', 'SMTPATTRB'])
+    .orderBy('mg.id', 'asc');
+    logInfo("📊 Hasil get params ",result)
+    return result;
+  }
+// , 'PASSATTRB'
+
   async findParamForMigration() {
     const result = await db.select([
       'mg.paramgroup',

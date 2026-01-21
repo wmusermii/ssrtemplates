@@ -5,9 +5,10 @@
   <div class="card py-2">
     <p-tabs value="0">
       <p-tablist>
-        <p-tab value="0">General</p-tab>
+        <p-tab value="0">Application</p-tab>
         <p-tab value="1">SMTP</p-tab>
-        <p-tab value="2">Databases</p-tab>
+        <p-tab value="2">General</p-tab>
+        <p-tab value="3">Databases</p-tab>
       </p-tablist>
       <p-tabpanels>
         <p-tabpanel value="0" >
@@ -137,6 +138,69 @@
           </form>
         </p-tabpanel>
         <p-tabpanel value="2" >
+            <div class="w-full rounded shadow">
+    <p-table #table [columns]="cols" [value]="params" class="w-full" stripedRows="true" showGridlines="true"
+      scrollable="true" [selectionMode]="aclMenublob.includes('up') ? 'single' : null" [(selection)]="selectedParam"
+      (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="rows" [tableStyle]="{ 'min-width': '80rem' }"
+      [rowsPerPageOptions]="[50, 100]">
+      <ng-template #caption>
+        <div class="flex flex-col gap-2">
+          <!-- Baris atas: Title dan Add Button -->
+          <div class="flex items-center justify-between">
+            <span class="text-lg font-semibold">User has {{totalParam}} Records</span>
+            <p-button *ngIf="aclMenublob?.includes('cr')" icon="pi pi-add" (onClick)="_addParam()" label="Add Data"
+              variant="outlined" />
+          </div>
+          <!-- Input Search -->
+          <p-inputgroup class="w-full">
+            <input pInputText #search placeholder="Keyword" class="w-full" [(ngModel)]="globalFilter"
+              (input)="onGlobalSearch()" />
+            <p-inputgroup-addon>
+              <p-button icon="pi pi-search" severity="secondary" variant="text" />
+            </p-inputgroup-addon>
+          </p-inputgroup>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th class="w-16 text-center">No</th>
+          <th [pSortableColumn]="col.field" *ngFor="let col of columns"
+            [ngStyle]="{ 'text-align': col.class === 'text-center' ? 'center' : (col.class === 'text-end' ? 'right' : 'left') }">
+            {{ col.header }}<p-sortIcon field="col.field" />
+          </th>
+          <th>Act</th>
+          <!-- <th style="text-align: center;">Action</th> -->
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData">
+          <!-- <td class="w-28 text-center">
+          <div class="flex justify-center">
+            {{ rowData.iduser }}
+          </div>
+        </td> -->
+          <td class="w-16">
+            <div class="flex justify-end">
+              {{ rowIndex + 1 + (table.first || 0) }}.
+            </div>
+          </td>
+          <td class="w-72 text-start">{{rowData.paramgroup}}</td>
+          <td class="w-72 text-start">{{rowData.paramkey}}</td>
+          <td class="w-72 text-start">{{rowData.paramvalue}}</td>
+          <td class="w-72 text-start">{{rowData.description}}</td>
+          <td class="w-16 text-center">
+            @if(aclMenublob.includes('dl')){
+            <p-button pTooltip="Delete data" tooltipPosition="top" icon="pi pi-trash" [rounded]="true" [text]="true"
+              (onClick)="_delParam(rowData)" severity="danger" />
+            }
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+        </p-tabpanel>
+        <p-tabpanel value="3" >
           <p class="m-0">
             This tabs is only for database migration to other RDBMS except SQLite. If Test connection success means you could migrate data from Embeded to target database
           </p>
@@ -190,7 +254,46 @@
       </p-tabpanels>
     </p-tabs>
   </div>
-
+<div *ngIf="showDetailForm.show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()"
+      class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl space-y-4">
+      <div [hidden]="!errorMessage.error" class="mb-2">
+        <p-message [severity]="errorMessage.severity" [text]="errorMessage.message" [icon]="errorMessage.icon"
+          styleClass="p-message p-component block">
+        </p-message>
+      </div>
+      <!-- Header / Title -->
+      <div class="border-b pb-3 mb-2">
+        <h2 class="text-xl font-semibold text-gray-800 m-0 p-0">{{showDetailForm.action | titlecase}} Param Detail</h2>
+      </div>
+      <!-- paramgroup -->
+      <div class="flex flex-col mb-2">
+        <label for="paramgroup" class="mb-2 font-medium label-required">Group</label>
+        <input type="text" class="w-full" pInputText formControlName="paramgroup" id="paramgroup" />
+      </div>
+      <!-- paramkey -->
+      <div class="flex flex-col mb-2">
+        <label for="paramkey" class="mb-2 font-medium label-required">Key</label>
+        <input type="text" class="w-full" pInputText formControlName="paramkey" id="paramkey" />
+      </div>
+      <!-- paramvalue -->
+      <div class="flex flex-col mb-2">
+        <label for="paramvalue" class="mb-2 font-medium label-required">Value</label>
+        <input type="text" class="w-full" pInputText formControlName="paramvalue" id="paramvalue" />
+      </div>
+      <div class="flex flex-col mb-2">
+        <label for="paramvalue" class="mb-2 font-medium label-required">Description</label>
+        <!-- <input type="text" class="w-full" pInputText formControlName="paramvalue" id="paramvalue" /> -->
+        <textarea rows="5" pTextarea formControlName="paramvalue" class="w-full"></textarea>
+      </div>
+      <!-- Buttons -->
+      <div class="flex justify-end gap-4 pt-4">
+        <button pButton type="button" (click)="onCancel()" class="px-6" severity="secondary" label="Cancel"
+          (click)="showDetailForm.show=false"></button>
+        <button pButton type="submit" class="px-6" [disabled]="!userForm.valid" label="Save"></button>
+      </div>
+    </form>
+  </div>
 <div *ngIf="loading"
     class="absolute inset-0 flex items-center justify-center rounded-md z-50 bg-[rgba(255,255,255,0.5)]">
     <div role="status">

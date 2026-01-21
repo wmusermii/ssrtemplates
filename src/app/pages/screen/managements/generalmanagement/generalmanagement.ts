@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
@@ -21,11 +21,13 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import cloneDeep from 'lodash-es/cloneDeep';
 import { PasswordModule } from 'primeng/password';
 import { SelectModule } from 'primeng/select';
+import { ChipModule } from 'primeng/chip';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   standalone: true,
   selector: 'app-generalmanagement',
-  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, TreeModule, DragDropModule, TabsModule, DividerModule, ToggleSwitchModule, PasswordModule, SelectModule],
+  imports: [CommonModule, TooltipModule, FormsModule, ReactiveFormsModule, ButtonModule, InputGroupModule, InputGroupAddonModule, InputTextModule, TextareaModule, TableModule, BreadcrumbModule, MessageModule, TreeModule, DragDropModule, TabsModule, DividerModule, ToggleSwitchModule, PasswordModule, SelectModule,ChipModule,TagModule],
   templateUrl: './generalmanagement.html',
   styleUrl: './generalmanagement.css'
 })
@@ -37,6 +39,31 @@ export class Generalmanagement implements OnInit {
   //##########################################################
   token: string | null | undefined = undefined;
   userInfo: any | undefined;
+  cols!: Column[];
+  rows = 50;
+  params!: ParamField[];
+  allParams!: ParamField[];
+  selectedParam: ParamField = {};
+  idParamOld: string = "";
+  totalParam: number = 0;
+  showDetailForm: any = { show: false, action: "add" };
+  showDetailDelete: boolean = false;
+  showErrorPage: any = { show: false, message: "undefined" };
+  errorMessage: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" };
+  aclMenublob: any[] = [
+          "cr",
+          "rd",
+          "vw",
+          "up",
+          "dl"
+        ];
+  userForm = new FormGroup({
+    paramgroup: new FormControl('', [Validators.required]),
+    paramkey: new FormControl('', [Validators.required]),
+    paramvalue: new FormControl('', [Validators.required]),
+    description: new FormControl('')
+  });
+  globalFilter: string = '';
   //##########################################################
   listClass: any[] = [{ key: 'pg', label: 'Postgres' }, { key: 'mysql2', label: 'MySQL' }, { key: 'mssql', label: 'Microsoft SQL' }, { key: 'oracledb', label: 'ORACLE' }]
   readyMigrate: boolean = false;
@@ -74,12 +101,21 @@ export class Generalmanagement implements OnInit {
   errorMessageG: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" }
   errorMessageS: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" }
   errorMessageD: any = { error: false, severity: "error", message: "ini test", icon: "pi pi-exclamation-circle" }
-  constructor(private router: Router, private ssrStorage: LocalstorageService) { }
+  constructor(private router: Router, private ssrStorage: LocalstorageService,private cdr: ChangeDetectorRef) { }
   async ngOnInit(): Promise<void> {
     this.breaditems = [{ label: 'Settings' }, { label: 'Configuration' }];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
+    // console.log("USER INFO ", this.userInfo);
+    this.cols = [
+      { field: 'paramgroup', header: 'Group' },
+      { field: 'paramkey', header: 'Key' },
+      { field: 'paramvalue', header: 'Value' },
+      { field: 'description', header: 'Description' }
+    ];
+    // await this._refreshACLMenu();
     await this._refreshGeneralData();
     await this._refreshPasswordData();
+    await this._refreshParamData();
     await this._refreshSMTPData();
   }
   onChangeListener(event: Event) {
@@ -124,8 +160,35 @@ export class Generalmanagement implements OnInit {
       await this._databaseMigration(payloadConfig);
     }
   }
+  async _addParam() {
 
+    this.userForm.patchValue({
+      "paramgroup": null,
+      "paramkey": null,
+      "paramvalue": null,
+      "description": null
+    }
+    )
+    // this.setCreateMode();
 
+    this.showDetailForm = { show: true, action: "add" };
+  }
+  async _delParam(event: any) {
+    // this.selectedUser = event;
+    // this.showDetailDelete = true;
+  }
+  onGlobalSearch() {
+    console.log("Global filter : ", this.globalFilter);
+    const term = this.globalFilter.trim().toLowerCase();
+    if (term === '') {
+      this.params = [...this.allParams];
+    } else {
+      this.params = this.allParams.filter(item =>
+        [item.paramgroup, item.paramkey, item.paramvalue]
+          .some(field => field?.toLowerCase().includes(term))
+      );
+    }
+  }
   async _testDatabaseConnection(optionconfig:any): Promise<void> {
     fetch('/v2/admin/test_database', {
       method: 'POST',
@@ -227,6 +290,50 @@ export class Generalmanagement implements OnInit {
         } else {
 
           this.loading = false;
+        }
+      })
+      .catch(err => {
+        this.loading = false;
+        console.log("Response Error Catch /v2/admin/get_parambygroup", err);
+      });
+  }
+  async _refreshParamData(): Promise<void> {
+    this.loading = true;
+    fetch('/v2/admin/get_params', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-client': 'angular-ssr'
+      }
+    })
+      .then(res => {
+        console.log("Response dari API  /v2/admin/get_params", res);
+        if (!res.ok) throw new Error('get Params Gagal');
+        return res.json();
+      })
+      .then(data => {
+        console.log("Response dari API /v2/admin/get_params", data);
+        this.loading = false;
+
+        if (data.code === 20000) {
+          const dataRecordsTemp = cloneDeep(data.data);
+          // this.generalForm.patchValue(
+          //   {
+          //     title: dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "title").paramvalue,
+          //     cookietime: dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "cookietime").paramvalue,
+          //     maxloginattempt: dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "maxloginattempt").paramvalue,
+          //     userMinLength: dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "userMinLength").paramvalue,
+          //   }
+          // )
+            this.params = dataRecordsTemp;
+            this.allParams = this.params;
+            this.totalParam = this.allParams.length;
+            this.loading = false;this.cdr.detectChanges();
+        } else {
+            this.params = [];
+            this.allParams = this.params;
+            this.totalParam = this.allParams.length;
+            this.loading = false;this.cdr.detectChanges();
         }
       })
       .catch(err => {
@@ -360,6 +467,68 @@ export class Generalmanagement implements OnInit {
         console.log("Response Error Catch /v2/admin/upd_parambygroup", err);
       });
   }
+  async _refreshACLMenu(): Promise<void> {
+        const payload: any = { routeUrl: this.currentUrl };
+        this.loading = true;
+        try {
+          const res = await fetch('/v2/auth/aclattrb', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              // 'Authorization': `Bearer ${this.token}`,
+              'x-client': 'angular-ssr'
+            },
+            body: JSON.stringify(payload)
+          });
+          // console.log("Response dari API /v2/auth/aclattrb", res);
+          const data = await res.json();
+          console.log("Response dari API /v2/auth/aclattrb", data);
+          this.loading = false;
+          if (data.code === 20000) {
+            const dataRecordsMenu: any = cloneDeep(data.data);
+            this.aclMenublob = dataRecordsMenu.roles;
+          } else {
+            this.aclMenublob = [];
+          }
+        } catch (err) {
+          console.log("Response Error Catch /v2/auth/aclattrb", err);
+          this.aclMenublob = [];
+          this.loading = false;
+        }
+      }
+  onRowSelect(event: any) {
+    console.log('Selected Param:', event.data);
+
+  }
+  _changeError() {
+    // this.errorMessage={error:false, severity:"info", message:"", icon:"pi pi-send"};
+  }
+  onCancel() {
+    this.showDetailForm = { show: false, action: "add" };
+  }
+  onSubmit() {
+    if (this.userForm.invalid) {
+      return; // Form invalid, jangan lanjut
+    }
+    this.loading = true;
+    let objPayload = this.userForm.value;
+    console.log("Payload form ", objPayload);
+    if (this.showDetailForm.action == "add") {
+      //########### CHECK PANJANG USER ##############
+      // let usernameLength = objPayload?.username
+      // if((usernameLength ?? "").length < 6) {
+      //   this.loading = false;
+      //   this.errorMessage ={ error: true, severity: "error", message: "Username cannot less than 6 characters", icon: "pi pi-exclamation-circle" };
+      //   return;
+      // }
+      // ########## CHECK PASSWORD ATTRIBUTE ########
+
+
+    } else {
+      console.log("IdUserOLD : ", this.idParamOld);
+      // this._saveEditData(objPayload, this.idUserOld)
+    }
+  }
 }
 interface dataField {
   id?: number | null;
@@ -370,4 +539,22 @@ interface dataField {
   created_by?: string | null;
   updated_at?: string | null;
   updated_by?: string | null;
+}
+interface Column {
+  field?: string | null;
+  header?: string | null;
+  class?: string | null;
+  cellclass?: string | null;
+}
+interface ParamField {
+  id?: number | null;
+  paramgroup?: string | null;
+  paramkey?: string | null;
+  paramvalue?: string | null;
+  created_at?: string | null;
+  created_by?: string | null;
+  updated_at?: string | null;
+  updated_by?: string | null;
+  for_app?: number | null;
+  description?: string | null;
 }

@@ -235,6 +235,14 @@ async goMigratetDatabaseService(config: any):Promise<any> {
   // return ApiResponse.success({}, "Database connection OK ✅");
 }
 
+  async getParamsAll(userinfo: any, payload:any) {
+    const paramResult = await this.paramRepo.findParamExternal();
+    if (!paramResult) return ApiResponse.successNoData(paramResult, "Unable to get data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(paramResult, "Records found");
+  }
+
+
   async getParamsByGroupService(userinfo: any, payload:any) {
     const paramResult = await this.paramRepo.findParamByGroup(payload);
     if (!paramResult) return ApiResponse.successNoData(paramResult, "Unable to get data!");
