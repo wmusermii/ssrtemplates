@@ -40,3 +40,9 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+
+*.zip
+/logs
+/hola-mii
+/data/*.bak
