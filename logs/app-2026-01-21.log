@@ -432,3 +432,20 @@
 [2026-01-21 13:26:43] WARN: Could not read param for rate limit, using default. Error: {}
 [2026-01-21 13:26:43] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\1df540a7-d1fb-47c6-8325-e8754ad37e1f\data\admdb.sqlite
 [2026-01-21 13:26:43] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:30:15] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\0a248f54-c7a8-4803-83eb-fe98f52f0f63\data\admdb.sqlite
+[2026-01-21 13:30:15] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:30:15] INFO: Node Express server listening on http://localhost:4000
+[2026-01-21 13:30:17] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\9420ee47-7e6f-4abe-bbe4-043e3cb9e602\data\admdb.sqlite
+[2026-01-21 13:30:17] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:30:17] INFO: Node Express server listening on http://localhost:4000
+[2026-01-21 13:30:17] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\4234a310-6cd1-4686-8493-16ef43581b3f\data\admdb.sqlite
+[2026-01-21 13:30:17] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:30:17] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\56a2b64e-97b9-4614-aab6-dc8b566cf859\data\admdb.sqlite
+[2026-01-21 13:30:17] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:30:17] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\.angular\prerender-root\0f985825-1651-4aa4-8283-43a390521b68\data\admdb.sqlite
+[2026-01-21 13:30:17] WARN: Could not read param for rate limit, using default. Error: {}
+[2026-01-21 13:30:32] INFO: *** Embeded database Original :  D:\Work\Mii\TEMPLATES\ssrtemplates\dist\ssrtemplates\server\data\admdb.sqlite
+[2026-01-21 13:30:32] INFO: login limiter max set to 3
+[2026-01-21 13:30:32] INFO: Node Express server listening on http://localhost:4000
+[2026-01-21 13:30:34] INFO: 📊 findParamExternal 
+[2026-01-21 13:30:34] INFO: 📊 Hasil get params  [{"paramgroup":"PASSATTRB","paramkey":"minLength","paramvalue":"8"},{"paramgroup":"PASSATTRB","paramkey":"requireUppercase","paramvalue":"true"},{"paramgroup":"PASSATTRB","paramkey":"requireNumber","paramvalue":"true"},{"paramgroup":"PASSATTRB","paramkey":"requireSpecialChar","paramvalue":"true"},{"paramgroup":"PASSATTRB","paramkey":"allowedSpecialChars","paramvalue":"!@#$%^&*()_+[]{}|;:,.?~-"}]
