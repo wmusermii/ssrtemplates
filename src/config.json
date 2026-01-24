@@ -1,0 +1,97 @@
+{
+  "environmentName": "lab",
+  "portApp": 4000,
+  "appenders": {
+    "all": {
+      "type": "dateFile",
+      "filename": "logs/log",
+      "pattern": "-yyyy-MM-dd.log",
+      "alwaysIncludePattern": true,
+      "layout": {
+        "type": "pattern",
+        "pattern": "%d{yyyy-MM-dd hh:mm:ss} %p ~ %m"
+      }
+    },
+    "log_auditrail": {
+      "type": "dateFile",
+      "filename": "logs/log_auditrail-",
+      "pattern": "-yyyy-MM-dd.log",
+      "alwaysIncludePattern": true,
+      "layout": {
+        "type": "pattern",
+        "pattern": "%d{yyyy-MM-dd hh:mm:ss} %p ~ %m"
+      }
+    },
+    "log_access": {
+      "type": "dateFile",
+      "filename": "logs/log_access-",
+      "pattern": "-yyyy-MM-dd.log",
+      "alwaysIncludePattern": true,
+      "layout": {
+        "type": "pattern",
+        "pattern": "%d{yyyy-MM-dd hh:mm:ss} %p ~ %m"
+      }
+    },
+    "db_pool": {
+      "type": "dateFile",
+      "filename": "logs/db_pool-",
+      "pattern": "-yyyy-MM-dd.log",
+      "alwaysIncludePattern": true,
+      "layout": {
+        "type": "pattern",
+        "pattern": "%d{yyyy-MM-dd hh:mm:ss} %p ~ %m"
+      }
+    },
+    "log_sso": {
+      "type": "dateFile",
+      "filename": "logs/log_sso-",
+      "pattern": "-yyyy-MM-dd.log",
+      "alwaysIncludePattern": true,
+      "layout": {
+        "type": "pattern",
+        "pattern": "%d{yyyy-MM-dd hh:mm:ss} %p ~ %m"
+      }
+    },
+    "console": {
+      "type": "console"
+    }
+  },
+  "pm2": true,
+  "categories": {
+    "default": {
+      "appenders": [
+        "all",
+        "console"
+      ],
+      "level": "debug"
+    },
+    "log_trail": {
+      "appenders": [
+        "log_auditrail",
+        "console"
+      ],
+      "level": "debug"
+    },
+    "log_access": {
+      "appenders": [
+        "log_access",
+        "console"
+      ],
+      "level": "debug"
+    },
+    "db_pool": {
+      "appenders": [
+        "db_pool",
+        "console"
+      ],
+      "level": "debug"
+    },
+    "log_sso": {
+      "appenders": [
+        "log_sso",
+        "console"
+      ],
+      "level": "debug"
+    }
+  }
+}
