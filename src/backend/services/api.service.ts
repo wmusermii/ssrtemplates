@@ -11,6 +11,8 @@ import { MenuRepository } from "../repositories/menu.repository";
 import { GroupRepository } from "../repositories/group.repository";
 import { ParamRepository } from "../repositories/param.repository";
 import Database from "../database/dbClient";
+import { ReportRepository } from "../repositories/report.repository";
+import { UploadFileRepository } from "../repositories/upload-file.repository";
 export class ApiService {
   // private shopeeRepo = new ShopeeRepository();
   private userRepo = new UserRepository();
@@ -19,6 +21,8 @@ export class ApiService {
   private menuRepo = new MenuRepository();
   private groupRepo = new GroupRepository();
   private paramRepo = new ParamRepository();
+  private reportRepo = new ReportRepository();
+  private uploadFileRepo = new UploadFileRepository();
 
   // async sendEmailNotification(to: string, subject: string, message: string) {
   //   // console.log('sendEmailNotification called with:', { to, subject, message });
@@ -65,53 +69,53 @@ export class ApiService {
     }
   }
 
-async getTestDatabaseService(config: any):Promise<any> {
-  logInfo("DATABASE CONFIG : ", config)
-  // {"config":{"client":"pg","condatabase":"ndp_proxy","conhost":"localhost","conport":5432,"conuser":"postgres","conpassword":"postgres","conoption":{}}}
-  Database.init({
-    client: config.config.client,
-    connection: {
-      host: config.config.conhost,
-      port: config.config.conport,
-      user: config.config.conuser,
-      password: config.config.conpassword,
-      database: config.config.condatabase,
-    },
-    pool: { min: 2, max: 100 },
-  })
-  const result = await Database.testConnection();
-  if (result.success) {
-    await Database.destroy();
-    // console.log(result.message);
-     return ApiResponse.success(result.success, result.message);
-  } else {
-    await Database.destroy();
-    return ApiResponse.successNoData(result.error, result.message);
-  }
+  async getTestDatabaseService(config: any): Promise<any> {
+    logInfo("DATABASE CONFIG : ", config)
+    // {"config":{"client":"pg","condatabase":"ndp_proxy","conhost":"localhost","conport":5432,"conuser":"postgres","conpassword":"postgres","conoption":{}}}
+    Database.init({
+      client: config.config.client,
+      connection: {
+        host: config.config.conhost,
+        port: config.config.conport,
+        user: config.config.conuser,
+        password: config.config.conpassword,
+        database: config.config.condatabase,
+      },
+      pool: { min: 2, max: 100 },
+    })
+    const result = await Database.testConnection();
+    if (result.success) {
+      await Database.destroy();
+      // console.log(result.message);
+      return ApiResponse.success(result.success, result.message);
+    } else {
+      await Database.destroy();
+      return ApiResponse.successNoData(result.error, result.message);
+    }
 
-  //################## Berhasil Isi #######################
-  // return ApiResponse.success({}, "Database connection OK ✅");
-}
-async goMigratetDatabaseService(config: any):Promise<any> {
-  logInfo("DATABASE MIGRATE CONFIG : ", config)
-  // {"config":{"client":"pg","condatabase":"ndp_proxy","conhost":"localhost","conport":5432,"conuser":"postgres","conpassword":"postgres","conoption":{}}}
-  Database.init({
-    client: config.config.client,
-    connection: {
-      host: config.config.conhost,
-      port: config.config.conport,
-      user: config.config.conuser,
-      password: config.config.conpassword,
-      database: config.config.condatabase,
-    },
-    pool: { min: 2, max: 100 },
-  })
-  const result = await Database.testConnection();
-  if (result.success) {
-    const db = Database.get();
-    try {
-      // Table m_group
-    await db.raw(`
+    //################## Berhasil Isi #######################
+    // return ApiResponse.success({}, "Database connection OK ✅");
+  }
+  async goMigratetDatabaseService(config: any): Promise<any> {
+    logInfo("DATABASE MIGRATE CONFIG : ", config)
+    // {"config":{"client":"pg","condatabase":"ndp_proxy","conhost":"localhost","conport":5432,"conuser":"postgres","conpassword":"postgres","conoption":{}}}
+    Database.init({
+      client: config.config.client,
+      connection: {
+        host: config.config.conhost,
+        port: config.config.conport,
+        user: config.config.conuser,
+        password: config.config.conpassword,
+        database: config.config.condatabase,
+      },
+      pool: { min: 2, max: 100 },
+    })
+    const result = await Database.testConnection();
+    if (result.success) {
+      const db = Database.get();
+      try {
+        // Table m_group
+        await db.raw(`
         CREATE TABLE IF NOT EXISTS m_group (
           idgroup VARCHAR(50) NOT NULL PRIMARY KEY,
           groupname VARCHAR(100) NOT NULL,
@@ -125,8 +129,8 @@ async goMigratetDatabaseService(config: any):Promise<any> {
           status INTEGER DEFAULT 1
         );
       `);
-      // Table m_icons
-      await db.raw(`
+        // Table m_icons
+        await db.raw(`
         CREATE TABLE IF NOT EXISTS m_icons (
           id SERIAL PRIMARY KEY,
           code VARCHAR(1000),
@@ -136,8 +140,8 @@ async goMigratetDatabaseService(config: any):Promise<any> {
         );
       `);
 
-      // Table m_menus
-  await db.raw(`
+        // Table m_menus
+        await db.raw(`
     CREATE TABLE "m_menus" (
   "idMenu" SERIAL PRIMARY KEY,
   "nameMenu" VARCHAR(100) NOT NULL,
@@ -151,8 +155,8 @@ async goMigratetDatabaseService(config: any):Promise<any> {
 );
   `);
 
-  // Table m_param
-  await db.raw(`
+        // Table m_param
+        await db.raw(`
     CREATE TABLE IF NOT EXISTS m_param (
       id SERIAL PRIMARY KEY,
       paramgroup VARCHAR(100) DEFAULT '100',
@@ -165,8 +169,8 @@ async goMigratetDatabaseService(config: any):Promise<any> {
     );
   `);
 
-  // Table m_role
-  await db.raw(`
+        // Table m_role
+        await db.raw(`
     CREATE TABLE IF NOT EXISTS "m_role" (
       "idRole" VARCHAR(10) NOT NULL PRIMARY KEY,
       "roleName" VARCHAR(200) DEFAULT 'undefined',
@@ -176,8 +180,8 @@ async goMigratetDatabaseService(config: any):Promise<any> {
     );
   `);
 
-  // Table m_user
-  await db.raw(`
+        // Table m_user
+        await db.raw(`
     CREATE TABLE IF NOT EXISTS m_user (
       iduser VARCHAR(50) NOT NULL PRIMARY KEY,
       username VARCHAR(100) NOT NULL,
@@ -196,46 +200,46 @@ async goMigratetDatabaseService(config: any):Promise<any> {
       status INTEGER DEFAULT 1
     );
   `);
-    // INSERT DATABASE PERLAHAN
-      logInfo("Inserting Users...");
-      let allUsers:any[] = await this.userRepo.findAllUserMigrate()
-      const cleanUsers = allUsers.map(({ groupname, ...rest }) => rest);// Hapus kolom "groupname" karena tidak ada di struktur m_user
-      await db("m_user").insert(cleanUsers);
-      logInfo("Inserting Roles...");
-      let allRoles = await this.roleRepo.findAllRole();
-      await db("m_role").insert(allRoles);
-      logInfo("Inserting Params...");
-      let allParam:any[] = await this.paramRepo.findParamForMigration();
-      await db("m_param").insert(allParam);
-      logInfo("Inserting Menus...");
-      let allMenus:any[] = await this.menuRepo.findAllMenuMigrate();
-      await db("m_menus").insert(allMenus);
-      logInfo("Inserting Icons...");
-      let allIcons:any[] = await this.menuRepo.findAllIconsPrimeMigrate();
-      await db("m_icons").insert(allIcons);
-      logInfo("Inserting Groups...");
-      let allGroups:any[] = await this.groupRepo.findAllGroupMigrate();
-      await db("m_group").insert(allGroups);
-      console.log("✅ Tables created successfully");
-      await Database.destroy();
-      return ApiResponse.success(true, "✅ Tables created successfully");
-    } catch (error) {
+        // INSERT DATABASE PERLAHAN
+        logInfo("Inserting Users...");
+        let allUsers: any[] = await this.userRepo.findAllUserMigrate()
+        const cleanUsers = allUsers.map(({ groupname, ...rest }) => rest);// Hapus kolom "groupname" karena tidak ada di struktur m_user
+        await db("m_user").insert(cleanUsers);
+        logInfo("Inserting Roles...");
+        let allRoles = await this.roleRepo.findAllRole();
+        await db("m_role").insert(allRoles);
+        logInfo("Inserting Params...");
+        let allParam: any[] = await this.paramRepo.findParamForMigration();
+        await db("m_param").insert(allParam);
+        logInfo("Inserting Menus...");
+        let allMenus: any[] = await this.menuRepo.findAllMenuMigrate();
+        await db("m_menus").insert(allMenus);
+        logInfo("Inserting Icons...");
+        let allIcons: any[] = await this.menuRepo.findAllIconsPrimeMigrate();
+        await db("m_icons").insert(allIcons);
+        logInfo("Inserting Groups...");
+        let allGroups: any[] = await this.groupRepo.findAllGroupMigrate();
+        await db("m_group").insert(allGroups);
+        console.log("✅ Tables created successfully");
+        await Database.destroy();
+        return ApiResponse.success(true, "✅ Tables created successfully");
+      } catch (error) {
 
-       return ApiResponse.successNoData(false, "✅ Unable to create tables");
+        return ApiResponse.successNoData(false, "✅ Unable to create tables");
+      }
+
+      // console.log(result.message);
+
+    } else {
+      await Database.destroy();
+      return ApiResponse.successNoData(result.error, result.message);
     }
 
-    // console.log(result.message);
-
-  } else {
-    await Database.destroy();
-    return ApiResponse.successNoData(result.error, result.message);
+    //################## Berhasil Isi #######################
+    // return ApiResponse.success({}, "Database connection OK ✅");
   }
 
-  //################## Berhasil Isi #######################
-  // return ApiResponse.success({}, "Database connection OK ✅");
-}
-
-  async getParamsAll(userinfo: any, payload:any) {
+  async getParamsAll(userinfo: any, payload: any) {
     const paramResult = await this.paramRepo.findParamExternal();
     if (!paramResult) return ApiResponse.successNoData(paramResult, "Unable to get data!");
     //################## Berhasil Isi #######################
@@ -243,25 +247,25 @@ async goMigratetDatabaseService(config: any):Promise<any> {
   }
 
 
-  async getParamsByGroupService(userinfo: any, payload:any) {
+  async getParamsByGroupService(userinfo: any, payload: any) {
     const paramResult = await this.paramRepo.findParamByGroup(payload);
     if (!paramResult) return ApiResponse.successNoData(paramResult, "Unable to get data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(paramResult, "Records found");
   }
-  async getParamsByKeyService(userinfo: any, payload:any) {
+  async getParamsByKeyService(userinfo: any, payload: any) {
     const paramResult = await this.paramRepo.findParamByKey(payload);
     if (!paramResult) return ApiResponse.successNoData(paramResult, "Unable to get data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(paramResult, "Records found");
   }
-  async updParamsByGroupService(userinfo: any, payload:any) {
+  async updParamsByGroupService(userinfo: any, payload: any) {
     // const paramResult = await this.paramRepo.findParamByGroup(payload);
     const paramgroup = payload.paramgroup;
-    const results:any[]= [];
+    const results: any[] = [];
 
     for (const [key, value] of Object.entries(payload)) {
-      const updateScript:any = {paramkey:key, paramvalue:value+""}
+      const updateScript: any = { paramkey: key, paramvalue: value + "" }
       const updateRecords = await this.paramRepo.updParamByKey(updateScript);
       results.push(updateRecords);
     }
@@ -279,15 +283,15 @@ async goMigratetDatabaseService(config: any):Promise<any> {
     //################## Berhasil Isi #######################
     return ApiResponse.success(roleResult, "Records found");
   }
-  async getRoleByIdService(userinfo: any, payload:any) {
+  async getRoleByIdService(userinfo: any, payload: any) {
     const roleResult = await this.roleRepo.findAllRoleById(payload.idRole);
     if (!roleResult) return ApiResponse.successNoData(roleResult, "Unable to get data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(roleResult, "Records found");
   }
-  async addRoleService(userinfo: any, payload:any) {
+  async addRoleService(userinfo: any, payload: any) {
 
-    payload = {...payload, ...{created_at:new Date().toISOString().slice(0, 19).replace('T', ' ')}}
+    payload = { ...payload, ...{ created_at: new Date().toISOString().slice(0, 19).replace('T', ' ') } }
 
 
     const roleResult = await this.roleRepo.addRole(payload);
@@ -295,15 +299,15 @@ async goMigratetDatabaseService(config: any):Promise<any> {
     //################## Berhasil Isi #######################
     return ApiResponse.success(roleResult, "Record added");
   }
-  async updRoleService(userinfo: any, payload:any) {
+  async updRoleService(userinfo: any, payload: any) {
     const idRoleOld = payload.idRoleOld;
     delete payload.idRoleOld;
-    const roleResult = await this.roleRepo.updRole(payload,idRoleOld);
+    const roleResult = await this.roleRepo.updRole(payload, idRoleOld);
     if (!roleResult) return ApiResponse.successNoData(roleResult, "Unable to update data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(roleResult, "Record updated");
   }
-  async dellRoleService(userinfo: any, payload:any) {
+  async dellRoleService(userinfo: any, payload: any) {
     const roleResult = await this.roleRepo.delRole(payload);
     if (!roleResult) return ApiResponse.successNoData(roleResult, "Unable to delete data!");
     //################## Berhasil Isi #######################
@@ -323,27 +327,27 @@ async goMigratetDatabaseService(config: any):Promise<any> {
     //################## Berhasil Isi #######################
     return ApiResponse.success(menuResult, "Records found");
   }
-  async getMenuByIdService(userinfo: any, payload:any) {
+  async getMenuByIdService(userinfo: any, payload: any) {
     const menuResult = await this.menuRepo.findAllMenuById(payload.idRole);
     if (!menuResult) return ApiResponse.successNoData(menuResult, "Unable to get data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(menuResult, "Records found");
   }
-  async addMenuService(userinfo: any, payload:any) {
-    payload = {...payload, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
+  async addMenuService(userinfo: any, payload: any) {
+    payload = { ...payload, ...{ created_at: new Date().toLocaleString('sv-SE').replace('T', ' ') }, ...{ created_by: userinfo.iduser } }
     const menuResult = await this.menuRepo.addMenu(payload);
     if (!menuResult) return ApiResponse.successNoData(menuResult, "Unable to add data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(menuResult, "Record added");
   }
-  async updMenuService(userinfo: any, payload:any) {
-    payload = {...payload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{updated_by:userinfo.iduser}}
+  async updMenuService(userinfo: any, payload: any) {
+    payload = { ...payload, ...{ updated_at: new Date().toLocaleString('sv-SE').replace('T', ' ') }, ...{ updated_by: userinfo.iduser } }
     const menuResult = await this.menuRepo.updMenu(payload);
     if (!menuResult) return ApiResponse.successNoData(menuResult, "Unable to update data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(menuResult, "Record updated");
   }
-  async dellMenuService(userinfo: any, payload:any) {
+  async dellMenuService(userinfo: any, payload: any) {
     const menuResult = await this.menuRepo.delMenu(payload);
     if (!menuResult) return ApiResponse.successNoData(menuResult, "Unable to delete data!");
     //################## Berhasil Isi #######################
@@ -356,35 +360,35 @@ async goMigratetDatabaseService(config: any):Promise<any> {
     //################## Berhasil Isi #######################
     return ApiResponse.success(groupResult, "Records found");
   }
-  async getGroupByIdService(userinfo: any, payload:any) {
+  async getGroupByIdService(userinfo: any, payload: any) {
     const groupResult = await this.groupRepo.findAllGroupById(payload.idRole);
     if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to get data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(groupResult, "Records found");
   }
-  async addGroupService(userinfo: any, payload:any) {
-    payload = {...payload, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
+  async addGroupService(userinfo: any, payload: any) {
+    payload = { ...payload, ...{ created_at: new Date().toLocaleString('sv-SE').replace('T', ' ') }, ...{ created_by: userinfo.iduser } }
     const groupResult = await this.groupRepo.addGroup(payload);
     if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to add data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(groupResult, "Record added");
   }
-  async updGroupService(userinfo: any, payload:any) {
+  async updGroupService(userinfo: any, payload: any) {
 
-    payload = {...payload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{updated_by:userinfo.iduser}}
+    payload = { ...payload, ...{ updated_at: new Date().toLocaleString('sv-SE').replace('T', ' ') }, ...{ updated_by: userinfo.iduser } }
     const groupResult = await this.groupRepo.updGroup(payload);
     if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to update data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(groupResult, "Record updated");
   }
-  async updGroupMenuService(userinfo: any, payload:any) {
-    payload = {...payload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{updated_by:userinfo.iduser}}
+  async updGroupMenuService(userinfo: any, payload: any) {
+    payload = { ...payload, ...{ updated_at: new Date().toLocaleString('sv-SE').replace('T', ' ') }, ...{ updated_by: userinfo.iduser } }
     const groupResult = await this.groupRepo.updGroupMenu(payload);
     if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to update data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(groupResult, "Record updated");
   }
-  async dellGroupService(userinfo: any, payload:any) {
+  async dellGroupService(userinfo: any, payload: any) {
     console.log("DELETE PAYLOAD ", payload);
     const groupResult = await this.groupRepo.delGroup(payload);
     if (!groupResult) return ApiResponse.successNoData(groupResult, "Unable to delete data!");
@@ -398,32 +402,32 @@ async goMigratetDatabaseService(config: any):Promise<any> {
     //################## Berhasil Isi #######################
     return ApiResponse.success(userResult, "Records found");
   }
-  async getUserByIdService(userinfo: any, payload:any) {
-    const userResult = await this.userRepo.findAllUsersById(userinfo,payload);
+  async getUserByIdService(userinfo: any, payload: any) {
+    const userResult = await this.userRepo.findAllUsersById(userinfo, payload);
     if (!userResult) return ApiResponse.successNoData(userResult, "Unable to get data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(userResult, "Records found");
   }
-  async addUserService(userinfo: any, payload:any) {
+  async addUserService(userinfo: any, payload: any) {
     const iduserGenerated = await this.generateRandomId()
-    payload.status = payload.status?1:0;
+    payload.status = payload.status ? 1 : 0;
 
-    payload = {...payload,...{iduser:iduserGenerated}, ...{created_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{created_by:userinfo.iduser}}
+    payload = { ...payload, ...{ iduser: iduserGenerated }, ...{ created_at: new Date().toLocaleString('sv-SE').replace('T', ' ') }, ...{ created_by: userinfo.iduser } }
     const userResult = await this.userRepo.addUser(payload);
     if (!userResult) return ApiResponse.successNoData(userResult, "Unable to add data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(userResult, "Record added");
   }
-  async updUserService(userinfo: any, payload:any) {
+  async updUserService(userinfo: any, payload: any) {
 
-    payload.status = payload.status?1:0;
-    payload = {...payload, ...{updated_at:new Date().toLocaleString('sv-SE').replace('T', ' ')},...{updated_by:userinfo.iduser}}
+    payload.status = payload.status ? 1 : 0;
+    payload = { ...payload, ...{ updated_at: new Date().toLocaleString('sv-SE').replace('T', ' ') }, ...{ updated_by: userinfo.iduser } }
     const userResult = await this.userRepo.updUser(payload);
     if (!userResult) return ApiResponse.successNoData(userResult, "Unable to update data!");
     //################## Berhasil Isi #######################
     return ApiResponse.success(userResult, "Record updated");
   }
-  async dellUserService(userinfo: any, payload:any) {
+  async dellUserService(userinfo: any, payload: any) {
     const userResult = await this.userRepo.delUser(payload);
     if (!userResult) return ApiResponse.successNoData(userResult, "Unable to delete data!");
     //################## Berhasil Isi #######################
@@ -432,8 +436,42 @@ async goMigratetDatabaseService(config: any):Promise<any> {
 
 
 
+  //############################################ REPORT ###############################################################
 
-//############################################ HELPER UTIL###############################################################
+  async getReportHistory(userinfo: any) {
+    const reportData = await this.reportRepo.getReportHistory();
+    if (!reportData) return ApiResponse.successNoData(reportData, "Unable to found data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(reportData, "Records found");
+  }
+
+  async insertReportHistory(userinfo: any, payload: any) {
+    payload = { ...payload, ...{ created_at: new Date().toLocaleString('sv-SE').replace('T', ' ') } }
+    const reportData = await this.reportRepo.insertReportHistory(payload);
+    if (!reportData) return ApiResponse.successNoData(reportData, "Unable to insert data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(reportData, "Records added");
+  }
+
+  //############################################ UPLOAD FILE ###############################################################
+
+  async getUploadFileHistory(userinfo: any) {
+    const uploadData = await this.uploadFileRepo.getUploadFileHistory();
+    if (!uploadData) return ApiResponse.successNoData(uploadData, "Unable to found data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(uploadData, "Records found");
+  }
+
+  async insertUploadFileHistory(userinfo: any, payload: any) {
+    payload = { ...payload, ...{ created_at: new Date().toLocaleString('sv-SE').replace('T', ' ') } }
+    const uploadData = await this.uploadFileRepo.insertUploadFileHistory(payload);
+    if (!uploadData) return ApiResponse.successNoData(uploadData, "Unable to insert data!");
+    //################## Berhasil Isi #######################
+    return ApiResponse.success(uploadData, "Records added");
+  }
+  
+
+  //############################################ HELPER UTIL###############################################################
   private toDatetimeString(unix: number): string {
     const date = new Date(unix * 1000);
     const pad = (n: number) => String(n).padStart(2, '0');

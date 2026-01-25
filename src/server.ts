@@ -9,13 +9,6 @@ import express from 'express';
 import { join, resolve } from 'node:path';
 import cookieParser from 'cookie-parser';
 import { logInfo } from './backend/utils/logger';
-import path from "path";
-import fs from "fs";
-const CONFIG_PATH = path.join(process.cwd(), "/src/config.json");
-const conf = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
-const log4js = require('log4js');
-const log4jsConfigPath = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
-log4js.configure(log4jsConfigPath);
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 const serverDistFolder = join(import.meta.dirname); // Folder dist/server
@@ -62,6 +55,7 @@ app.use(
  */
 const uploadFolder = resolve(serverDistFolder, '../upload'); // dist/upload relatif dari dist/server
 app.use('/upload', express.static(uploadFolder));
+app.use("/reports", express.static("public/reports"));
 
 
 /**

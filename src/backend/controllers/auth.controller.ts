@@ -1,14 +1,11 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { ResponseHelper } from '../utils/ResponseHelper';
-import { logError, logInfo } from '../utils/logger';
+import { logError, logInfo, logAccess } from '../utils/logger';
 import { ApiResponse } from '../utils/apiResponse';
 import { AuthService } from '../services/auth.service';
 import { EncryptDecryptJwt } from '../utils/encryptdecryptJwt';
 import { ApiService } from '../services/api.service';
-import log4js from "log4js";
-const logger_log = log4js.getLogger("log_access");
-import { log } from 'console';
 import { randomUUID } from 'crypto';
 const authService = new AuthService();
 const apiService = new ApiService();
@@ -146,7 +143,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         responseTime: null
       };
 
-      logger_log.info(JSON.stringify(logData));
+      logAccess(JSON.stringify(logData));
       
       await ResponseHelper.sendWithCookies(res, user, optionCookie); return;
     } else {
@@ -183,7 +180,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         responseTime: null
       };
 
-      logger_log.info(JSON.stringify(logData));
+      logAccess(JSON.stringify(logData));
       await ResponseHelper.send(res, user); return;
     }
   } catch (error) {
