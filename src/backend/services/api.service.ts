@@ -270,8 +270,23 @@ async goMigratetDatabaseService(config: any):Promise<any> {
     //################## Berhasil Isi #######################
     return ApiResponse.success(results, "Records found");
   }
-
-
+  async addParamsService(userinfo: any, payload:any) {
+    console.log("MASUK addParamsService");
+    const addRecords = await this.paramRepo.addParam(payload);
+    console.log("Success addParamsService ", addRecords);
+    if (!addRecords) return ApiResponse.successNoData(addRecords, "Unable to add data!");
+    return ApiResponse.success(addRecords, "Record added");
+  }
+  async updParamsService(userinfo: any, payload:any) {
+    const addRecords = await this.paramRepo.updParam(payload);
+    if (!addRecords) return ApiResponse.successNoData(addRecords, "Unable to upd data!");
+    return ApiResponse.success(addRecords, "Record added");
+  }
+  async delParamsService(userinfo: any, payload:any) {
+    const addRecords = await this.paramRepo.delParam(payload);
+    if (!addRecords) return ApiResponse.successNoData(addRecords, "Unable to del data!");
+    return ApiResponse.success(addRecords, "Record added");
+  }
 
   async getRolesService(userinfo: any) {
     const roleResult = await this.roleRepo.findAllRole();

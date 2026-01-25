@@ -57,7 +57,7 @@ export class Generalmanagement implements OnInit {
           "up",
           "dl"
         ];
-  userForm = new FormGroup({
+  paramForm = new FormGroup({
     paramgroup: new FormControl('', [Validators.required]),
     paramkey: new FormControl('', [Validators.required]),
     paramvalue: new FormControl('', [Validators.required]),
@@ -162,7 +162,7 @@ export class Generalmanagement implements OnInit {
   }
   async _addParam() {
 
-    this.userForm.patchValue({
+    this.paramForm.patchValue({
       "paramgroup": null,
       "paramkey": null,
       "paramvalue": null,
@@ -174,8 +174,17 @@ export class Generalmanagement implements OnInit {
     this.showDetailForm = { show: true, action: "add" };
   }
   async _delParam(event: any) {
-    // this.selectedUser = event;
-    // this.showDetailDelete = true;
+    this.selectedParam = event;
+    this.showDetailDelete = true;
+  }
+   async onOkDelete() {
+    this.loading = true;
+    console.log("data to delete ", this.selectedParam);
+    await this._saveDeleteParamData(this.selectedParam);
+    this.showDetailDelete = false;
+  }
+  onCancelDelete() {
+    this.showDetailDelete = false;
   }
   onGlobalSearch() {
     console.log("Global filter : ", this.globalFilter);
@@ -220,7 +229,6 @@ export class Generalmanagement implements OnInit {
         console.log("Response Error Catch /v2/admin/test_database", err);
       });
   }
-
   async _databaseMigration(optionconfig:any): Promise<void> {
       fetch('/v2/admin/migrate_database', {
       method: 'POST',
@@ -253,8 +261,6 @@ export class Generalmanagement implements OnInit {
         console.log("Response Error Catch /v2/admin/migrate_database", err);
       });
   }
-
-
   async _refreshGeneralData(): Promise<void> {
     this.loading = true;
     const payload = { paramgroup: "GENERAL" }
@@ -317,14 +323,6 @@ export class Generalmanagement implements OnInit {
 
         if (data.code === 20000) {
           const dataRecordsTemp = cloneDeep(data.data);
-          // this.generalForm.patchValue(
-          //   {
-          //     title: dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "title").paramvalue,
-          //     cookietime: dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "cookietime").paramvalue,
-          //     maxloginattempt: dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "maxloginattempt").paramvalue,
-          //     userMinLength: dataRecordsTemp.find((item: { paramkey: any; }) => item.paramkey === "userMinLength").paramvalue,
-          //   }
-          // )
             this.params = dataRecordsTemp;
             this.allParams = this.params;
             this.totalParam = this.allParams.length;
@@ -498,36 +496,125 @@ export class Generalmanagement implements OnInit {
       }
   onRowSelect(event: any) {
     console.log('Selected Param:', event.data);
-
+     const dataObj = event.data
+    this.idParamOld = dataObj.id
+    this.paramForm.patchValue({
+      "paramgroup": dataObj.paramgroup,
+      "paramkey": dataObj.paramkey,
+      "paramvalue": dataObj.paramvalue,
+      "description": dataObj.description
+    }
+    )
+    this.showDetailForm = { show: true, action: "edit" };this.cdr.detectChanges();
   }
+
   _changeError() {
     // this.errorMessage={error:false, severity:"info", message:"", icon:"pi pi-send"};
   }
   onCancel() {
     this.showDetailForm = { show: false, action: "add" };
   }
-  onSubmit() {
-    if (this.userForm.invalid) {
+  async onSubmitParams() {
+    if (this.paramForm.invalid) {
       return; // Form invalid, jangan lanjut
     }
     this.loading = true;
-    let objPayload = this.userForm.value;
-    console.log("Payload form ", objPayload);
+    let objPayload = this.paramForm.value;
     if (this.showDetailForm.action == "add") {
-      //########### CHECK PANJANG USER ##############
-      // let usernameLength = objPayload?.username
-      // if((usernameLength ?? "").length < 6) {
-      //   this.loading = false;
-      //   this.errorMessage ={ error: true, severity: "error", message: "Username cannot less than 6 characters", icon: "pi pi-exclamation-circle" };
-      //   return;
-      // }
-      // ########## CHECK PASSWORD ATTRIBUTE ########
-
+      await this._saveParamData(objPayload)
 
     } else {
       console.log("IdUserOLD : ", this.idParamOld);
-      // this._saveEditData(objPayload, this.idUserOld)
+      this._saveEditParamData(objPayload, this.idParamOld)
     }
+  }
+  async _saveParamData(payload:any): Promise<void> {
+    this.loading = true;
+    // let payloadObjec = {payload:payload}
+    fetch('/v2/admin/add_param', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-client': 'angular-ssr'
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Error add data');
+        return res.json();
+      })
+      .then(async data => {
+        this.loading = false;
+        if (data.code === 20000) {
+          this.showDetailForm = { show: false, action: "add" };
+          await this._refreshParamData();
+        } else {
+          this.errorMessage = { error: true, severity: "error", message: `${data.message}`, icon: "pi pi-times" }
+        }
+      })
+      .catch(err => {
+        console.log("Response Error ", err);
+        this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
+      });
+  }
+  async _saveEditParamData(payload: any, idParam: string): Promise<void> {
+    payload = { ...payload, ...{ id: idParam } };
+    console.log("Payload Edit ", payload);
+    fetch('/v2/admin/upd_param', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-client': 'angular-ssr'
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Error update data');
+        return res.json();
+      })
+      .then(data => {
+        this.loading = false;
+        if (data.code === 20000) {
+          this.showDetailForm = { show: false, action: "add" };
+          this._refreshParamData()
+        } else {
+          this.errorMessage = { error: true, severity: "error", message: `${data.message}`, icon: "pi pi-times" }
+        }
+      })
+      .catch(err => {
+        console.log("Response Error ", err);
+        // alert('Login gagal: ' + err.message);
+        this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
+      });
+  }
+  async _saveDeleteParamData(payload:any): Promise<void> {
+    this.loading = true;
+    // let payloadObjec = {payload:payload}
+    fetch('/v2/admin/del_param', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-client': 'angular-ssr'
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Error add data');
+        return res.json();
+      })
+      .then(async data => {
+        this.loading = false;
+        if (data.code === 20000) {
+          this.showDetailForm = { show: false, action: "add" };
+          await this._refreshParamData();
+        } else {
+          this.errorMessage = { error: true, severity: "error", message: `${data.message}`, icon: "pi pi-times" }
+        }
+      })
+      .catch(err => {
+        console.log("Response Error ", err);
+        this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
+      });
   }
 }
 interface dataField {

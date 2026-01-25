@@ -8,8 +8,9 @@ import { logError, logInfo, logWarn } from "../utils/logger";
 export async function CookieMiddleware(req: Request, res: Response, next: NextFunction) {
   try {
     const xtoken = req.signedCookies?.["x_token"]; // Ambil token dari signed cookie
-    // console.log("COOKIE TOKEN ",xtoken);
+    console.log("Cookie Req : ",req.url);
     if (!xtoken) {
+       //**************************Tolong dilihat lagi */
         return ResponseHelper.send(res, ApiResponse.serviceUnauthorised('Unauthorized - No token provided'));
     }
     try {

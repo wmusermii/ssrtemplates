@@ -3,15 +3,17 @@ import { logInfo } from '../utils/logger';
 export class ParamRepository {
 
   async findParamExternal() {
-    logInfo("📊 findParamExternal ")
+    // logInfo("📊 findParamExternal ")
     const result = await db.select([
+      'mg.id',
       'mg.paramgroup',
       'mg.paramkey',
       'mg.paramvalue',
+      'mg.description',
     ]).from('m_param as mg')
-    .whereNotIn('mg.paramgroup', ['GENERAL', 'SMTPATTRB'])
+    .whereNotIn('mg.paramgroup', ['GENERAL', 'SMTPATTRB', 'PASSATTRB'])
     .orderBy('mg.id', 'asc');
-    logInfo("📊 Hasil get params ",result)
+    // logInfo("📊 Hasil get params external",result)
     return result;
   }
 // , 'PASSATTRB'
@@ -44,6 +46,18 @@ export class ParamRepository {
   }
    async updParamByKey(payload:any) {
     const query = await db('m_param').update(payload).where("paramkey", payload.paramkey).returning("id");
+    return query;
+  }
+  async addParam(payload:any) {
+    const query = await db('m_param').insert(payload).returning("id");
+    return query;
+  }
+  async updParam(payload:any) {
+    const query = await db('m_param').update(payload).where("id", payload.id).returning("id");
+    return query;
+  }
+  async delParam(payload:any) {
+    const query = await db('m_param').delete().where("id", payload.id);
     return query;
   }
 }

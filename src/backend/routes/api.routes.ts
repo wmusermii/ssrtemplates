@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addGroups, addMenus, addRoles,  addUsers,  delGroups,  delMenus, delRoles, delUsers, echo, getGroupsAvailable, getIcons,  getMenusAvailable, getParamsAll, getParamsByGroup, getParamsByKey, getRolesAvailable, getTestDatabase, getUsersAvailable, goMigrateDatabase, updateUser, updGroupMenu, updGroups, updMenus, updParamsByGroup, updRoles, updUsers } from '../controllers/api.controller';
+import { addGroups, addMenus, addParams, addRoles,  addUsers,  delGroups,  delMenus, delParams, delRoles, delUsers, echo, getGroupsAvailable, getIcons,  getMenusAvailable, getParamsAll, getParamsByGroup, getParamsByKey, getRolesAvailable, getTestDatabase, getUsersAvailable, goMigrateDatabase, updateUser, updGroupMenu, updGroups, updMenus, updParams, updParamsByGroup, updRoles, updUsers } from '../controllers/api.controller';
 import { attrb, getaclattrb, login, logout, registUser } from '../controllers/auth.controller';
 import { asyncHandler } from '../middlewares/asyncHandler';
 import { CookieMiddleware } from '../middlewares/cookiemiddleware';
@@ -24,8 +24,10 @@ router.post('/admin/migrate_database', asyncHandler(CookieMiddleware),asyncHandl
 //************************************* WEB ADMIN ROUTES *************
 router.post('/admin/get_parambygroup', asyncHandler(CookieMiddleware),asyncHandler(getParamsByGroup));
 router.post('/admin/get_parambykey', asyncHandler(getParamsByKey));
+router.post('/admin/add_param', asyncHandler(CookieMiddleware),asyncHandler(addParams));
+router.post('/admin/upd_param', asyncHandler(CookieMiddleware),asyncHandler(updParams));
+router.post('/admin/del_param', asyncHandler(CookieMiddleware),asyncHandler(delParams));
 router.post('/admin/upd_parambygroup', asyncHandler(updParamsByGroup));
-
 router.get('/admin/get_params', asyncHandler(CookieMiddleware),asyncHandler(getParamsAll)); //Melihat is daftar Role
 
 

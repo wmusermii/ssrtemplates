@@ -59,6 +59,57 @@ export async function getParamsByGroup(req: Request, res: Response, next: NextFu
     return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 }
+export async function addParams(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### addParams");
+    const userInfo: any = req.userInfo;
+    const paramResult = await apiService.addParamsService(userInfo, req.body);
+    if (paramResult.code === 20000) {
+      await ResponseHelper.send(res, paramResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    // next(error);
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function updParams(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### updParams");
+    const userInfo: any = req.userInfo;
+    const paramResult = await apiService.updParamsService(userInfo, req.body);
+    if (paramResult.code === 20000) {
+      await ResponseHelper.send(res, paramResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    // next(error);
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
+export async function delParams(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("####################################### delParams");
+    const userInfo: any = req.userInfo;
+    const paramResult = await apiService.delParamsService(userInfo, req.body);
+    if (paramResult.code === 20000) {
+      await ResponseHelper.send(res, paramResult); return;
+    } else {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to generate data"));
+      return;
+    }
+  } catch (error) {
+    logError("Error api.controller : ", error)
+    // next(error);
+    return await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
+  }
+}
 export async function updParamsByGroup(req: Request, res: Response, next: NextFunction) {
   try {
     console.log("####################################### updParamsByGroup");

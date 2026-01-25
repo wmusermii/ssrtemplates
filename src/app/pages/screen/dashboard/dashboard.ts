@@ -63,109 +63,71 @@ export class Dashboard implements OnInit {
     this.token = this.ssrStorage.getItem('token');
     this.userInfo = this.ssrStorage.getItem("C_INFO");
     const sessionDate:any = this.ssrStorage.getItem("FETCHTIME")
-    // console.log("USER INFO ", this.userInfo);
-
     this._refreshTitle();
   }
 
-  async _popupShopee(){
-    this.showGenerateDialog= true;
-    let startArray:any = await this.ssrStorage.getItem("FETCHTIME");
-    if(startArray){
-      //################### SETTING JAM BERIKUT ########################
-      let startT:string[] = startArray.split(",");
-      this.starttime = startT[0];
-       let dateTmp= new Date();
-       this.endtime = dateTmp.toLocaleTimeString('en-GB');
-    }
-  }
-  async _processFetchingShopee(){
-    this.loading= true;
-    this.showGenerateDialog=false;
-//################## AMBIL DATA DULU DARI LOCAL SESSION #######################
-    let startArray:any = await this.ssrStorage.getItem("FETCHTIME");
-    if(startArray){
-      //################### SETTING JAM BERIKUT ########################
-      let startT:string[] = startArray.split(",");
-      this.starttime = startT[0];
-       let dateTmp= new Date();
-          // Jam:Menit:Detik
-       this.endtime = dateTmp.toLocaleTimeString('en-GB');
-    }
-//#############################################################################
-    let payload = {date:this.currentDate, fromtime:this.starttime, totime:this.endtime}
-    fetch('/v2/shopee/gen_qshopeeCurrent', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
-      },
-      body: JSON.stringify(payload)
-    })
-      .then(res => {
-        // console.log("Response dari API /shopee/gen_qshopeeCurrent 0", res);
-        if (!res.ok) throw new Error('q_shopee Gagal');
-        return res.json();
-      })
-      .then(data => {
-        // console.log("Response dari API /shopee/gen_qshopeeCurrent 1", data);
-        if (data.code === 20000) {
-          console.log("FETCH SETELAH GENERATE ");
-          this.loading = false;
-        } else {
-          this.loading = false
-          // this.listMenu = [];
-        }
-      })
-      .catch(err => {
-        console.log("Response Error Catch /shopee/gen_qshopeeCurrent", err);
-      });
-  }
+  // async _popupShopee(){
+  //   this.showGenerateDialog= true;
+  //   let startArray:any = await this.ssrStorage.getItem("FETCHTIME");
+  //   if(startArray){
+  //     //################### SETTING JAM BERIKUT ########################
+  //     let startT:string[] = startArray.split(",");
+  //     this.starttime = startT[0];
+  //      let dateTmp= new Date();
+  //      this.endtime = dateTmp.toLocaleTimeString('en-GB');
+  //   }
+  // }
+//   async _processFetchingShopee(){
+//     this.loading= true;
+//     this.showGenerateDialog=false;
+// //################## AMBIL DATA DULU DARI LOCAL SESSION #######################
+//     let startArray:any = await this.ssrStorage.getItem("FETCHTIME");
+//     if(startArray){
+//       //################### SETTING JAM BERIKUT ########################
+//       let startT:string[] = startArray.split(",");
+//       this.starttime = startT[0];
+//        let dateTmp= new Date();
+//           // Jam:Menit:Detik
+//        this.endtime = dateTmp.toLocaleTimeString('en-GB');
+//     }
+// //#############################################################################
+//     let payload = {date:this.currentDate, fromtime:this.starttime, totime:this.endtime}
+//     fetch('/v2/shopee/gen_qshopeeCurrent', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${this.token}`
+//       },
+//       body: JSON.stringify(payload)
+//     })
+//       .then(res => {
+//         // console.log("Response dari API /shopee/gen_qshopeeCurrent 0", res);
+//         if (!res.ok) throw new Error('q_shopee Gagal');
+//         return res.json();
+//       })
+//       .then(data => {
+//         // console.log("Response dari API /shopee/gen_qshopeeCurrent 1", data);
+//         if (data.code === 20000) {
+//           console.log("FETCH SETELAH GENERATE ");
+//           this.loading = false;
+//         } else {
+//           this.loading = false
+//           // this.listMenu = [];
+//         }
+//       })
+//       .catch(err => {
+//         console.log("Response Error Catch /shopee/gen_qshopeeCurrent", err);
+//       });
+//   }
   async _cancelFetchingShopee(){
     this.showGenerateDialog=false;
   }
-  _goToPackaging() {
-    this.router.navigate(['/printing']);
-  }
-  async _getViewPosProcess(payload:any) {
-    this.loading=true;
-    fetch('/v2/shopee/get_positem', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
-      },
-      body: JSON.stringify(payload)
-    })
-      .then(res => {
-        // console.log("Response dari API  /shopee/get_positem", res);
-        if (!res.ok) throw new Error('get QShopee Gagal');
-        return res.json();
-      })
-      .then(data => {
-        // console.log("Response dari API /shopee/get_positem ", data);
-        this.loading=false;
-        if (data.code === 20000) {
-          this.showProcedPostDialog = true;
-          const dataRecordsTemp = cloneDeep(data.data);
-          console.log("Data View ", dataRecordsTemp.data);
-          this.QueriesDataPos = dataRecordsTemp.data;
-          this.loading=false;
-        } else {
-          this.QueriesDataPos = [];
-          this.loading=false;
-        }
-      })
-      .catch(err => {
-        console.log("Response Error Catch /shopee/get_qshopee", err);
-      });
-  }
-  async _onRowSelect(payload:any){
-    console.log("Selected 1 : ",payload);
-    console.log("Selected 2 : ",this.selectProduct);
-    this.ssrStorage.setItem("FORCEITEMID", this.selectProduct);
-    this._goToPackaging();
-  }
+
+  // async _onRowSelect(payload:any){
+  //   console.log("Selected 1 : ",payload);
+  //   console.log("Selected 2 : ",this.selectProduct);
+
+  // }
   async _refreshTitle():Promise<any>{
           // this.loading=true;
           const payload = {paramgroup: "GENERAL", paramkey:"title"}

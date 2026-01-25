@@ -318,14 +318,10 @@ export class Usermanagement implements OnInit {
       body: JSON.stringify(payload)
     })
       .then(res => {
-        // console.log("Response dari API ", res);
-        // logInfo
         if (!res.ok) throw new Error('Error add data');
         return res.json();
       })
       .then(async data => {
-        // // console.log("Response dari API DATA ", JSON.parse(data));
-        // // console.log("Response dari API DATA ", data);
         this.loading = false;
         if (data.code === 20000) {
           this.showDetailForm = { show: false, action: "add" };
@@ -336,7 +332,6 @@ export class Usermanagement implements OnInit {
       })
       .catch(err => {
         console.log("Response Error ", err);
-        // alert('Login gagal: ' + err.message);
         this.errorMessage = { error: true, severity: "error", message: `${err}`, icon: "pi pi-times" }
       });
   }
