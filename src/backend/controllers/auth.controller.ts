@@ -1,12 +1,12 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { ResponseHelper } from '../utils/ResponseHelper';
-import { logError, logInfo } from '../utils/logger';
+import { logError, logInfo, logAccess } from '../utils/logger';
 import { ApiResponse } from '../utils/apiResponse';
 import { AuthService } from '../services/auth.service';
 import { EncryptDecryptJwt } from '../utils/encryptdecryptJwt';
 import { ApiService } from '../services/api.service';
-import { log } from 'console';
+import { randomUUID } from 'crypto';
 const authService = new AuthService();
 const apiService = new ApiService();
 // export async function login(req: Request, res: Response, next: NextFunction) {
@@ -65,90 +65,165 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     const decoded = Buffer.from(credential, 'base64').toString('utf-8');
     const [username, password] = decoded.split(':');
     const user = await authService.login(username, password);
-    let dataTemp:any = user.data;
-    const data:any = {
+    let dataTemp: any = user.data;
+    const data: any = {
       ...dataTemp,
       ua: req.headers['user-agent'],
       ip: req.ip
     }
     let tokenCookie = null;
-    if(user.code === 20000) {
-            const cookieObj:any = await apiService.getParamsByKeyService({},{paramgroup:"GENERAL",paramkey:"cookietime"});
-            logInfo(">>>>>>>>>>>>>>>>>>>> cookieObj : ",cookieObj);
-            let cookieTimeStr:string = cookieObj.code === 20000?cookieObj.data.paramvalue:'15m';
-            logInfo(">>>>>>>>>>>>>>>>>>>> cookieTime : ",cookieTimeStr);
-            const token = await EncryptDecryptJwt.generateToken(data);
-            delete data.password;
-            tokenCookie = await EncryptDecryptJwt.generateToken(data);
-            const uInfo = JSON.parse(JSON.stringify(data)); // agar data tidak hilang
-            for (const key in user.data) {
-              if (user.data.hasOwnProperty(key)) {
-                delete user.data[key];
-              }
-            }
-            // logInfo("############################UINFO 2 : ",uInfo)
-            delete uInfo.menublob;
-            user.data.token = token;
-            user.data.userinfo = uInfo;
-            const optionCookie:any[]=[
-            {
-              name: 'x_token',
-              value: tokenCookie,
-              options: {
-                httpOnly: true,   // Melindungi dari akses JavaScript
-                secure: false,     // Hanya dikirim melalui HTTPS jika true
-                signed:true,
-                sameSite: 'strict', // Mencegah CSRF
-                maxAge: convertToMaxAge(cookieTimeStr)  // Cookie berlaku selama 15 menit
-              }
-            }
-          ]
-          await ResponseHelper.sendWithCookies(res, user, optionCookie);return;
-    } else {
-        await ResponseHelper.send(res, user);return;
-    }
 
+    req.body.secret = "**********";
+    const currentDate = new Date();
+    const timestamp = currentDate.getTime();
+    const systemName: any = await apiService.getParamsByKeyService({}, { paramgroup: "GENERAL", paramkey: "title" });
+    if (user.code === 20000) {
+      const cookieObj: any = await apiService.getParamsByKeyService({}, { paramgroup: "GENERAL", paramkey: "cookietime" });
+      logInfo(">>>>>>>>>>>>>>>>>>>> cookieObj : ", cookieObj);
+      let cookieTimeStr: string = cookieObj.code === 20000 ? cookieObj.data.paramvalue : '15m';
+      logInfo(">>>>>>>>>>>>>>>>>>>> cookieTime : ", cookieTimeStr);
+      const token = await EncryptDecryptJwt.generateToken(data);
+      delete data.password;
+      tokenCookie = await EncryptDecryptJwt.generateToken(data);
+      const uInfo = JSON.parse(JSON.stringify(data)); // agar data tidak hilang
+      for (const key in user.data) {
+        if (user.data.hasOwnProperty(key)) {
+          delete user.data[key];
+        }
+      }
+      // logInfo("############################UINFO 2 : ",uInfo)
+      delete uInfo.menublob;
+      user.data.token = token;
+      user.data.userinfo = uInfo;
+      console.log("USERINFOD: ", uInfo)
+      const optionCookie: any[] = [
+        {
+          name: 'x_token',
+          value: tokenCookie,
+          options: {
+            httpOnly: true,   // Melindungi dari akses JavaScript
+            secure: false,     // Hanya dikirim melalui HTTPS jika true
+            signed: true,
+            sameSite: 'strict', // Mencegah CSRF
+            maxAge: convertToMaxAge(cookieTimeStr)  // Cookie berlaku selama 15 menit
+          }
+        }
+      ]
+
+      let logData = {
+        id: randomUUID(),
+        eventTimestamp: timestamp,
+        requestDate: currentDate,
+        activity: "AUTH",
+        objectType: "LOGIN",
+        objectValue: uInfo.fullname,
+        before: null,
+        after: null,
+        direction: "INBOUND",
+        userId: uInfo.iduser,
+        userName: uInfo.username,
+        groupUser: uInfo.groupname,
+        systemOrigin: null,
+        auditType: "AUDIT_LOG",
+        systemName: systemName?.data?.paramvalue,
+        status: "SUCCESS",
+        messages: `Success Login ${systemName?.data?.paramvalue}`,
+        clientIp:
+          req.headers["x-forwarded-for"] ||
+          req.connection.remoteAddress ||
+          req.socket.remoteAddress,
+        serverInfo: req.headers.connection,
+        method: req.method,
+        requestUrl: req.url,
+        requestPath: req.path,
+        requestHeader: req.headers,
+        requestBody: JSON.stringify(req.body),
+        responseHeader: null,
+        responseBody: JSON.stringify({ message: 'Success' }),
+        responseTime: null
+      };
+
+      logAccess(JSON.stringify(logData));
+      
+      await ResponseHelper.sendWithCookies(res, user, optionCookie); return;
+    } else {
+      let logData = {
+        id: randomUUID(),
+        eventTimestamp: timestamp,
+        requestDate: currentDate,
+        activity: "AUTH",
+        objectType: "LOGIN",
+        objectValue: null,
+        before: null,
+        after: null,
+        direction: "INBOUND",
+        userId: null,
+        userName: username,
+        groupUser: null,
+        systemOrigin: null,
+        auditType: "AUDIT_LOG",
+        systemName: systemName?.data?.paramvalue,
+        status: "FAILED",
+        messages: `Failed Login ${systemName?.data?.paramvalue}`,
+        clientIp:
+          req.headers["x-forwarded-for"] ||
+          req.connection.remoteAddress ||
+          req.socket.remoteAddress,
+        serverInfo: req.headers.connection,
+        method: req.method,
+        requestUrl: req.url,
+        requestPath: req.path,
+        requestHeader: req.headers,
+        requestBody: JSON.stringify(req.body),
+        responseHeader: null,
+        responseBody: JSON.stringify({ message: 'Success' }),
+        responseTime: null
+      };
+
+      logAccess(JSON.stringify(logData));
+      await ResponseHelper.send(res, user); return;
+    }
   } catch (error) {
     logError("Error auth.controller : ", error)
     // next(error);
-    await ResponseHelper.send(res,ApiResponse.serverError(error+""));return;
+    await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 }
 export async function logout(req: Request, res: Response, next: NextFunction) {
   try {
-    const optionCookie:any[]=[
+    const optionCookie: any[] = [
       {
         name: 'x_token',
         value: null,
         options: {
           httpOnly: true,   // Melindungi dari akses JavaScript
           secure: false,     // Hanya dikirim melalui HTTPS jika true
-          signed:true,
+          signed: true,
           sameSite: 'strict', // Mencegah CSRF
           maxAge: convertToMaxAge("15m")  // Cookie berlaku selama 15 menit
         }
       }
     ]
-    return ResponseHelper.sendClearCookies(res, ApiResponse.success({code:-1, message:"Logged out"}, "Logout success"), optionCookie);
+    return ResponseHelper.sendClearCookies(res, ApiResponse.success({ code: -1, message: "Logged out" }, "Logout success"), optionCookie);
   } catch (error) {
     logError("Error auth.controller logout : ", error)
-    await ResponseHelper.send(res,ApiResponse.serverError(error+""));return;
+    await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 }
 export async function attrb(req: Request, res: Response) {
   try {
     // const user = await authService.login(username, password);
     // logInfo("Auth.controller ",user);
-    const data:any = req.userInfo;
+    const data: any = req.userInfo;
     // console.log("USER INFO ",data.code);
-    if(data.code === 'ERR_JWT_EXPIRED') {
-      await ResponseHelper.send(res, ApiResponse.invalidToken(data.code));return;
+    if (data.code === 'ERR_JWT_EXPIRED') {
+      await ResponseHelper.send(res, ApiResponse.invalidToken(data.code)); return;
     } else {
-      await ResponseHelper.send(res, ApiResponse.success(data,"Success Attrb"));return;
+      await ResponseHelper.send(res, ApiResponse.success(data, "Success Attrb")); return;
     }
   } catch (error) {
     logError("Error auth.controller : ", error)
-    await ResponseHelper.send(res,ApiResponse.serverError(error+""));return;
+    await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 }
 export async function getaclattrb(req: Request, res: Response, next: NextFunction) {
@@ -178,19 +253,19 @@ export async function registUser(req: Request, res: Response) {
   const { fullname, mobilename, email, username, password, groupCode } = req.body;
   try {
     const userExist = await authService.selectGetUserByUserID(username);
-    if(userExist.code === 20000) {
-        await ResponseHelper.send(res, ApiResponse.successNoData([], "Username Already token!, please use else"));return;
+    if (userExist.code === 20000) {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Username Already token!, please use else")); return;
     }
     const newPassword = await generatePassword()
-    const payloadInser ={fullname:fullname, mobilename:mobilename, email:email, username:username, password:newPassword, groupCode:groupCode.code}
+    const payloadInser = { fullname: fullname, mobilename: mobilename, email: email, username: username, password: newPassword, groupCode: groupCode.code }
     const insertUser = await apiService.registerUser(payloadInser);
     logInfo("HASIL INSERT TABLE ", insertUser)
-    if(insertUser.code !== 20000){
-      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to register data!"));return;
+    if (insertUser.code !== 20000) {
+      await ResponseHelper.send(res, ApiResponse.successNoData([], "Unable to register data!")); return;
     }
     // if(insertUser.code=20000){
-      //########################### Coba kirim Email
-      const htmlMessage = `
+    //########################### Coba kirim Email
+    const htmlMessage = `
             <!DOCTYPE html>
             <html lang="en">
             <head>
@@ -223,10 +298,10 @@ export async function registUser(req: Request, res: Response) {
             </div>
             </body>
             </html>`;
-      await ResponseHelper.send(res, ApiResponse.success(insertUser.data, "Success"));return;
+    await ResponseHelper.send(res, ApiResponse.success(insertUser.data, "Success")); return;
   } catch (error) {
     logError("Error auth.controller : ", error)
-    await ResponseHelper.send(res,ApiResponse.serverError(error+""));return;
+    await ResponseHelper.send(res, ApiResponse.serverError(error + "")); return;
   }
 
 }
@@ -270,15 +345,15 @@ function shuffleString(str: string): string {
 function convertToMaxAge(timeString: string): number {
   const match = timeString.match(/^(\d+)([smhd])$/);
   if (!match) {
-      throw new Error('Format waktu tidak valid. Gunakan format seperti "5m", "1h", dll.');
+    throw new Error('Format waktu tidak valid. Gunakan format seperti "5m", "1h", dll.');
   }
   const value = parseInt(match[1], 10);
   const unit = match[2];
   switch (unit) {
-      case 's': return value * 1000;          // Detik ke milidetik
-      case 'm': return value * 60 * 1000;     // Menit ke milidetik
-      case 'h': return value * 60 * 60 * 1000; // Jam ke milidetik
-      case 'd': return value * 24 * 60 * 60 * 1000; // Hari ke milidetik
-      default: throw new Error('Unit waktu tidak dikenal.');
+    case 's': return value * 1000;          // Detik ke milidetik
+    case 'm': return value * 60 * 1000;     // Menit ke milidetik
+    case 'h': return value * 60 * 60 * 1000; // Jam ke milidetik
+    case 'd': return value * 24 * 60 * 60 * 1000; // Hari ke milidetik
+    default: throw new Error('Unit waktu tidak dikenal.');
   }
 }

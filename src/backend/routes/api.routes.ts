@@ -7,6 +7,7 @@ import { CookieMiddleware } from '../middlewares/cookiemiddleware';
 import rateLimit from 'express-rate-limit';
 import { ParamRepository } from '../repositories/param.repository';
 import { logInfo, logWarn } from '../utils/logger';
+import { generateReportFromLog, getReportHistory } from '../controllers/report.controller';
 const router = Router();
 router.get('/echo', echo);
 //************************************* LIMIT RATE LOGIN *************
@@ -56,7 +57,8 @@ router.post('/admin/upd_user', asyncHandler(CookieMiddleware),asyncHandler(updUs
 router.post('/admin/del_user', asyncHandler(CookieMiddleware),asyncHandler(delUsers)); //menghapus is daftar User
 
 /***********************FOR Application API **************************************/
-
+router.post('/report/generate', asyncHandler(CookieMiddleware),asyncHandler(generateReportFromLog)); //menghapus is daftar User
+router.get('/report/getAll', asyncHandler(CookieMiddleware),asyncHandler(getReportHistory)); //menghapus is daftar User
 //************************************* EMAIL *************
 // router.post('/warehouse/send_email', asyncHandler(sendingEmailTo));// Untuk cek apaka package yang di ambil sudah diambil user lain
 //************************************* Printing *************

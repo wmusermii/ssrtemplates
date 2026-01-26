@@ -1,8 +1,120 @@
 <main class="pt-2 px-2 mb-6">
+  <!-- Breadcrumb -->
   <div class="w-full flex bg-white py-2 px-5 items-center rounded shadow mb-3">
     <p-breadcrumb [model]="breaditems" [home]="home" />
   </div>
+
+  <!-- Main Content -->
   <div class="w-full rounded shadow">
-    <span>Ini tolong di buat form nya</span>
+    <!-- Filter Card -->
+    <p-card header="Audit Report Filter">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
+        <!-- Date Range -->
+        <div class="flex flex-col gap-2">
+          <label for="fromDate" class="text-sm font-medium">From Date</label>
+          <p-datepicker inputId="fromDate" [(ngModel)]="filter.fromDate" [showTime]="true" dateFormat="yy-mm-dd"
+            placeholder="Select start date" [showIcon]="true" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label for="toDate" class="text-sm font-medium">To Date</label>
+          <p-datepicker inputId="toDate" [(ngModel)]="filter.toDate" [showTime]="true" dateFormat="yy-mm-dd"
+            placeholder="Select end date" [showIcon]="true" />
+        </div>
+
+        <!-- Audit Type -->
+        <div class="flex flex-col gap-2">
+          <label for="auditType" class="text-sm font-medium">Audit Type</label>
+          <p-autocomplete inputId="auditType" [(ngModel)]="filter.auditType" [suggestions]="auditTypes"
+            [forceSelection]="true" (completeMethod)="searchAuditTypes($event)" placeholder="Select audit type" [dropdown]="true"/>
+        </div>
+
+        <!-- System Name -->
+        <div class="flex flex-col gap-2">
+          <label for="systemName" class="text-sm font-medium">System Name</label>
+          <p-autocomplete inputId="systemName" [(ngModel)]="filter.systemName" [suggestions]="systemNames"
+            [forceSelection]="true" (completeMethod)="searchSystemNames($event)" placeholder="Select system" [dropdown]="true" />
+        </div>
+
+        <!-- User Name -->
+        <div class="flex flex-col gap-2">
+          <label for="userName" class="text-sm font-medium">User Name</label>
+          <input pInputText id="userName" [(ngModel)]="filter.userName" placeholder="Enter user name" />
+        </div>
+
+        <!-- Activity -->
+        <div class="flex flex-col gap-2">
+          <label for="activity" class="text-sm font-medium">Activity</label>
+          <p-autocomplete inputId="activity" [(ngModel)]="filter.activity" [suggestions]="activities"
+            [forceSelection]="true" (completeMethod)="searchActivities($event)" placeholder="Select activity" [dropdown]="true" />
+        </div>
+
+        <!-- Format -->
+        <div class="flex flex-col gap-2">
+          <label for="format" class="text-sm font-medium">Format</label>
+          <p-autocomplete inputId="format" [(ngModel)]="filter.format" [suggestions]="formats"
+             [forceSelection]="true" (completeMethod)="searchFormats($event)" placeholder="Select format" [dropdown]="true" />
+        </div>
+
+        <!-- Generate Button -->
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium invisible">Action</label>
+          <p-button label="Generate Report" icon="pi pi-file-export" (onClick)="generateReport()" [raised]="true" />
+        </div>
+      </div>
+    </p-card>
+
+    <!-- History Card -->
+    <p-card header="Generated Reports History" styleClass="mt-3">
+      <p-table [value]="history" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+        [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} reports"
+        [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="file_name">
+              File Name <p-sortIcon field="file_name" />
+            </th>
+            <th pSortableColumn="format">
+              Format <p-sortIcon field="format" />
+            </th>
+            <th pSortableColumn="created_by">
+              Created By <p-sortIcon field="created_by" />
+            </th>
+            <th pSortableColumn="created_at">
+              Created At <p-sortIcon field="created_at" />
+            </th>
+            <th class="text-center">Download</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-report>
+          <tr>
+            <td>{{ report.file_name }}</td>
+            <td>
+              <p-tag [value]="report.format" />
+            </td>
+            <td>{{ report.created_by }}</td>
+            <td>{{ report.created_at | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+            <td class="text-center">
+              <a [href]="report.file_path" target="_blank" download>
+                <p-button icon="pi pi-download" [rounded]="true" severity="success" [text]="true"
+                  pTooltip="Download Report" tooltipPosition="top" />
+              </a>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" class="text-center py-4">
+              <div class="flex flex-col items-center gap-2">
+                <i class="pi pi-inbox text-4xl text-gray-400"></i>
+                <p class="text-gray-500">No reports found</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
   </div>
 </main>

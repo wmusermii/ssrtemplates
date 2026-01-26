@@ -11,7 +11,12 @@
     "buildall": "powershell -Command \"$time=(Get-Date -Format 'yyyyMMddHHmm'); if (Test-Path 'data/admdb.sqlite') {Rename-Item -Path 'data/admdb.sqlite' -NewName ('admdb_' + $time + '.bak')} ; Copy-Item 'dist/ssrtemplates/server/data/admdb.sqlite' 'data/admdb.sqlite' -Force ; npm run builddata\"",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:ssrtemplates": "node dist/ssrtemplates/server/server.mjs"
+    "serve:ssr:ssrtemplates": "node dist/ssrtemplates/server/server.mjs",
+    "build:ssr": "ng build && ng run ssrtemplates:server",
+    "build:ssr:watch": "ng build --watch",
+    "serve:ssr": "nodemon --signal SIGTERM --watch dist/ssrtemplates -e js,mjs --exec \"node dist/ssrtemplates/server/server.mjs\"",
+    "dev:ssr": "concurrently \"npm run build:ssr:watch\" \"npm run serve:ssr\"",
+    "zip:ssrtemplates": "cd dist && zip -r ../ssrtemplates.zip ssrtemplates"
   },
   "prettier": {
     "overrides": [
@@ -44,6 +49,9 @@
     "better-sqlite3": "^12.2.0",
     "cookie-parser": "^1.4.7",
     "cpx": "^1.5.0",
+    "csv-writer": "^1.6.0",
+    "date-fns": "^4.1.0",
+    "exceljs": "^4.4.0",
     "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
     "html-to-image": "^1.11.13",
@@ -77,12 +85,14 @@
     "@types/node": "^20.17.19",
     "@types/nodemailer": "^6.4.17",
     "autoprefixer": "10.4.16",
+    "concurrently": "^9.2.1",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "nodemon": "^3.1.11",
     "postcss": "8.4.27",
     "tailwindcss": "3.4.1",
     "typescript": "~5.8.2"
