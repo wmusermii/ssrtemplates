@@ -123,13 +123,13 @@ export class Audittrail implements OnInit {
     this.home = { icon: 'pi pi-home', routerLink: '/' };
     //##########################################################
     await this._refreshACLMenu();
-    await this.getHistoryReport();
-    this.initializeFilter();
     if (this.aclMenublob.includes("rd")) {
       //******************** Untuk Refresh data *************/
+       await this.getHistoryReport();
+       this.initializeFilter();
     }
   }
-  
+
   private initializeFilter(): void {
     // Set default fromDate to first day of current month at 00:00:00
     const today = new Date();

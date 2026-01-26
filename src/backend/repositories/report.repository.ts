@@ -13,7 +13,7 @@ export class ReportRepository {
     ])
     .from('m_report as mr')
     .orderBy('mr.id', 'desc');
-    logInfo("📊 Hasil get ReportHistory ",result)
+    // logInfo("📊 Hasil get ReportHistory ",result)
     return result;
   }
 
